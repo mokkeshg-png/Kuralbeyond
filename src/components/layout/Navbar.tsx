@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Flame, Sparkles, User, Globe, Shield, Mic } from 'lucide-react';
+import { Flame, Sparkles, User, Globe, Shield, Mic, BookOpen } from 'lucide-react';
 import { UserProfile, UserStats } from '../../types';
 import { SarvamVoiceModal } from '../common/SarvamVoiceModal';
+import { TamilAlphabet247Modal } from '../common/TamilAlphabet247Modal';
 
 interface NavbarProps {
   profile: UserProfile | null;
@@ -15,6 +16,9 @@ export const Navbar: React.FC<NavbarProps> = ({ profile, stats }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isVoiceAssistantOpen, setIsVoiceAssistantOpen] = useState(false);
+  const [isAlphabetModalOpen, setIsAlphabetModalOpen] = useState(false);
+
+  const isTa = i18n.language === 'ta';
 
   const toggleLanguage = () => {
     const nextLang = i18n.language === 'en' ? 'ta' : 'en';
@@ -38,8 +42,9 @@ export const Navbar: React.FC<NavbarProps> = ({ profile, stats }) => {
   if (isLessonActive) return null;
 
   return (
-    <header className="sticky top-0 z-40 bg-paper/95 backdrop-blur-md border-b border-sand px-4 sm:px-6 lg:px-8 py-3.5 transition-colors">
-      <div className="w-full max-w-7xl mx-auto flex items-center justify-between gap-4">
+    <>
+      <header className="sticky top-0 z-40 bg-paper/95 backdrop-blur-md border-b border-sand px-4 sm:px-6 lg:px-8 py-3.5 transition-colors">
+        <div className="w-full max-w-7xl mx-auto flex items-center justify-between gap-4">
         {/* Brand Logo & Name */}
         <a 
           href={profile ? "/dashboard" : "/"} 
@@ -154,6 +159,18 @@ export const Navbar: React.FC<NavbarProps> = ({ profile, stats }) => {
             <span>{i18n.language === 'en' ? 'தமிழ்' : 'EN'}</span>
           </button>
 
+          {/* 247 Tamil Letters Chart Trigger */}
+          <button
+            type="button"
+            onClick={() => setIsAlphabetModalOpen(true)}
+            aria-label="Open 247 Tamil Letters Chart"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-gold-surface border border-gold/40 hover:bg-gold/30 text-ink text-xs sm:text-sm font-bold active:scale-95 transition-all shadow-sm"
+            title={isTa ? 'அனைத்து 247 தமிழ் எழுத்துகள்' : 'All 247 Tamil Letters Chart'}
+          >
+            <BookOpen size={16} className="text-gold-dark" />
+            <span className="hidden sm:inline">{isTa ? '247 எழுத்துகள்' : '247 Letters'}</span>
+          </button>
+
           {/* Tamil AI Voice Assistant Trigger */}
           <button
             type="button"
@@ -163,7 +180,7 @@ export const Navbar: React.FC<NavbarProps> = ({ profile, stats }) => {
             title="Tamil AI Voice Assistant (Powered by Sarvam AI)"
           >
             <Mic size={16} />
-            <span className="hidden sm:inline">கிளியிடம் பேசு</span>
+            <span className="hidden sm:inline">{isTa ? 'கிளியிடம் பேசு' : 'Talk with Kili'}</span>
           </button>
 
           {/* Profile / Settings Button */}
@@ -186,12 +203,19 @@ export const Navbar: React.FC<NavbarProps> = ({ profile, stats }) => {
           )}
         </div>
       </div>
-
-      {/* Sarvam AI Tamil Voice Assistant Modal */}
-      <SarvamVoiceModal
-        isOpen={isVoiceAssistantOpen}
-        onClose={() => setIsVoiceAssistantOpen(false)}
-      />
     </header>
-  );
+
+    {/* Sarvam AI Tamil Voice Assistant Modal */}
+    <SarvamVoiceModal
+      isOpen={isVoiceAssistantOpen}
+      onClose={() => setIsVoiceAssistantOpen(false)}
+    />
+
+    {/* All 247 Tamil Letters Hub Modal */}
+    <TamilAlphabet247Modal
+      isOpen={isAlphabetModalOpen}
+      onClose={() => setIsAlphabetModalOpen(false)}
+    />
+  </>
+);
 };

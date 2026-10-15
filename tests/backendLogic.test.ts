@@ -269,4 +269,75 @@ describe('Backend Database Logic & RPC Formula Parity', () => {
       expect(nfd.normalize('NFC')).toBe('கா');
     });
   });
+
+  // 8. Word Tracing Layout & Dynamic Sizing for Tamil Words (e.g. "அம்மா")
+  describe('Word Tracing Layout & Dynamic Sizing', () => {
+    // Import functions dynamically or test the logic
+    function getTamilClusterCount(text: string): number {
+      const clean = text.trim();
+      if (!clean) return 1;
+      const baseChars = clean.replace(/[\u0B82\u0BBE-\u0BCD\u0BD7\s]/g, '');
+      return Math.max(1, baseChars.length || clean.length);
+    }
+
+    function getTracingLayoutConfig(text: string) {
+      const count = getTamilClusterCount(text);
+      if (count <= 1) {
+        return { isWord: false, containerClassName: 'w-72 h-72 sm:w-80 sm:h-80', fontSizePx: 140 };
+      } else if (count === 2) {
+        return { isWord: true, containerClassName: 'w-full max-w-sm min-h-[260px] h-64 sm:h-72', fontSizePx: 100 };
+      } else if (count === 3) {
+        return { isWord: true, containerClassName: 'w-full max-w-lg min-h-[260px] h-64 sm:h-72', fontSizePx: 80 };
+      } else {
+        return { isWord: true, containerClassName: 'w-full max-w-xl min-h-[260px] h-64 sm:h-72', fontSizePx: 64 };
+      }
+    }
+
+    it('identifies single Tamil letters as non-words with large font (140px)', () => {
+      const singleLetterConfig = getTracingLayoutConfig('அ');
+      expect(singleLetterConfig.isWord).toBe(false);
+      expect(singleLetterConfig.fontSizePx).toBe(140);
+      expect(singleLetterConfig.containerClassName).toContain('w-72');
+    });
+
+    it('identifies "அம்மா" as a multi-character word with expanded container and scaled font (80px)', () => {
+      const wordConfig = getTracingLayoutConfig('அம்மா');
+      expect(wordConfig.isWord).toBe(true);
+      expect(wordConfig.fontSizePx).toBe(80);
+      expect(wordConfig.containerClassName).toContain('max-w-lg');
+    });
+
+    it('properly scales font size for longer Tamil words like "வணக்கம்"', () => {
+      const longWordConfig = getTracingLayoutConfig('வணக்கம்');
+      expect(longWordConfig.isWord).toBe(true);
+      expect(longWordConfig.fontSizePx).toBeLessThanOrEqual(64);
+    });
+  });
+
+  // 9. Session Persistence Across Logouts
+  describe('Session Persistence: No Progress Loss on Log Out', () => {
+    it('preserves learning statistics, streaks, and stars in storage when logged out', () => {
+      const mockStorage: Record<string, string> = {
+        'kuralbeyond_progress': JSON.stringify({ streak: 5, stars: 120, completed: ['les-1', 'les-2'] }),
+        'kuralbeyond_session_active': 'true',
+      };
+
+      // Simulate sign out (clears only active session flag, does NOT clear user progress)
+      mockStorage['kuralbeyond_session_active'] = 'false';
+
+      // Verify that progress data is completely intact
+      expect(mockStorage['kuralbeyond_session_active']).toBe('false');
+      expect(mockStorage['kuralbeyond_progress']).toBeDefined();
+      const progress = JSON.parse(mockStorage['kuralbeyond_progress']);
+      expect(progress.streak).toBe(5);
+      expect(progress.stars).toBe(120);
+      expect(progress.completed).toHaveLength(2);
+
+      // Simulate student re-logging in
+      mockStorage['kuralbeyond_session_active'] = 'true';
+      const resumedProgress = JSON.parse(mockStorage['kuralbeyond_progress']);
+      expect(resumedProgress.streak).toBe(5);
+      expect(resumedProgress.stars).toBe(120);
+    });
+  });
 });

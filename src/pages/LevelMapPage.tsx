@@ -14,12 +14,14 @@ import {
   Grid,
   Puzzle,
   MessageCircle,
-  ArrowLeft
+  ArrowLeft,
+  ArrowRight
 } from 'lucide-react';
 import { LearningLevel, Lesson } from '../types';
 import { curriculumService } from '../services/curriculumService';
 import { KiliParrot } from '../components/mascot/KiliParrot';
 import { LocalStorageAdapter } from '../services/storageAdapter';
+import { TamilAlphabet247Modal } from '../components/common/TamilAlphabet247Modal';
 
 export const LevelMapPage: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -30,6 +32,7 @@ export const LevelMapPage: React.FC = () => {
   const [selectedLevel, setSelectedLevel] = useState<LearningLevel | null>(null);
   const [levelLessons, setLevelLessons] = useState<Lesson[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isAlphabetModalOpen, setIsAlphabetModalOpen] = useState(false);
 
   const profile = LocalStorageAdapter.getProfile();
   const isScholars = profile.age_mode === 'scholars';
@@ -49,7 +52,6 @@ export const LevelMapPage: React.FC = () => {
   }, []);
 
   const handleSelectLevel = async (lvl: LearningLevel) => {
-    if (!lvl.is_unlocked) return;
     setSelectedLevel(lvl);
     const lessons = await curriculumService.getLessonsByLevel(lvl.level_number);
     setLevelLessons(lessons);
@@ -114,6 +116,78 @@ export const LevelMapPage: React.FC = () => {
           <p className="text-xs sm:text-sm text-ink-muted">
             {t('learn.subtitle')}
           </p>
+        </div>
+
+        {/* 247 Tamil Letters Hub Banner */}
+        <div 
+          onClick={() => setIsAlphabetModalOpen(true)}
+          className="p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-teal-surface via-paper-dark to-gold-surface border-2 border-teal/30 hover:border-teal shadow-md cursor-pointer transition-all hover:scale-[1.01] flex flex-col sm:flex-row items-center justify-between gap-4"
+        >
+          <div className="flex items-center gap-3.5">
+            <div className="w-12 h-12 rounded-2xl bg-teal text-gold flex items-center justify-center font-tamil font-extrabold text-2xl shadow-md flex-shrink-0">
+              அ
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h3 className="font-heading font-extrabold text-lg text-teal">
+                  {isTa ? 'அனைத்து 247 தமிழ் எழுத்துகள்' : 'All 247 Tamil Letters Chart'}
+                </h3>
+                <span className="text-[10px] font-extrabold bg-gold text-ink px-2.5 py-0.5 rounded-full uppercase">
+                  {isTa ? 'முழு அகரவரிசை' : 'Complete Alphabet'}
+                </span>
+              </div>
+              <p className="text-xs text-ink-muted mt-0.5">
+                {isTa 
+                  ? 'உயிர் (12), ஆய்தம் (1), மெய் (18), உயிர்மெய் (216) — ஒலி கேட்டு வரைந்து பயிலுங்கள்!'
+                  : 'Vowels (12), Aytham (1), Consonants (18), Compounds (216) — Listen, speak, and write!'}
+              </p>
+            </div>
+          </div>
+          <button 
+            type="button"
+            className="px-5 py-2.5 rounded-2xl bg-teal text-white font-bold text-xs flex items-center gap-1.5 shadow-md flex-shrink-0 hover:bg-teal-light active:scale-95 transition-all"
+          >
+            <span>{isTa ? '247 எழுத்துகளைக் காண்க' : 'View All 247 Letters'}</span>
+            <ArrowRight size={14} />
+          </button>
+        </div>
+
+        {/* Temporary Hackathon Demo Bypass Option Banner */}
+        <div className="p-4 sm:p-5 rounded-3xl bg-gold-surface/80 border-2 border-gold/40 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5">
+            <span className="w-11 h-11 rounded-2xl bg-gold text-ink flex items-center justify-center font-bold text-xl flex-shrink-0 shadow-sm">
+              ⚡
+            </span>
+            <div>
+              <div className="flex items-center gap-2">
+                <h4 className="font-heading font-extrabold text-sm sm:text-base text-ink">
+                  {isTa ? 'ஹேக்கத்தான் மாதிரி: நிலை 2க்கு நேரடியாகச் செல்லுங்கள்' : 'Hackathon Demo: Proceed Directly to Level 2'}
+                </h4>
+                <span className="text-[10px] font-extrabold bg-gold text-ink px-2 py-0.5 rounded-full uppercase">
+                  {isTa ? 'மாதிரி வசதி' : 'Demo Option'}
+                </span>
+              </div>
+              <p className="text-xs text-ink-muted mt-0.5">
+                {isTa
+                  ? '240 எழுத்துகளையும் முடிக்காமல் நேரடியாக நிலை 2 (தமிழ் சொற்கள்) பயிற்சிக்குச் செல்லலாம்.'
+                  : 'Bypass completing all 240 letters to demo Level 2 (Tamil Words) directly for the hackathon.'}
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={async () => {
+              const lvl2 = levels.find(l => l.level_number === 2);
+              if (lvl2) {
+                await handleSelectLevel(lvl2);
+              }
+              navigate('/lesson/lesson-2-0');
+            }}
+            className="px-5 py-2.5 rounded-2xl bg-teal text-white hover:bg-teal-light font-bold text-xs flex items-center gap-1.5 shadow-md flex-shrink-0 transition-all active:scale-95"
+          >
+            <span>{isTa ? 'நிலை 2க்குச் செல்க' : 'Proceed directly to Level 2'}</span>
+            <ArrowRight size={14} />
+          </button>
         </div>
 
         {/* 3D-Perspective Milestones Trail */}
@@ -224,12 +298,30 @@ export const LevelMapPage: React.FC = () => {
               </div>
 
               {!isScholars && (
-                <KiliParrot
-                  mood="happy"
-                  speechText="Pick a lesson and let's earn stars!"
-                  speechTextTa="பாடத்தைத் தேர்ந்தெடுங்கள், நட்சத்திரங்களை வெல்லலாம்!"
-                  size="sm"
-                />
+                <div className="flex flex-col sm:flex-row items-end sm:items-center gap-3">
+                  {selectedLevel.level_number === 1 && (
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        const lvl2 = levels.find(l => l.level_number === 2);
+                        if (lvl2) {
+                          await handleSelectLevel(lvl2);
+                        }
+                        navigate('/lesson/lesson-2-0');
+                      }}
+                      className="px-3.5 py-2 rounded-2xl bg-gold-surface border border-gold/50 text-ink font-bold text-xs hover:bg-gold transition-all flex items-center gap-1.5 shadow-sm"
+                    >
+                      <span>⚡ {isTa ? 'ஹேக்கத்தான் மாதிரி: நிலை 2' : 'Hackathon Demo: Proceed to Level 2'}</span>
+                      <ArrowRight size={13} />
+                    </button>
+                  )}
+                  <KiliParrot
+                    mood="happy"
+                    speechText={isTa ? undefined : "Pick a lesson and let's earn stars!"}
+                    speechTextTa={isTa ? "பாடத்தைத் தேர்ந்தெடுங்கள், நட்சத்திரங்களை வெல்லலாம்!" : undefined}
+                    size="sm"
+                  />
+                </div>
               )}
             </div>
 
@@ -290,6 +382,12 @@ export const LevelMapPage: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* All 247 Tamil Letters Hub Modal */}
+      <TamilAlphabet247Modal
+        isOpen={isAlphabetModalOpen}
+        onClose={() => setIsAlphabetModalOpen(false)}
+      />
     </div>
   );
 };

@@ -61,6 +61,7 @@ export const LessonPlayerPage: React.FC = () => {
   // Matching state
   const [selectedLeft, setSelectedLeft] = useState<string | null>(null);
   const [matchedPairs, setMatchedPairs] = useState<Set<string>>(new Set());
+  const [shuffledRightPairs, setShuffledRightPairs] = useState<{ id: string; left_ta: string; right_en: string; audio_id?: string }[]>([]);
 
   // Story reader active panel index
   const [activeStoryPanel, setActiveStoryPanel] = useState(0);
@@ -159,10 +160,17 @@ export const LessonPlayerPage: React.FC = () => {
       setPlacedWords([]);
     }
 
-    // Initialize matching pairs
-    if (currentQuestion.exercise_type === 'matching') {
+    // Initialize matching pairs with randomized right column
+    if (currentQuestion.exercise_type === 'matching' && currentQuestion.pairs) {
       setSelectedLeft(null);
       setMatchedPairs(new Set());
+      const pairs = [...currentQuestion.pairs];
+      // Randomize the right column options so they are NEVER on the same row as the left items
+      let shuffled = [...pairs].sort(() => Math.random() - 0.5);
+      if (shuffled.length > 1 && shuffled.every((p, i) => p.id === pairs[i].id)) {
+        shuffled = [...shuffled.slice(1), shuffled[0]];
+      }
+      setShuffledRightPairs(shuffled);
     }
 
     // Initialize story panels
@@ -342,6 +350,7 @@ export const LessonPlayerPage: React.FC = () => {
         stage={lesson.tanglish_stage}
         onExit={() => navigate('/learn')}
         onNeedHelp={() => { setManualHelpOverride(true); setHintsUsed(h => h + 1); }}
+        onSkip={advanceToNext}
         helpActive={manualHelpOverride}
       />
 
@@ -365,7 +374,7 @@ export const LessonPlayerPage: React.FC = () => {
 
         {/* 1. Tracing Activity Type */}
         {currentQuestion.exercise_type === 'tracing' && currentQuestion.tracing_data && (
-          <div className="space-y-4 flex flex-col items-center">
+          <div className="space-y-4 flex flex-col items-center w-full">
             <TracingCanvas
               letter={currentQuestion.tracing_data.letter}
               outlineSvgPath={currentQuestion.tracing_data.outline_path}
@@ -567,9 +576,9 @@ export const LessonPlayerPage: React.FC = () => {
                 })}
               </div>
 
-              {/* Right Column (English) */}
+              {/* Right Column (English) - shuffled for learning challenge */}
               <div className="space-y-3">
-                {currentQuestion.pairs.map(pair => {
+                {(shuffledRightPairs.length > 0 ? shuffledRightPairs : (currentQuestion.pairs || [])).map(pair => {
                   const isMatched = matchedPairs.has(pair.id);
 
                   return (
@@ -756,8 +765,8 @@ export const LessonPlayerPage: React.FC = () => {
         {!isScholars && (
           <KiliParrot
             mood={feedbackState === 'correct' ? 'cheering' : 'idle'}
-            speechText={feedbackState === 'correct' ? 'Arpudham! Spot on!' : 'Take your time, you are doing great!'}
-            speechTextTa={feedbackState === 'correct' ? 'அற்புதம்! மிகச் சரியான விடை!' : 'பொறுமையாகக் கற்கவும், நீங்கள் அருமையாகக் கற்கிறீர்கள்!'}
+            speechText={isTa ? undefined : (feedbackState === 'correct' ? 'Arpudham! Spot on!' : 'Take your time, you are doing great!')}
+            speechTextTa={isTa ? (feedbackState === 'correct' ? 'அற்புதம்! மிகச் சரியான விடை!' : 'பொறுமையாகக் கற்கவும், நீங்கள் அருமையாகக் கற்கிறீர்கள்!') : undefined}
             size="sm"
           />
         )}

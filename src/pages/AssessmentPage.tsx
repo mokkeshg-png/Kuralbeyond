@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight, Award } from 'lucide-react';
 import { ASSESSMENT_QUESTIONS } from '../data/assessmentData';
 import { AudioButton } from '../components/common/AudioButton';
 import { LocalStorageAdapter } from '../services/storageAdapter';
 
 export const AssessmentPage: React.FC = () => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const navigate = useNavigate();
   const isTa = i18n.language === 'ta';
 
@@ -41,19 +41,42 @@ export const AssessmentPage: React.FC = () => {
     }, 250);
   };
 
-  // Determine recommended level based on score
-  const getRecommendedLevel = () => {
-    if (correctCount <= 3) return 0;
-    if (correctCount <= 6) return 1;
-    if (correctCount <= 8) return 2;
-    return 3;
+  const scorePercentage = Math.round((correctCount / ASSESSMENT_QUESTIONS.length) * 100);
+
+  // Beginner-level classification in English as requested
+  const getProficiencyClassification = () => {
+    if (scorePercentage <= 20) {
+      return {
+        level: 1,
+        title: 'Complete Beginner',
+        badgeColor: 'bg-teal-surface text-teal border-teal/30',
+        summary: 'You are taking your first steps in Tamil literacy! You will start at Level 1 to master all foundational Tamil letters through writing and speaking.',
+        recommendedLevelTitle: 'Level 1: Tamil Letters',
+      };
+    }
+    if (scorePercentage <= 60) {
+      return {
+        level: 1,
+        title: 'Elementary Beginner',
+        badgeColor: 'bg-gold-surface text-ink border-gold/40',
+        summary: 'You recognize some core Tamil sounds and letter shapes! Starting at Level 1 will solidify your mastery of all 240 letters before building words.',
+        recommendedLevelTitle: 'Level 1: Tamil Letters',
+      };
+    }
+    return {
+      level: 2,
+      title: 'Proficient Beginner',
+      badgeColor: 'bg-leaf-surface text-leaf-dark border-leaf/40',
+      summary: 'You have solid familiarity with Tamil letters and syllables! You can proceed to Level 2 to learn your first 100 essential Tamil words.',
+      recommendedLevelTitle: 'Level 2: Tamil Words',
+    };
   };
 
-  const recommendedLevel = getRecommendedLevel();
+  const classification = getProficiencyClassification();
 
   const handleAcceptRecommendation = async () => {
     const stats = LocalStorageAdapter.getStats();
-    stats.xp += 30; // Welcome XP for assessment completion
+    stats.xp += 50; // XP reward for diagnostic assessment
     LocalStorageAdapter.setStats(stats);
 
     navigate('/dashboard');
@@ -68,10 +91,10 @@ export const AssessmentPage: React.FC = () => {
             <div className="flex items-center justify-between border-b border-sand pb-4">
               <div>
                 <span className="text-xs font-bold uppercase tracking-wider text-teal">
-                  {t('assessment.title')}
+                  Tamil Knowledge Assessment
                 </span>
                 <h1 className="font-heading font-extrabold text-xl text-ink">
-                  {t('assessment.questionProgress', { current: currentIndex + 1, total: ASSESSMENT_QUESTIONS.length })}
+                  Question {currentIndex + 1} of {ASSESSMENT_QUESTIONS.length}
                 </h1>
               </div>
 
@@ -94,7 +117,7 @@ export const AssessmentPage: React.FC = () => {
                     size="sm"
                   />
                   <span className="text-xs font-bold text-ink-muted">
-                    {t('common.tapToListen')}
+                    {isTa ? 'ஒலியைக் கேட்க தட்டவும்' : 'Tap to listen'}
                   </span>
                 </div>
               )}
@@ -136,42 +159,54 @@ export const AssessmentPage: React.FC = () => {
             </div>
           </>
         ) : (
-          /* Results View */
+          /* Results View (Displayed in English with Percentage and Classification) */
           <div className="text-center space-y-6">
             <div className="w-16 h-16 rounded-3xl bg-gold text-ink mx-auto flex items-center justify-center shadow-lg animate-pop">
-              <Sparkles size={36} />
+              <Award size={36} />
             </div>
 
             <div className="space-y-2">
               <h2 className="font-heading font-extrabold text-3xl text-ink">
-                {t('assessment.resultsTitle')}
+                Tamil Assessment Result
               </h2>
-              <p className="text-sm font-semibold text-teal">
-                {isTa 
-                  ? `நீங்கள் 10 வினாக்களில் ${correctCount} வினாக்களுக்குச் சரியாக விடையளித்தீர்கள்!` 
-                  : `You answered ${correctCount} of 10 questions correctly!`}
+              <p className="text-sm font-semibold text-ink-muted">
+                Your diagnostic assessment is complete!
               </p>
             </div>
 
-            {/* Recommendation Box */}
-            <div className="bg-paper-dark rounded-3xl border-2 border-teal/30 p-6 space-y-3 text-left">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-teal text-white flex items-center justify-center font-bold">
-                  {recommendedLevel}
-                </div>
+            {/* Score & Classification Card in English */}
+            <div className="bg-paper-dark rounded-3xl border-2 border-teal/20 p-6 space-y-4 text-left">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-sand pb-3">
                 <div>
                   <span className="text-xs font-bold text-ink-muted uppercase">
-                    {t('assessment.recommendedLevel')}
+                    Your Tamil Knowledge Score
                   </span>
-                  <h3 className="text-base font-extrabold text-ink">
-                    Level {recommendedLevel}: {recommendedLevel === 0 ? 'Tamil Discovery' : recommendedLevel === 1 ? 'Vowels & Consonants' : recommendedLevel === 2 ? 'First Words' : 'Syllables & Sentences'}
-                  </h3>
+                  <div className="flex items-baseline gap-2 mt-0.5">
+                    <span className="font-heading font-extrabold text-3xl text-teal">
+                      {scorePercentage}%
+                    </span>
+                    <span className="text-xs font-bold text-ink-muted">
+                      ({correctCount} of {ASSESSMENT_QUESTIONS.length} correct)
+                    </span>
+                  </div>
+                </div>
+
+                <div className={`px-3.5 py-1.5 rounded-full border text-xs font-extrabold w-fit ${classification.badgeColor}`}>
+                  Level: {classification.title}
                 </div>
               </div>
 
-              <p className="text-xs text-ink-muted leading-relaxed">
-                {t('assessment.reasoning')}
-              </p>
+              <div>
+                <span className="text-xs font-bold text-teal uppercase tracking-wider block">
+                  Recommended Starting Path
+                </span>
+                <h3 className="text-lg font-extrabold text-ink mt-0.5">
+                  {classification.recommendedLevelTitle}
+                </h3>
+                <p className="text-xs text-ink-muted leading-relaxed mt-1">
+                  {classification.summary}
+                </p>
+              </div>
             </div>
 
             {/* Actions */}
@@ -181,16 +216,8 @@ export const AssessmentPage: React.FC = () => {
                 onClick={handleAcceptRecommendation}
                 className="w-full py-4 bg-teal hover:bg-teal-light text-white font-extrabold rounded-2xl text-sm shadow-md transition-all active:scale-98 flex items-center justify-center gap-2"
               >
-                <span>{t('assessment.acceptRecommendation', { level: recommendedLevel })}</span>
+                <span>Continue to Learning Dashboard</span>
                 <ArrowRight size={18} />
-              </button>
-
-              <button
-                type="button"
-                onClick={handleAcceptRecommendation}
-                className="w-full py-3 bg-sand hover:bg-sand-dark text-ink font-semibold rounded-2xl text-xs transition-colors"
-              >
-                {t('assessment.overrideOption')}
               </button>
             </div>
           </div>
