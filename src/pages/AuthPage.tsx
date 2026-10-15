@@ -16,11 +16,8 @@ export const AuthPage: React.FC = () => {
   const [displayName, setDisplayName] = useState('');
   const [grade, setGrade] = useState<StandardGrade>(4);
   const [error, setError] = useState<string | null>(null);
-<<<<<<< HEAD
   const [newUserId, setNewUserId] = useState<string | null>(null);
-=======
   const [emailConfirmPending, setEmailConfirmPending] = useState(false);
->>>>>>> d02263589388d2a4afdded61d0928b2574ee939f
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,20 +34,15 @@ export const AuthPage: React.FC = () => {
           setError(isTa ? 'மாணவரின் பெயரை உள்ளிடவும்' : 'Please enter learner name');
           return;
         }
-<<<<<<< HEAD
-        const profile = await authService.signUp(email, displayName, grade, true, password);
-        // Display the Supabase auth UUID (stored as auth_user_id) or profile id
+        const profile = await authService.signUp(email, password, displayName, grade, true);
         const displayId: string = (profile as any).auth_user_id ?? profile.id;
         setNewUserId(displayId);
 
-=======
-        const profile = await authService.signUp(email, password, displayName, grade, true);
         // Check if email confirmation is required
-        if ((profile as Record<string, unknown>)['__emailConfirmationRequired']) {
+        if ((profile as any).__emailConfirmationRequired) {
           setEmailConfirmPending(true);
           return;
         }
->>>>>>> d02263589388d2a4afdded61d0928b2574ee939f
         if (profile.is_child && !profile.parental_consent) {
           // Brief pause so the user can see their ID before navigating
           setTimeout(() => navigate('/parent-consent'), 2500);
@@ -61,14 +53,9 @@ export const AuthPage: React.FC = () => {
         await authService.signIn(email, password);
         navigate('/dashboard');
       }
-<<<<<<< HEAD
-    } catch (err: any) {
-      setError(err?.message ?? t('errors.somethingWrong'));
-=======
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : t('errors.somethingWrong');
       setError(msg);
->>>>>>> d02263589388d2a4afdded61d0928b2574ee939f
     }
   };
 

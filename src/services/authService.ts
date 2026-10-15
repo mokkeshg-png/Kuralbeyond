@@ -1,19 +1,11 @@
 import { UserProfile, StandardGrade, AgeMode } from '../types';
 import { LocalStorageAdapter } from './storageAdapter';
 import { SupabaseAdapter } from './supabaseAdapter';
-<<<<<<< HEAD
-import { supabase, isSupabaseConfigured } from './supabaseClient';
-
-export interface IAuthService {
-  getCurrentUser(): Promise<UserProfile | null>;
-  signIn(email: string, password?: string): Promise<UserProfile>;
-  signUp(email: string, displayName: string, grade: StandardGrade, isChild?: boolean, password?: string): Promise<UserProfile>;
-=======
 import { supabase, isSupabaseConfigured, checkSupabaseConnection } from './supabaseClient';
 
 export interface IAuthService {
   getCurrentUser(): Promise<UserProfile | null>;
-  signIn(email: string, password: string): Promise<UserProfile>;
+  signIn(email: string, password?: string): Promise<UserProfile>;
   signUp(
     email: string,
     password: string,
@@ -21,7 +13,6 @@ export interface IAuthService {
     grade: StandardGrade,
     isChild?: boolean,
   ): Promise<UserProfile>;
->>>>>>> d02263589388d2a4afdded61d0928b2574ee939f
   verifyParentalConsent(parentEmail: string, verificationCode: string): Promise<boolean>;
   updateProfile(updates: Partial<UserProfile>): Promise<UserProfile>;
   signOut(): Promise<void>;
@@ -60,7 +51,7 @@ export class AuthService implements IAuthService {
   }
 
   // ── Sign in ───────────────────────────────────────────────────────────────
-  async signIn(email: string, password: string): Promise<UserProfile> {
+  async signIn(email: string, password?: string): Promise<UserProfile> {
     if (!isSupabaseConfigured()) {
       // Offline / demo fallback only
       const current = LocalStorageAdapter.getProfile();
@@ -73,29 +64,10 @@ export class AuthService implements IAuthService {
       return updated;
     }
 
-<<<<<<< HEAD
-  async signIn(email: string, password?: string): Promise<UserProfile> {
-    // If Supabase is configured and a password was supplied, use real auth
-    if (isSupabaseConfigured() && password) {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw new Error(error.message);
-      if (data.user) {
-        // Try to load profile from Supabase
-        const profile = await SupabaseAdapter.getCurrentUser();
-        if (profile) return profile;
-      }
+    if (!password) {
+      throw new Error('Password is required for Supabase authentication.');
     }
 
-    // Fallback: local-only session (existing behaviour)
-    const current = LocalStorageAdapter.getProfile();
-    const updated: UserProfile = {
-      ...current,
-      email,
-      updated_at: new Date().toISOString(),
-    };
-    LocalStorageAdapter.setProfile(updated);
-    return updated;
-=======
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw new Error(error.message);
     if (!data.user) throw new Error('Sign-in succeeded but no user was returned.');
@@ -106,86 +78,12 @@ export class AuthService implements IAuthService {
     }
     LocalStorageAdapter.setProfile(profile);
     return profile;
->>>>>>> d02263589388d2a4afdded61d0928b2574ee939f
   }
 
   // ── Sign up ───────────────────────────────────────────────────────────────
   // Creates auth account; the DB trigger handle_new_user automatically
   // creates public.users, public.profiles, streaks, and user_roles.
   async signUp(
-<<<<<<< HEAD
-    email: string, 
-    displayName: string, 
-    grade: StandardGrade, 
-    isChild = true,
-    password?: string
-  ): Promise<UserProfile> {
-    const ageMode: AgeMode = grade <= 3 ? 'sprouts' : grade <= 6 ? 'explorers' : 'scholars';
-
-    // ── Real Supabase Auth signup ──────────────────────────────────────────
-    if (isSupabaseConfigured() && password) {
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { data: { display_name: displayName } },
-      });
-
-      if (authError) throw new Error(authError.message);
-
-      if (authData.user) {
-        const authUserId = authData.user.id;
-
-        // Insert profile row; use the auth UUID as user_id
-        const profileRow = {
-          user_id: authUserId,
-          display_name: displayName,
-          interface_language: 'en' as const,
-          grade,
-          age_mode: ageMode,
-          is_child: isChild,
-          parental_consent: !isChild,
-          avatar_id: 'avatar-kili',
-        };
-
-        const { data: inserted, error: insertError } = await supabase
-          .from('profiles')
-          .insert(profileRow)
-          .select()
-          .single();
-
-        if (insertError) {
-          console.warn('[authService.signUp] Profile insert failed:', insertError.message);
-        }
-
-        const profileId: string = (inserted as any)?.id ?? authUserId;
-
-        const newProfile: UserProfile = {
-          id: profileId,
-          email,
-          display_name: displayName,
-          interface_language: 'en',
-          grade,
-          age_mode: ageMode,
-          is_child: isChild,
-          parental_consent: !isChild,
-          avatar_id: 'avatar-kili',
-          created_at: (inserted as any)?.created_at ?? new Date().toISOString(),
-          updated_at: (inserted as any)?.updated_at ?? new Date().toISOString(),
-        };
-
-        // Store auth UUID separately so the UI can display it
-        (newProfile as any).auth_user_id = authUserId;
-
-        SupabaseAdapter.setActiveProfileId(profileId);
-        LocalStorageAdapter.setProfile(newProfile);
-        return newProfile;
-      }
-    }
-
-    // ── Fallback: local-only (no Supabase / no password supplied) ──────────
-    const newProfile: UserProfile = {
-      id: 'usr-' + Math.random().toString(36).substring(2, 9),
-=======
     email: string,
     password: string,
     displayName: string,
@@ -209,6 +107,7 @@ export class AuthService implements IAuthService {
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       };
+      (newProfile as any).auth_user_id = newProfile.id;
       LocalStorageAdapter.setProfile(newProfile);
       return newProfile;
     }
@@ -262,7 +161,8 @@ export class AuthService implements IAuthService {
         updated_at: new Date().toISOString(),
       };
       // Flag so AuthPage can show "check your email" message
-      (provisional as Record<string, unknown>)['__emailConfirmationRequired'] = true;
+      (provisional as any).__emailConfirmationRequired = true;
+      (provisional as any).auth_user_id = data.user.id;
       LocalStorageAdapter.setProfile(provisional);
       return provisional;
     }
@@ -274,7 +174,6 @@ export class AuthService implements IAuthService {
     const profile = await SupabaseAdapter.getCurrentUser();
     const localProfile: UserProfile = profile ?? {
       id: data.user.id,
->>>>>>> d02263589388d2a4afdded61d0928b2574ee939f
       email,
       display_name: displayName,
       interface_language: 'en',
@@ -286,6 +185,7 @@ export class AuthService implements IAuthService {
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };
+    (localProfile as any).auth_user_id = data.user.id;
     LocalStorageAdapter.setProfile(localProfile);
     return localProfile;
   }
@@ -334,7 +234,7 @@ export class AuthService implements IAuthService {
   async enableDemoMode(): Promise<UserProfile> {
     const demoProfile: UserProfile = {
       id: 'usr-demo-guest',
-      email: 'guest@tamilpalam.demo',
+      email: 'guest@kuralbeyond.demo',
       display_name: 'Explorer Guest',
       interface_language: 'en',
       grade: 4,
