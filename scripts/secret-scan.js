@@ -109,7 +109,7 @@ function checkClientCode() {
   return warnings;
 }
 
-console.log('🔍 TamilPalam Secret Scan');
+console.log('🔍 Kuralbeyond Secret Scan');
 console.log('='.repeat(50));
 console.log();
 

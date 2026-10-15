@@ -31,7 +31,7 @@ export const ProfilePage: React.FC = () => {
 
   const handleLanguageChange = (lang: 'en' | 'ta') => {
     i18n.changeLanguage(lang);
-    localStorage.setItem('tamilpalam_language', lang);
+    localStorage.setItem('kuralbeyond_language', lang);
     authService.updateProfile({ interface_language: lang });
     setProfile(prev => ({ ...prev, interface_language: lang }));
   };

@@ -18,12 +18,33 @@ import { ProfilePage } from './pages/ProfilePage';
 import { ParentDashboardPage } from './pages/ParentDashboardPage';
 import { authService } from './services/authService';
 import { progressService } from './services/progressService';
+import { supabase, isSupabaseConfigured } from './services/supabaseClient';
 import { UserProfile, UserStats } from './types';
 
 const AppContent: React.FC = () => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [stats, setStats] = useState<UserStats | null>(null);
   const location = useLocation();
+
+  // Listen for Supabase auth state changes (sign in / sign out / token refresh)
+  useEffect(() => {
+    if (!isSupabaseConfigured()) return;
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event) => {
+      if (event === 'SIGNED_OUT') {
+        setProfile(null);
+        setStats(null);
+      } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') {
+        const u = await authService.getCurrentUser();
+        setProfile(u);
+        if (u) {
+          document.documentElement.setAttribute('data-age-mode', u.age_mode);
+          const s = await progressService.getStats();
+          setStats(s);
+        }
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     async function refreshUserState() {

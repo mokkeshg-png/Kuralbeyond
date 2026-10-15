@@ -12,6 +12,8 @@ interface KiliParrotProps {
   size?: 'sm' | 'md' | 'lg';
   className?: string;
   showSpeech?: boolean;
+  onOpenVoiceAssistant?: () => void;
+  onClick?: () => void;
 }
 
 export const KiliParrot: React.FC<KiliParrotProps> = ({
@@ -22,10 +24,23 @@ export const KiliParrot: React.FC<KiliParrotProps> = ({
   size = 'md',
   className = '',
   showSpeech = true,
+  onOpenVoiceAssistant,
+  onClick,
 }) => {
-  const handleAudio = () => {
-    if (audioPromptId) {
-      audioService.play(audioPromptId, speechTextTa || speechText);
+  const handleClick = () => {
+    if (onOpenVoiceAssistant) {
+      onOpenVoiceAssistant();
+      return;
+    }
+    if (onClick) {
+      onClick();
+      return;
+    }
+    if (audioPromptId || speechTextTa || speechText) {
+      audioService.play(
+        audioPromptId || `kili_${speechTextTa || speechText}`,
+        speechTextTa || speechText
+      );
     }
   };
 
@@ -48,7 +63,7 @@ export const KiliParrot: React.FC<KiliParrotProps> = ({
       {/* Kili Character SVG */}
       <div 
         className={`relative flex-shrink-0 cursor-pointer ${moodAnimation}`}
-        onClick={handleAudio}
+        onClick={handleClick}
         title="Kili the Tamil Parrot (கிளி)"
       >
         <svg
@@ -92,7 +107,7 @@ export const KiliParrot: React.FC<KiliParrotProps> = ({
       {/* Optional Speech / Hint Bubble */}
       {showSpeech && (speechText || speechTextTa) && (
         <div 
-          onClick={handleAudio}
+          onClick={handleClick}
           className="relative max-w-xs bg-paper-dark border-2 border-teal/20 rounded-2xl p-3 shadow-md text-ink cursor-pointer hover:border-teal/40 transition-colors"
         >
           {speechTextTa && (

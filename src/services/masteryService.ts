@@ -1,6 +1,7 @@
 import { SkillType, LearnerSkillMastery } from '../types';
 import { LocalStorageAdapter } from './storageAdapter';
 import { SupabaseAdapter } from './supabaseAdapter';
+import { supabase, isSupabaseConfigured } from './supabaseClient';
 
 export interface IMasteryService {
   getSkillMasteries(): Promise<LearnerSkillMastery[]>;
@@ -40,28 +41,68 @@ export class MasteryService implements IMasteryService {
   }
 
   async getMasteryBySkillType(): Promise<Record<SkillType, number>> {
-    const masteries = LocalStorageAdapter.getSkillMastery();
     const skills: SkillType[] = [
-      'letter_recognition', 
-      'word_reading', 
-      'sentence_comprehension', 
-      'listening', 
-      'speaking'
+      'letter_recognition',
+      'word_reading',
+      'sentence_comprehension',
+      'listening',
+      'speaking',
     ];
 
+    // Default fallback values (shown when no data exists yet)
     const result: Record<SkillType, number> = {
-      letter_recognition: 0.85,
-      word_reading: 0.70,
-      sentence_comprehension: 0.60,
-      listening: 0.80,
-      speaking: 0.65,
+      letter_recognition: 0,
+      word_reading: 0,
+      sentence_comprehension: 0,
+      listening: 0,
+      speaking: 0,
     };
 
+    // Try Supabase first
+    if (isSupabaseConfigured()) {
+      try {
+        const profile = await SupabaseAdapter.getCurrentUser();
+        if (profile) {
+          const { data } = await supabase
+            .from('learner_skill_mastery')
+            .select('skill_type, mastery_score')
+            .eq('profile_id', profile.id);
+
+          if (data && data.length > 0) {
+            const byType: Record<string, number[]> = {};
+            for (const row of data as any[]) {
+              if (!byType[row.skill_type]) byType[row.skill_type] = [];
+              byType[row.skill_type].push(row.mastery_score);
+            }
+            // Map DB skill types to FE skill types
+            const typeMap: Record<string, SkillType> = {
+              letter: 'letter_recognition',
+              letter_recognition: 'letter_recognition',
+              word: 'word_reading',
+              word_reading: 'word_reading',
+              sentence_comprehension: 'sentence_comprehension',
+              grammar: 'sentence_comprehension',
+              listening: 'listening',
+              speaking: 'speaking',
+            };
+            for (const [dbType, scores] of Object.entries(byType)) {
+              const feType = typeMap[dbType];
+              if (feType && scores.length > 0) {
+                result[feType] = parseFloat((scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(2));
+              }
+            }
+            return result;
+          }
+        }
+      } catch { /* fall through to local */ }
+    }
+
+    // Local storage fallback
+    const masteries = LocalStorageAdapter.getSkillMastery();
     skills.forEach(skill => {
       const items = masteries.filter(m => m.skill_type === skill);
       if (items.length > 0) {
-        const total = items.reduce((acc, curr) => acc + curr.mastery_score, 0);
-        result[skill] = parseFloat((total / items.length).toFixed(2));
+        result[skill] = parseFloat((items.reduce((acc, curr) => acc + curr.mastery_score, 0) / items.length).toFixed(2));
       }
     });
 

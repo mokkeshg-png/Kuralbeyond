@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Volume2, VolumeX, Sparkles } from 'lucide-react';
+import { Volume2, VolumeX, Sparkles, Loader2, AlertCircle } from 'lucide-react';
 import { audioService } from '../../services/audioService';
 
 interface AudioButtonProps {
@@ -18,15 +18,18 @@ export const AudioButton: React.FC<AudioButtonProps> = ({
   showFallbackBadge = true,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isFallback, setIsFallback] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const unsubscribe = audioService.subscribe(state => {
       if (state.currentAudioId === audioId) {
         setIsPlaying(state.isPlaying);
-        setIsFallback(state.isFallback);
+        setIsLoading(state.isLoading);
+        setError(state.error || null);
       } else {
         setIsPlaying(false);
+        setIsLoading(false);
       }
     });
     return unsubscribe;
@@ -34,9 +37,11 @@ export const AudioButton: React.FC<AudioButtonProps> = ({
 
   const handlePlay = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (isLoading) return; // Prevent duplicate clicks while generating
     if (isPlaying) {
       audioService.stop();
     } else {
+      setError(null);
       audioService.play(audioId, fallbackText);
     }
   };
@@ -59,21 +64,52 @@ export const AudioButton: React.FC<AudioButtonProps> = ({
     <div className="inline-flex flex-col items-center gap-1">
       <button
         type="button"
+        disabled={isLoading}
         onClick={handlePlay}
-        aria-label={isPlaying ? 'Stop audio' : 'Play Tamil pronunciation audio'}
+        aria-label={
+          isLoading
+            ? 'Generating Sarvam AI voice...'
+            : isPlaying
+            ? 'Stop audio'
+            : 'Play Tamil pronunciation audio (Sarvam AI)'
+        }
+        title={
+          error
+            ? error
+            : isLoading
+            ? 'Sarvam AI குரல் தயாராகிறது...'
+            : 'Sarvam AI குரலில் கேட்க (Listen in Sarvam AI voice)'
+        }
         className={`relative inline-flex items-center justify-center rounded-full font-semibold transition-all shadow-md active:scale-95 focus:outline-none focus:ring-4 focus:ring-teal/30 ${
-          isPlaying
+          isLoading
+            ? 'bg-sand text-teal opacity-90 cursor-wait ring-2 ring-teal/30'
+            : isPlaying
             ? 'bg-gold text-ink animate-pulse shadow-glow-gold'
             : 'bg-teal text-white hover:bg-teal-light'
         } ${sizeClasses} ${className}`}
       >
-        {isPlaying ? <VolumeX size={iconSizes} /> : <Volume2 size={iconSizes} />}
+        {isLoading ? (
+          <Loader2 size={iconSizes} className="animate-spin text-teal" />
+        ) : isPlaying ? (
+          <VolumeX size={iconSizes} />
+        ) : (
+          <Volume2 size={iconSizes} />
+        )}
       </button>
 
-      {showFallbackBadge && isFallback && isPlaying && (
-        <span className="inline-flex items-center gap-1 text-[10px] text-ink-muted bg-sand px-2 py-0.5 rounded-full font-medium">
-          <Sparkles size={10} className="text-teal" />
-          Web Speech API (ta-IN)
+      {/* Sarvam AI Voice Indicator Badge */}
+      {showFallbackBadge && isPlaying && (
+        <span className="inline-flex items-center gap-1 text-[10px] text-teal-dark bg-teal-surface border border-teal/20 px-2 py-0.5 rounded-full font-bold shadow-xs animate-fade-in">
+          <Sparkles size={10} className="text-gold" />
+          Sarvam AI (ta-IN)
+        </span>
+      )}
+
+      {/* Error Badge */}
+      {error && !isLoading && !isPlaying && (
+        <span className="inline-flex items-center gap-1 text-[10px] text-maroon bg-maroon-surface px-2 py-0.5 rounded-full font-medium" title={error}>
+          <AlertCircle size={10} />
+          குரல் பெற முடியவில்லை
         </span>
       )}
     </div>

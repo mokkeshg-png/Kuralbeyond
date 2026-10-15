@@ -17,6 +17,32 @@ export type GenericRelationship = {
 export interface Database {
   public: {
     Tables: {
+      users: {
+        Row: {
+          id: string;
+          email: string | null;
+          full_name: string | null;
+          avatar_url: string | null;
+          interface_language: 'en' | 'ta';
+          learning_language: string;
+          onboarding_done: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id: string;
+          email?: string | null;
+          full_name?: string | null;
+          avatar_url?: string | null;
+          interface_language?: 'en' | 'ta';
+          learning_language?: string;
+          onboarding_done?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database['public']['Tables']['users']['Insert']>;
+        Relationships: GenericRelationship[];
+      };
       profiles: {
         Row: {
           id: string;
@@ -788,6 +814,10 @@ export interface Database {
     };
     Views: Record<string, never>;
     Functions: {
+      get_my_user: {
+        Args: Record<string, never>;
+        Returns: Json;
+      };
       submit_item_answer: {
         Args: {
           p_profile_id: string;

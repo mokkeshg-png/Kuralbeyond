@@ -47,7 +47,7 @@ describe('i18n Key Parity & Tamil Unicode NFC Normalization', () => {
   });
 
   it('verifies essential Tamil navigation and pedagogical keys are populated', () => {
-    expect(ta.common.appName).toBe('தமிழ் பாலம்');
+    expect(ta.common.appName).toBe('குறள்பியாண்ட்');
     expect(ta.common.home).toBe('முகப்பு');
     expect(ta.common.learn).toBe('கற்போம்');
     expect(ta.common.needHelp).toBe('உதவி தேவையா?');

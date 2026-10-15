@@ -54,7 +54,7 @@ function escapeArray(arr) {
 }
 
 let sql = `-- =========================================================================
--- TamilPalam Seed Curriculum & Assets (Generated from Frontend Single Source of Truth)
+-- Kuralbeyond Seed Curriculum & Assets (Generated from Frontend Single Source of Truth)
 -- Normalization: All Tamil text is guaranteed Unicode NFC normalized
 -- =========================================================================
 

@@ -14,23 +14,23 @@ import { INITIAL_BADGES } from '../data/badgesData';
 import { INITIAL_MISSIONS } from '../data/missionsData';
 
 const STORAGE_KEYS = {
-  PROFILE: 'tamilpalam_profile',
-  PREFERENCES: 'tamilpalam_preferences',
-  PROGRESS: 'tamilpalam_progress',
-  QUIZ_ATTEMPTS: 'tamilpalam_quiz_attempts',
-  SKILL_MASTERY: 'tamilpalam_skill_mastery',
-  REVISION_QUEUE: 'tamilpalam_revision_queue',
-  BADGES: 'tamilpalam_badges',
-  MISSIONS: 'tamilpalam_missions',
-  ACTIVITY_LOG: 'tamilpalam_activity_log',
-  USER_STATS: 'tamilpalam_user_stats',
-  INITIALIZED: 'tamilpalam_initialized_v1',
+  PROFILE: 'kuralbeyond_profile',
+  PREFERENCES: 'kuralbeyond_preferences',
+  PROGRESS: 'kuralbeyond_progress',
+  QUIZ_ATTEMPTS: 'kuralbeyond_quiz_attempts',
+  SKILL_MASTERY: 'kuralbeyond_skill_mastery',
+  REVISION_QUEUE: 'kuralbeyond_revision_queue',
+  BADGES: 'kuralbeyond_badges',
+  MISSIONS: 'kuralbeyond_missions',
+  ACTIVITY_LOG: 'kuralbeyond_activity_log',
+  USER_STATS: 'kuralbeyond_user_stats',
+  INITIALIZED: 'kuralbeyond_initialized_v1',
 };
 
 // Default seed user
 export const DEFAULT_PROFILE: UserProfile = {
   id: 'usr-default-1',
-  email: 'learner@tamilpalam.edu',
+  email: 'learner@kuralbeyond.edu',
   display_name: 'Aarav',
   interface_language: 'en',
   grade: 3,
@@ -126,6 +126,29 @@ export class LocalStorageAdapter {
     if (typeof window === 'undefined') return;
     const isInit = localStorage.getItem(STORAGE_KEYS.INITIALIZED);
     if (!isInit) {
+      // Migrate legacy tamilpalam_* keys if present
+      const legacyInit = localStorage.getItem('tamilpalam_initialized_v1');
+      if (legacyInit) {
+        const legacyMap: Record<string, string> = {
+          'tamilpalam_profile': STORAGE_KEYS.PROFILE,
+          'tamilpalam_preferences': STORAGE_KEYS.PREFERENCES,
+          'tamilpalam_progress': STORAGE_KEYS.PROGRESS,
+          'tamilpalam_quiz_attempts': STORAGE_KEYS.QUIZ_ATTEMPTS,
+          'tamilpalam_skill_mastery': STORAGE_KEYS.SKILL_MASTERY,
+          'tamilpalam_revision_queue': STORAGE_KEYS.REVISION_QUEUE,
+          'tamilpalam_badges': STORAGE_KEYS.BADGES,
+          'tamilpalam_missions': STORAGE_KEYS.MISSIONS,
+          'tamilpalam_activity_log': STORAGE_KEYS.ACTIVITY_LOG,
+          'tamilpalam_user_stats': STORAGE_KEYS.USER_STATS,
+        };
+        for (const [oldKey, newKey] of Object.entries(legacyMap)) {
+          const val = localStorage.getItem(oldKey);
+          if (val) localStorage.setItem(newKey, val);
+        }
+        localStorage.setItem(STORAGE_KEYS.INITIALIZED, 'true');
+        return;
+      }
+
       localStorage.setItem(STORAGE_KEYS.PROFILE, JSON.stringify(DEFAULT_PROFILE));
       localStorage.setItem(STORAGE_KEYS.PREFERENCES, JSON.stringify(DEFAULT_PREFERENCES));
       localStorage.setItem(STORAGE_KEYS.USER_STATS, JSON.stringify(DEFAULT_STATS));

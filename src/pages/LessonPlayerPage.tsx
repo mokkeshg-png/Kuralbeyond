@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { 
@@ -12,10 +12,21 @@ import { progressService } from '../services/progressService';
 import { masteryService } from '../services/masteryService';
 import { tanglishService } from '../services/tanglishService';
 import { audioService } from '../services/audioService';
+import { authService } from '../services/authService';
+import {
+  AdaptiveEngine,
+  initAdaptiveSession,
+  getSessionTier,
+  getSessionId,
+  updateSessionTier,
+  tierLabel,
+  tierBadgeClass,
+} from '../services/adaptiveEngine';
 import { InLessonHeader } from '../components/layout/InLessonHeader';
 import { TracingCanvas } from '../components/common/TracingCanvas';
 import { VoiceRecordCompare } from '../components/common/VoiceRecordCompare';
 import { FlipCard } from '../components/common/FlipCard';
+import { AudioButton } from '../components/common/AudioButton';
 import { KiliParrot } from '../components/mascot/KiliParrot';
 import { LocalStorageAdapter } from '../services/storageAdapter';
 
@@ -37,6 +48,11 @@ export const LessonPlayerPage: React.FC = () => {
   const [correctCount, setCorrectCount] = useState(0);
   const [startTime] = useState<number>(Date.now());
   const [loading, setLoading] = useState(true);
+
+  // Adaptive difficulty state
+  const [currentDiffTier, setCurrentDiffTier] = useState(1);
+  const [questionStartTime, setQuestionStartTime] = useState<number>(Date.now());
+  const [hintsUsed, setHintsUsed] = useState(0);
 
   // Word ordering state
   const [placedWords, setPlacedWords] = useState<string[]>([]);
@@ -67,10 +83,48 @@ export const LessonPlayerPage: React.FC = () => {
         navigate('/learn');
         return;
       }
-      setExercises(exList);
+
+      // ── Adaptive difficulty: get authenticated profile ──────────────────
+      const authProfile = await authService.getCurrentUser();
+      const profileId = authProfile?.id || LocalStorageAdapter.getProfile().id;
+      const levelNum = data.level_number ?? 0;
+
+      // Prepare adaptively ordered exercises
+      const adaptiveResult = await AdaptiveEngine.prepareAdaptiveExercises(
+        exList,
+        profileId,
+        lessonId,
+        levelNum,
+      );
+
+      // Reconstruct Exercise[] with one question each (adaptive order)
+      const adaptiveExercises: Exercise[] = adaptiveResult.questions.map((q, i) => {
+        const origEx = exList.find(ex => ex.questions?.some(oq => oq.id === q.id));
+        return {
+          id:             origEx?.id ?? `adaptive-ex-${i}`,
+          lesson_id:      lessonId,
+          exercise_type:  q.exercise_type,
+          prompt_en:      origEx?.prompt_en ?? q.prompt_en,
+          prompt_ta:      origEx?.prompt_ta ?? q.prompt_ta,
+          sequence_order: i + 1,
+          questions:      [q],
+        };
+      });
+
+      const finalExercises = adaptiveExercises.length > 0 ? adaptiveExercises : exList;
+      setExercises(finalExercises);
+
+      // Initialise in-session adaptive state
+      initAdaptiveSession(
+        adaptiveResult.adaptiveState.currentDifficultyTier,
+        adaptiveResult.sessionId,
+      );
+      setCurrentDiffTier(adaptiveResult.adaptiveState.currentDifficultyTier);
+      setQuestionStartTime(Date.now());
+      // ───────────────────────────────────────────────────────────────────
 
       // Resume from last saved item if present
-      if (data.last_item_index && data.last_item_index < exList.length) {
+      if (data.last_item_index && data.last_item_index < finalExercises.length) {
         setCurrentExerciseIndex(data.last_item_index);
       } else {
         setCurrentExerciseIndex(0);
@@ -95,8 +149,8 @@ export const LessonPlayerPage: React.FC = () => {
 
     // Auto play audio if Tanglish rules allow
     const rules = tanglishService.getDisplayRules(lesson?.tanglish_stage || 'A');
-    if (rules.autoplayAudio && currentQuestion.audio_id) {
-      audioService.play(currentQuestion.audio_id);
+    if (rules.autoplayAudio && (currentQuestion.audio_id || currentQuestion.content_ta)) {
+      audioService.play(currentQuestion.audio_id || `q_${currentQuestion.content_ta}`, currentQuestion.content_ta);
     }
 
     // Initialize ordering word bank
@@ -116,6 +170,43 @@ export const LessonPlayerPage: React.FC = () => {
       setActiveStoryPanel(0);
     }
   }, [currentExerciseIndex, currentQuestionIndex, lesson]);
+
+  // ── Reset per-question timers when exercise advances ────────────────────
+  useEffect(() => {
+    setQuestionStartTime(Date.now());
+    setHintsUsed(0);
+  }, [currentExerciseIndex, currentQuestionIndex]);
+
+  // ── Adaptive response recorder ───────────────────────────────────────────
+  const recordAdaptiveResponse = useCallback(async (
+    questionId: string,
+    skillType: string,
+    isCorrect: boolean,
+  ) => {
+    const authProfile = await authService.getCurrentUser();
+    const profileId = authProfile?.id || LocalStorageAdapter.getProfile().id;
+    const tier = getSessionTier();
+    const responseTimeMs = Math.max(0, Date.now() - questionStartTime);
+
+    const result = await AdaptiveEngine.recordResponse({
+      profileId,
+      lessonId:       lesson?.id ?? '',
+      questionId,
+      skillType,
+      difficultyTier: tier,
+      isCorrect,
+      responseTimeMs,
+      hintsUsed,
+      sessionId:      getSessionId(),
+    });
+
+    if (result) {
+      updateSessionTier(result.newDifficultyTier);
+      setCurrentDiffTier(result.newDifficultyTier);
+    }
+    setHintsUsed(0);
+    setQuestionStartTime(Date.now());
+  }, [lesson, questionStartTime, hintsUsed]);
 
   if (loading) {
     return (
@@ -164,14 +255,15 @@ export const LessonPlayerPage: React.FC = () => {
     if (feedbackState === 'correct') return;
     setSelectedOptionId(opt.id);
 
-    if (opt.audio_id) {
-      audioService.play(opt.audio_id);
+    if (opt.audio_id || opt.option_text) {
+      audioService.play(opt.audio_id || `opt_${opt.option_text}`, opt.option_text);
     }
 
     if (opt.is_correct) {
       setFeedbackState('correct');
       setCorrectCount(prev => prev + 1);
       masteryService.recordSkillAttempt('letter_recognition', currentQuestion.id, true);
+      recordAdaptiveResponse(currentQuestion.id, 'letter_recognition', true);
 
       setTimeout(() => {
         advanceToNext();
@@ -179,6 +271,7 @@ export const LessonPlayerPage: React.FC = () => {
     } else {
       setFeedbackState('try_again');
       masteryService.recordSkillAttempt('letter_recognition', currentQuestion.id, false);
+      recordAdaptiveResponse(currentQuestion.id, 'letter_recognition', false);
     }
   };
 
@@ -201,15 +294,19 @@ export const LessonPlayerPage: React.FC = () => {
       setFeedbackState('correct');
       setCorrectCount(prev => prev + 1);
       masteryService.recordSkillAttempt('sentence_comprehension', currentQuestion.id, true);
+      recordAdaptiveResponse(currentQuestion.id, 'sentence_comprehension', true);
       setTimeout(() => advanceToNext(), 250);
     } else {
       setFeedbackState('try_again');
+      recordAdaptiveResponse(currentQuestion.id, 'sentence_comprehension', false);
     }
   };
 
   // Matching pair handler
-  const handleTapPairLeft = (pairId: string, audioId?: string) => {
-    if (audioId) audioService.play(audioId);
+  const handleTapPairLeft = (pairId: string, audioId?: string, textTa?: string) => {
+    if (audioId || textTa) {
+      audioService.play(audioId || `pair_${textTa}`, textTa);
+    }
     setSelectedLeft(pairId);
   };
 
@@ -227,6 +324,7 @@ export const LessonPlayerPage: React.FC = () => {
         setFeedbackState('correct');
         setCorrectCount(prev => prev + 1);
         masteryService.recordSkillAttempt('word_reading', currentQuestion.id, true);
+        recordAdaptiveResponse(currentQuestion.id, 'word_reading', true);
         setTimeout(() => advanceToNext(), 250);
       }
     } else {
@@ -243,7 +341,7 @@ export const LessonPlayerPage: React.FC = () => {
         totalItems={exercises.length}
         stage={lesson.tanglish_stage}
         onExit={() => navigate('/learn')}
-        onNeedHelp={() => setManualHelpOverride(true)}
+        onNeedHelp={() => { setManualHelpOverride(true); setHintsUsed(h => h + 1); }}
         helpActive={manualHelpOverride}
       />
 
@@ -251,9 +349,15 @@ export const LessonPlayerPage: React.FC = () => {
       <main className="flex-1 max-w-3xl w-full mx-auto px-4 py-6 flex flex-col items-center justify-center">
         {/* Activity Prompt Banner */}
         <div className="text-center space-y-2 mb-6 w-full">
+        {/* Activity type + adaptive difficulty tier */}
+        <div className="flex items-center justify-center gap-2 flex-wrap">
           <span className="text-[11px] font-extrabold uppercase tracking-wider text-teal bg-teal-surface px-3 py-1 rounded-full">
             {currentQuestion.exercise_type}
           </span>
+          <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${tierBadgeClass(currentDiffTier)}`}>
+            {tierLabel(currentDiffTier)}
+          </span>
+        </div>
           <h2 className="font-heading font-extrabold text-xl sm:text-2xl text-ink leading-relaxed">
             {isTa ? currentQuestion.prompt_ta : currentQuestion.prompt_en}
           </h2>
@@ -320,15 +424,14 @@ export const LessonPlayerPage: React.FC = () => {
                     {currentQuestion.content_tanglish}
                   </span>
                 )}
-                {currentQuestion.audio_id && (
-                  <button
-                    type="button"
-                    onClick={() => audioService.play(currentQuestion.audio_id!)}
-                    className="mt-3 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-teal text-white text-xs font-bold hover:bg-teal-light transition-colors shadow-sm active:scale-95"
-                  >
-                    <Volume2 size={16} />
-                    <span>Play</span>
-                  </button>
+                {(currentQuestion.audio_id || currentQuestion.content_ta) && (
+                  <div className="mt-3">
+                    <AudioButton
+                      audioId={currentQuestion.audio_id || `mcq_${currentQuestion.content_ta}`}
+                      fallbackText={currentQuestion.content_ta}
+                      size="sm"
+                    />
+                  </div>
                 )}
               </div>
             )}
@@ -448,7 +551,7 @@ export const LessonPlayerPage: React.FC = () => {
                     <button
                       key={'left-' + pair.id}
                       type="button"
-                      onClick={() => handleTapPairLeft(pair.id, pair.audio_id)}
+                      onClick={() => handleTapPairLeft(pair.id, pair.audio_id, pair.left_ta)}
                       disabled={isMatched}
                       className={`w-full p-3.5 rounded-2xl font-tamil font-bold text-base transition-all text-center min-h-[56px] shadow-sm break-words max-w-full px-2 overflow-hidden flex items-center justify-center ${
                         isMatched
@@ -494,13 +597,11 @@ export const LessonPlayerPage: React.FC = () => {
         {currentQuestion.exercise_type === 'listening' && currentQuestion.options && (
           <div className="w-full max-w-md space-y-6 text-center">
             <div className="p-6 bg-paper-dark rounded-3xl border-2 border-sand flex flex-col items-center justify-center space-y-3">
-              <button
-                type="button"
-                onClick={() => audioService.play(currentQuestion.audio_id!)}
-                className="w-16 h-16 rounded-full bg-teal text-white flex items-center justify-center shadow-lg hover:bg-teal-light transition-all active:scale-95"
-              >
-                <Volume2 size={32} />
-              </button>
+              <AudioButton
+                audioId={currentQuestion.audio_id || `listen_${currentQuestion.content_ta}`}
+                fallbackText={currentQuestion.content_ta}
+                size="lg"
+              />
               <span className="text-xs font-bold text-ink-muted">
                 {t('lesson.listenPrompt')}
               </span>
@@ -543,8 +644,11 @@ export const LessonPlayerPage: React.FC = () => {
               <span>Panel {activeStoryPanel + 1} of {currentQuestion.story_panels.length}</span>
               <button
                 type="button"
-                onClick={() => audioService.play(currentQuestion.story_panels![activeStoryPanel].audio_id)}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-teal text-white text-xs font-bold hover:bg-teal-light"
+                onClick={() => audioService.play(
+                  currentQuestion.story_panels![activeStoryPanel].audio_id,
+                  currentQuestion.story_panels![activeStoryPanel].caption_ta
+                )}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-teal text-white text-xs font-bold hover:bg-teal-light active:scale-95 shadow-sm"
               >
                 <Volume2 size={16} />
                 <span>Hear Panel</span>

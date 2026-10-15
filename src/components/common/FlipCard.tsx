@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { RotateCw, Volume2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { RotateCw, Volume2, VolumeX, Loader2, Sparkles, AlertCircle } from 'lucide-react';
 import { audioService } from '../../services/audioService';
 
 interface FlipCardProps {
@@ -20,6 +20,25 @@ export const FlipCard: React.FC<FlipCardProps> = ({
   className = '',
 }) => {
   const [isFlipped, setIsFlipped] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const effectiveAudioId = audioId || `vocab_${contentTa}`;
+
+  useEffect(() => {
+    const unsubscribe = audioService.subscribe(state => {
+      if (state.currentAudioId === effectiveAudioId) {
+        setIsPlaying(state.isPlaying);
+        setIsLoading(state.isLoading);
+        setError(state.error || null);
+      } else {
+        setIsPlaying(false);
+        setIsLoading(false);
+      }
+    });
+    return unsubscribe;
+  }, [effectiveAudioId]);
 
   const handleFlip = () => {
     setIsFlipped(!isFlipped);
@@ -27,8 +46,13 @@ export const FlipCard: React.FC<FlipCardProps> = ({
 
   const handleAudio = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (audioId) {
-      audioService.play(audioId, contentTa);
+    if (isLoading) return; // Prevent duplicate clicks while generating
+    if (isPlaying) {
+      audioService.stop();
+    } else {
+      setError(null);
+      // Pass contentTa as the exact text to speak in Sarvam AI Tamil voice
+      audioService.play(effectiveAudioId, contentTa);
     }
   };
 
@@ -47,7 +71,8 @@ export const FlipCard: React.FC<FlipCardProps> = ({
         {/* Front of Card: Tamil Script First */}
         <div className="absolute inset-0 backface-hidden bg-paper rounded-3xl border-4 border-sand shadow-card-elevated p-6 flex flex-col items-center justify-between text-center bg-kolam-subtle">
           <div className="flex items-center justify-between w-full">
-            <span className="text-xs font-bold uppercase tracking-wider text-teal bg-teal-surface px-2.5 py-1 rounded-full">
+            <span className="text-xs font-bold uppercase tracking-wider text-teal bg-teal-surface px-2.5 py-1 rounded-full flex items-center gap-1">
+              <Sparkles size={12} className="text-gold" />
               தமிழ்
             </span>
             <span className="text-xs font-semibold text-ink-muted flex items-center gap-1">
@@ -75,16 +100,50 @@ export const FlipCard: React.FC<FlipCardProps> = ({
             )}
           </div>
 
-          <div className="w-full flex items-center justify-center gap-3">
-            {audioId && (
-              <button
-                type="button"
-                onClick={handleAudio}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-teal text-white font-bold text-sm shadow-md hover:bg-teal-light active:scale-95 transition-all"
-              >
-                <Volume2 size={18} />
-                Listen
-              </button>
+          <div className="w-full flex flex-col items-center justify-center gap-1.5">
+            <button
+              type="button"
+              disabled={isLoading}
+              onClick={handleAudio}
+              title={
+                error
+                  ? error
+                  : isLoading
+                  ? 'Sarvam AI குரல் தயாராகிறது...'
+                  : `Listen to "${contentTa}" in authentic Sarvam AI Tamil voice`
+              }
+              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl font-bold text-sm shadow-md transition-all active:scale-95 ${
+                isLoading
+                  ? 'bg-sand text-teal opacity-90 cursor-wait'
+                  : isPlaying
+                  ? 'bg-gold text-ink animate-pulse shadow-glow-gold'
+                  : 'bg-teal text-white hover:bg-teal-light'
+              }`}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 size={18} className="animate-spin text-teal" />
+                  <span>தயாராகிறது...</span>
+                </>
+              ) : isPlaying ? (
+                <>
+                  <VolumeX size={18} />
+                  <span>நிறுத்து</span>
+                </>
+              ) : (
+                <>
+                  <Volume2 size={18} />
+                  <span>Listen</span>
+                </>
+              )}
+            </button>
+
+            {/* Error notice if voice service is unavailable */}
+            {error && !isLoading && !isPlaying && (
+              <span className="inline-flex items-center gap-1 text-[10px] text-maroon bg-maroon-surface px-2 py-0.5 rounded-full font-medium" title={error}>
+                <AlertCircle size={10} />
+                குரல் பெற முடியவில்லை
+              </span>
             )}
           </div>
         </div>
@@ -124,8 +183,18 @@ export const FlipCard: React.FC<FlipCardProps> = ({
             )}
           </div>
 
-          <div className="text-xs text-ink-muted font-medium">
-            TamilPalam Phonics Bridge
+          <div className="w-full flex items-center justify-between text-xs text-ink-muted font-medium">
+            <span>Kuralbeyond Phonics Bridge</span>
+            <button
+              type="button"
+              disabled={isLoading}
+              onClick={handleAudio}
+              className="inline-flex items-center gap-1 text-teal font-bold hover:underline"
+              title="Listen again"
+            >
+              {isLoading ? <Loader2 size={12} className="animate-spin" /> : <Volume2 size={12} />}
+              <span>Listen</span>
+            </button>
           </div>
         </div>
       </div>

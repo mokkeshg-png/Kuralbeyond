@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { authService } from '../services/authService';
 import { audioService } from '../services/audioService';
+import { AudioButton } from '../components/common/AudioButton';
 import { KiliParrot } from '../components/mascot/KiliParrot';
 
 export const LandingPage: React.FC = () => {
@@ -129,17 +130,14 @@ export const LandingPage: React.FC = () => {
                 <span className="text-xs font-bold uppercase tracking-wider text-teal bg-teal-surface px-3 py-1 rounded-full group-hover:bg-teal group-hover:text-white transition-colors">
                   Uyir Vowel 1 • Start Lesson →
                 </span>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    playHeroAudio();
-                  }}
-                  className="p-2 rounded-xl bg-teal text-white hover:bg-teal-light transition-colors shadow-sm"
-                  aria-label="Play audio"
-                >
-                  <Volume2 size={16} />
-                </button>
+                <div onClick={(e) => e.stopPropagation()}>
+                  <AudioButton
+                    audioId="vocab_vanakkam"
+                    fallbackText="வணக்கம்"
+                    size="sm"
+                    showFallbackBadge={false}
+                  />
+                </div>
               </div>
 
               {/* Large Tamil Letter */}
@@ -176,7 +174,7 @@ export const LandingPage: React.FC = () => {
         <div className="w-full max-w-7xl mx-auto space-y-12">
           <div className="text-center max-w-2xl mx-auto space-y-3">
             <h2 className="font-heading font-bold text-3xl sm:text-4xl text-ink">
-              {isTa ? 'எப்படி இயங்குகிறது?' : 'How TamilPalam Works'}
+              {isTa ? 'எப்படி இயங்குகிறது?' : 'How Kuralbeyond Works'}
             </h2>
             <p className="text-sm sm:text-base text-ink-muted">
               {isTa 
@@ -443,7 +441,7 @@ export const LandingPage: React.FC = () => {
       {/* Footer */}
       <footer className="mt-auto py-8 px-4 text-center text-xs text-ink-muted border-t border-sand">
         <p className="font-semibold text-ink">
-          TamilPalam (தமிழ் பாலம்) • Built with love for Tamil heritage and young learners.
+          Kuralbeyond (குறள்பியாண்ட்) • Built with love for Tamil heritage and young learners.
         </p>
         <p className="mt-1">
           Compliant with COPPA 2.0 & GDPR-K child safety regulations.

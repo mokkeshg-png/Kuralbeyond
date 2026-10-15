@@ -61,7 +61,7 @@ export class SupabaseAdapter {
       const p: any = (profiles as any[])[0];
       const profile: UserProfile = {
         id: p.id,
-        email: session.user.email || p.parent_email || 'learner@tamilpalam.edu',
+        email: session.user.email || p.parent_email || 'learner@kuralbeyond.edu',
         display_name: p.display_name,
         interface_language: p.interface_language,
         grade: p.grade as StandardGrade,
@@ -166,12 +166,12 @@ export class SupabaseAdapter {
         return {
           id: lvl.id,
           level_number: lvl.level_number,
-          title_en: lvl.title_en,
-          title_ta: lvl.title_ta,
+          title_en: lvl.name_en,        // DB: name_en → FE: title_en
+          title_ta: lvl.name_ta,        // DB: name_ta → FE: title_ta
           description_en: lvl.description_en || '',
           description_ta: lvl.description_ta || '',
           cefr: lvl.cefr,
-          estimated_minutes: lvl.estimated_minutes,
+          estimated_minutes: lvl.total_lessons * 10 || 30,  // estimated from lesson count
           total_lessons: lvlLessons.length || lvl.total_lessons,
           completed_lessons: completedCount,
           is_unlocked: isUnlocked,
@@ -194,7 +194,7 @@ export class SupabaseAdapter {
       const { data: lessons, error } = await supabase
         .from('lessons')
         .select('*')
-        .eq('level_id', `level-${levelNumber}`)
+        .eq('level_number' as any, levelNumber)
         .order('display_order', { ascending: true });
 
       if (error || !lessons) return null as any;
@@ -216,14 +216,14 @@ export class SupabaseAdapter {
           title_ta: l.title_ta,
           description_en: l.description_en || '',
           description_ta: l.description_ta || '',
-          sequence_order: l.sequence_order,
+          sequence_order: l.sequence_order || l.display_order,
           lesson_type: l.lesson_type,
           estimated_minutes: l.estimated_minutes,
           tanglish_stage: l.tanglish_stage,
           items_count: l.items_count,
           is_completed: p?.status === 'completed',
-          score: p?.score,
-          last_item_index: p?.last_item_index || 0,
+          score: p?.accuracy_percentage,        // DB: accuracy_percentage → FE: score
+          last_item_index: p?.current_item_index || 0,  // DB: current_item_index → FE: last_item_index
         };
       });
     } catch {
@@ -380,11 +380,12 @@ export class SupabaseAdapter {
 
       const idempotencyKey = `comp_${profile.id}_${lessonId}_${Date.now()}`;
 
+      const accuracyPct = totalCount > 0 ? Math.round((correctCount / totalCount) * 100) : 100;
+
       const { data, error } = await (supabase.rpc as any)('complete_lesson', {
         p_profile_id: profile.id,
         p_lesson_id: lessonId,
-        p_correct_count: correctCount,
-        p_total_count: totalCount,
+        p_accuracy_percentage: accuracyPct,
         p_time_spent_seconds: timeSpentSeconds,
         p_idempotency_key: idempotencyKey,
       });
@@ -425,10 +426,11 @@ export class SupabaseAdapter {
 
       const { data, error } = await (supabase.rpc as any)('submit_item_answer', {
         p_profile_id: profile.id,
-        p_skill_type: skillType,
+        p_lesson_id: itemId,  // item_id used as lesson_id reference
         p_item_id: itemId,
         p_is_correct: isCorrect,
-        p_difficulty: difficultyModifier,
+        p_response_time_ms: Math.round(difficultyModifier * 1000),
+        p_quality: isCorrect ? 4 : 1,
       });
 
       if (error || !data) return null;

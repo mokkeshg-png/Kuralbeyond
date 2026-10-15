@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "TamilPalam",
+    "appName": "Kuralbeyond",
     "appTagline": "A joyful bridge to Tamil literacy and cultural discovery",
     "home": "Home",
     "learn": "Learn",
@@ -71,7 +71,7 @@
     "demoOnly": "Continue with limited guest mode"
   },
   "onboarding": {
-    "welcomeTitle": "Welcome to TamilPalam!",
+    "welcomeTitle": "Welcome to Kuralbeyond!",
     "slide1Title": "From Tanglish to Pure Tamil",
     "slide1Desc": "Start with familiar English letters (Tanglish), then watch your Script Power grow into real Tamil!",
     "slide2Title": "Audio-Led & Fun Quizzes",
@@ -205,11 +205,11 @@
     "skillBreakdown": "Mastery by Core Skill",
     "revisionHealth": "Revision Queue Health",
     "exportDataAction": "Download Full Learning Progress (JSON)",
-    "privacyAssurance": "TamilPalam strictly adheres to COPPA 2.0 and GDPR-K guidelines. Zero commercial ads, zero data sharing."
+    "privacyAssurance": "Kuralbeyond strictly adheres to COPPA 2.0 and GDPR-K guidelines. Zero commercial ads, zero data sharing."
   },
   "settings": {
     "title": "Settings & Preferences",
-    "subtitle": "Customize TamilPalam to fit your exact learning comfort and accessibility needs",
+    "subtitle": "Customize Kuralbeyond to fit your exact learning comfort and accessibility needs",
     "interfaceLanguage": "Interface Language",
     "en": "English",
     "ta": "தமிழ் (Tamil)",
