@@ -167,14 +167,15 @@ export class ProgressService implements IProgressService {
     LocalStorageAdapter.setActivityLogs(activityLogs);
 
     // 5. Check and unlock badges
-    this.evaluateBadges(stats);
+    await this.evaluateBadges(stats);
 
     return attempt;
   }
 
-  private evaluateBadges(stats: UserStats): void {
+  private async evaluateBadges(stats: UserStats): Promise<void> {
     const badges = LocalStorageAdapter.getBadges();
     let updated = false;
+    const newlyEarnedBadgeIds: string[] = [];
 
     for (const b of badges) {
       if (!b.is_earned) {
@@ -182,20 +183,47 @@ export class ProgressService implements IProgressService {
           b.is_earned = true;
           b.earned_at = new Date().toISOString().split('T')[0];
           updated = true;
+          newlyEarnedBadgeIds.push(b.id);
         } else if (b.criteria_type === 'words_learned' && stats.words_learned >= b.criteria_value) {
           b.is_earned = true;
           b.earned_at = new Date().toISOString().split('T')[0];
           updated = true;
+          newlyEarnedBadgeIds.push(b.id);
         } else if (b.criteria_type === 'letters_mastered' && stats.letters_mastered >= b.criteria_value) {
           b.is_earned = true;
           b.earned_at = new Date().toISOString().split('T')[0];
           updated = true;
+          newlyEarnedBadgeIds.push(b.id);
         }
       }
     }
 
     if (updated) {
       LocalStorageAdapter.setBadges(badges);
+
+      // Write newly earned badges to Supabase user_achievements
+      if (newlyEarnedBadgeIds.length > 0 && isSupabaseConfigured()) {
+        try {
+          const profileId = SupabaseAdapter.getActiveProfileId();
+          if (
+            profileId !== null &&
+            profileId !== 'usr-demo-guest' &&
+            !profileId.startsWith('usr-default')
+          ) {
+            const earnedAt = new Date().toISOString();
+            for (const badgeId of newlyEarnedBadgeIds) {
+              await supabase
+                .from('user_achievements')
+                .upsert(
+                  { profile_id: profileId, achievement_id: badgeId, earned_at: earnedAt },
+                  { onConflict: 'profile_id,achievement_id', ignoreDuplicates: true }
+                );
+            }
+          }
+        } catch (err) {
+          console.warn('[ProgressService] Failed to write badge to Supabase user_achievements:', err);
+        }
+      }
     }
   }
 
