@@ -1,5 +1,6 @@
 import { RevisionItem } from '../types';
 import { LocalStorageAdapter } from './storageAdapter';
+import { SupabaseAdapter } from './supabaseAdapter';
 
 const INTERVAL_STEPS = [1, 3, 7, 14, 30, 60];
 
@@ -23,10 +24,15 @@ export class RevisionService implements IRevisionService {
   }
 
   async getDueItems(): Promise<RevisionItem[]> {
+    const remoteDue = await SupabaseAdapter.getDueRevisionItems();
+    if (remoteDue && remoteDue.length > 0) {
+      return remoteDue;
+    }
     const queue = LocalStorageAdapter.getRevisionQueue();
     const now = new Date().toISOString();
     return queue.filter(item => item.next_review_at <= now);
   }
+
 
   async recordReview(itemId: string, remembered: boolean): Promise<RevisionItem | null> {
     const queue = LocalStorageAdapter.getRevisionQueue();

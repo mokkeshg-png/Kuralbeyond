@@ -1,5 +1,6 @@
 import { SkillType, LearnerSkillMastery } from '../types';
 import { LocalStorageAdapter } from './storageAdapter';
+import { SupabaseAdapter } from './supabaseAdapter';
 
 export interface IMasteryService {
   getSkillMasteries(): Promise<LearnerSkillMastery[]>;
@@ -73,11 +74,28 @@ export class MasteryService implements IMasteryService {
     isCorrect: boolean, 
     difficultyModifier = 1.0
   ): Promise<LearnerSkillMastery> {
-    const profile = LocalStorageAdapter.getProfile();
+    // Attempt server-authoritative mastery update via Supabase RPC
+    const remoteMastery = await SupabaseAdapter.submitItemAnswer(
+      skillType,
+      itemId,
+      isCorrect,
+      difficultyModifier
+    );
+
     const masteries = LocalStorageAdapter.getSkillMastery();
+    if (remoteMastery) {
+      const idx = masteries.findIndex(m => m.skill_type === skillType && m.skill_item_id === itemId);
+      if (idx >= 0) masteries[idx] = remoteMastery;
+      else masteries.push(remoteMastery);
+      LocalStorageAdapter.setSkillMastery(masteries);
+      return remoteMastery;
+    }
+
+    const profile = LocalStorageAdapter.getProfile();
     const existing = masteries.find(
       m => m.skill_type === skillType && m.skill_item_id === itemId
     );
+
 
     const now = new Date().toISOString();
     let updated: LearnerSkillMastery;

@@ -1,5 +1,6 @@
 import { UserProfile, StandardGrade, AgeMode } from '../types';
 import { LocalStorageAdapter } from './storageAdapter';
+import { SupabaseAdapter } from './supabaseAdapter';
 
 export interface IAuthService {
   getCurrentUser(): Promise<UserProfile | null>;
@@ -13,8 +14,10 @@ export interface IAuthService {
 
 export class AuthService implements IAuthService {
   async getCurrentUser(): Promise<UserProfile | null> {
-    return LocalStorageAdapter.getProfile();
+    const user = await SupabaseAdapter.getCurrentUser();
+    return user || LocalStorageAdapter.getProfile();
   }
+
 
   async signIn(email: string): Promise<UserProfile> {
     const current = LocalStorageAdapter.getProfile();
@@ -68,15 +71,11 @@ export class AuthService implements IAuthService {
   }
 
   async updateProfile(updates: Partial<UserProfile>): Promise<UserProfile> {
-    const current = LocalStorageAdapter.getProfile();
-    const updated: UserProfile = {
-      ...current,
-      ...updates,
-      updated_at: new Date().toISOString(),
-    };
+    const updated = await SupabaseAdapter.updateProfile(updates);
     LocalStorageAdapter.setProfile(updated);
     return updated;
   }
+
 
   async signOut(): Promise<void> {
     // Keep local progress intact, but mark session if needed

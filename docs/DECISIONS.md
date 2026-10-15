@@ -38,3 +38,28 @@
 
 ### 7. Dual Audio Architecture (Manifest + Web Speech API Fallback)
 - **Context:** Prerecorded audio files are designated in the audio manifest. For items where recorded MP3s are pending, the player falls back gracefully to browser SpeechSynthesis with `ta-IN` voice and an honest fallback indicator.
+
+### 8. Server-Authoritative Progression & Zero Client Trust (RPC Architecture)
+- **Context:** PRD specified client-side tracking for streaks, XP, and mastery. A malicious or buggy client could forge XP totals, bypass SRS intervals, or falsify level completions.
+- **Decision:** All gamification and learning logic is enforced server-side via PostgreSQL `SECURITY DEFINER` stored procedures (`submit_item_answer`, `complete_lesson`, `get_resume_point`, `get_dashboard_summary`). All XP awards are appended to an immutable `xp_ledger`. The client cannot directly mutate XP, streaks, or mastery tables.
+
+### 9. Secure Role Architecture via PostgreSQL `user_roles`
+- **Context:** Storing roles (admin, parent, teacher) in Supabase `raw_user_meta_data` is insecure because `supabase.auth.updateUser()` allows clients to overwrite their own metadata.
+- **Decision:** Roles are stored in an explicit `user_roles` database table with default-deny RLS. Privileges are checked via a `SECURITY DEFINER` helper function `has_role(check_role TEXT)`. User metadata is never trusted for authorization.
+
+### 10. Parent-Managed Multi-Profile Model for COPPA 2.0 / GDPR-K
+- **Context:** PRD Section 57 specified 1:1 user-to-profile mapping, but COPPA 2.0 and GDPR-K require verifiable parental consent and prohibit unmonitored accounts for children under 13. Furthermore, Section 72 requires parent profile switching.
+- **Decision:** Designed a parent-managed child profile model where one authenticated parent account can create and manage multiple child profiles (`is_child = true`). Child accounts operate in restricted demo mode until verified parental consent is recorded in `consent_records`.
+
+### 11. Database-Level Unicode NFC Normalization
+- **Context:** Tamil script has multiple Unicode representations (decomposed vs precomposed characters). Inconsistent normalization causes string search failures, broken index lookups, and audio asset misses.
+- **Decision:** Applied PostgreSQL triggers on all Tamil text columns calling `normalize(NEW.col, NFC)` to enforce Unicode NFC normalization at the database storage layer, supplemented by build-time validation.
+
+### 12. Human-Reviewed Audio Staging Pipeline for Sarvam AI TTS
+- **Context:** Unconstrained or unreviewed AI-generated audio may mispronounce nuanced Tamil phonemes (such as retroflex consonants ள, ழ, ண or vowel lengths அ/ஆ).
+- **Decision:** AI audio generated via Sarvam TTS is saved to a private `audio-staging` bucket with status `pending_review`. A native Tamil speaker must review and approve the asset before it is copied to the public CDN `audio` bucket. Never auto-publish unreviewed TTS to young learners.
+
+### 13. Ephemeral Retention & Tolerant Matching for Speaking Practice
+- **Context:** Indic speech recognition on children's speech has high Word Error Rates (WER 0.55–0.71). Storing child audio indefinitely poses privacy hazards.
+- **Decision:** Client recordings are uploaded to a private bucket with a 24-hour expiration timestamp and hard-deleted automatically via `cleanup-recordings` Edge Function / `pg_cron`. The STT transcript is compared using a tolerant character-similarity algorithm and framed as "Speech recognition match" without assigning punitive pronunciation grades.
+

@@ -1,5 +1,6 @@
 import { QuizAttempt, UserStats, DailyActivityLog, AchievementBadge } from '../types';
 import { LocalStorageAdapter } from './storageAdapter';
+import { SupabaseAdapter } from './supabaseAdapter';
 
 export interface IProgressService {
   getStats(): Promise<UserStats>;
@@ -12,10 +13,11 @@ export interface IProgressService {
 
 export class ProgressService implements IProgressService {
   async getStats(): Promise<UserStats> {
-    const stats = LocalStorageAdapter.getStats();
+    const stats = await SupabaseAdapter.getStats();
     this.checkStreakGrace(stats);
     return stats;
   }
+
 
   private checkStreakGrace(stats: UserStats): void {
     const today = new Date().toISOString().split('T')[0];
@@ -75,10 +77,18 @@ export class ProgressService implements IProgressService {
     totalCount: number, 
     timeSpentSeconds: number
   ): Promise<QuizAttempt> {
+    // Attempt server-authoritative completion via Supabase RPC
+    const remoteAttempt = await SupabaseAdapter.completeLesson(
+      lessonId,
+      correctCount,
+      totalCount,
+      timeSpentSeconds
+    );
+
     const profile = LocalStorageAdapter.getProfile();
     const accuracy = totalCount > 0 ? Math.round((correctCount / totalCount) * 100) : 100;
     
-    // 1. Save lesson progress
+    // 1. Save lesson progress locally
     const progressList = LocalStorageAdapter.getLessonProgress();
     const existingIdx = progressList.findIndex(p => p.lesson_id === lessonId);
     
@@ -103,7 +113,7 @@ export class ProgressService implements IProgressService {
     LocalStorageAdapter.setLessonProgress(progressList);
 
     // 2. Save quiz attempt
-    const attempt: QuizAttempt = {
+    const attempt: QuizAttempt = remoteAttempt || {
       id: 'qa-' + Math.random().toString(36).substring(2, 9),
       profile_id: profile.id,
       lesson_id: lessonId,
@@ -117,6 +127,7 @@ export class ProgressService implements IProgressService {
     const attempts = LocalStorageAdapter.getQuizAttempts();
     attempts.unshift(attempt);
     LocalStorageAdapter.setQuizAttempts(attempts);
+
 
     // 3. Update stats: XP, Daily Goal & Streak
     const stats = LocalStorageAdapter.getStats();

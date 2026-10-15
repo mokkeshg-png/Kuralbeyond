@@ -1,5 +1,6 @@
 import { AUDIO_MANIFEST, AudioEntry } from '../data/audioManifest';
 import { LocalStorageAdapter } from './storageAdapter';
+import { supabase, isSupabaseConfigured } from './supabaseClient';
 
 export interface PlaybackState {
   isPlaying: boolean;
@@ -66,9 +67,12 @@ export class AudioService {
           this.currentAudio = null;
           this.notify(false);
         };
-        audio.onerror = () => {
-          // File missing or failed -> fallback to Web Speech API
-          this.playSpeechSynthesis(textToSpeak, playbackSpeed);
+        audio.onerror = async () => {
+          // File missing or failed -> try tts-get Edge Function, then fallback to Web Speech API
+          const handled = await this.playFromEdgeTts(textToSpeak, playbackSpeed);
+          if (!handled) {
+            this.playSpeechSynthesis(textToSpeak, playbackSpeed);
+          }
         };
 
         const playPromise = audio.play();
@@ -77,13 +81,60 @@ export class AudioService {
           return true;
         }
       } catch {
-        // Autoplay blocked or load error -> fallback to Web Speech API
-        return this.playSpeechSynthesis(textToSpeak, playbackSpeed);
+        const handled = await this.playFromEdgeTts(textToSpeak, playbackSpeed);
+        if (!handled) {
+          return this.playSpeechSynthesis(textToSpeak, playbackSpeed);
+        }
+        return true;
       }
     }
 
-    return this.playSpeechSynthesis(textToSpeak, playbackSpeed);
+    const handled = await this.playFromEdgeTts(textToSpeak, playbackSpeed);
+    if (!handled) {
+      return this.playSpeechSynthesis(textToSpeak, playbackSpeed);
+    }
+    return true;
   }
+
+  private async playFromEdgeTts(text: string, rate: number): Promise<boolean> {
+    if (!isSupabaseConfigured()) return false;
+    try {
+      const { data, error } = await supabase.functions.invoke('tts-get', {
+        body: { text, voice: 'meera', pace: rate },
+      });
+      if (error || !data || data.fallback) return false;
+
+      if (data.audioUrl) {
+        const audio = new Audio(data.audioUrl);
+        audio.playbackRate = rate;
+        this.currentAudio = audio;
+        audio.onplay = () => this.notify(true);
+        audio.onended = () => {
+          this.currentAudio = null;
+          this.notify(false);
+        };
+        await audio.play();
+        return true;
+      }
+
+      if (data.audioBase64) {
+        const audio = new Audio(`data:audio/mp3;base64,${data.audioBase64}`);
+        audio.playbackRate = rate;
+        this.currentAudio = audio;
+        audio.onplay = () => this.notify(true);
+        audio.onended = () => {
+          this.currentAudio = null;
+          this.notify(false);
+        };
+        await audio.play();
+        return true;
+      }
+    } catch {
+      return false;
+    }
+    return false;
+  }
+
 
   private playSpeechSynthesis(text: string, rate: number): boolean {
     if (typeof window === 'undefined' || !('speechSynthesis' in window)) {

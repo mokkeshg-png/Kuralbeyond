@@ -1,6 +1,7 @@
 import { ParentSummary } from '../types';
 import { LocalStorageAdapter } from './storageAdapter';
 import { masteryService } from './masteryService';
+import { SupabaseAdapter } from './supabaseAdapter';
 
 export interface IParentService {
   getParentSummary(): Promise<ParentSummary>;
@@ -9,12 +10,18 @@ export interface IParentService {
 
 export class ParentService implements IParentService {
   async getParentSummary(): Promise<ParentSummary> {
+    const remoteSummary = await SupabaseAdapter.getParentSummary();
+    if (remoteSummary) {
+      return remoteSummary;
+    }
+
     const profile = LocalStorageAdapter.getProfile();
     const stats = LocalStorageAdapter.getStats();
     const activityLogs = LocalStorageAdapter.getActivityLogs();
     const progressList = LocalStorageAdapter.getLessonProgress();
     const revisionQueue = LocalStorageAdapter.getRevisionQueue();
     const masteryMap = await masteryService.getMasteryBySkillType();
+
 
     // Total practice minutes in the last 7 days
     const totalMinutes = activityLogs.slice(-7).reduce((acc, curr) => acc + curr.minutes_spent, 0);

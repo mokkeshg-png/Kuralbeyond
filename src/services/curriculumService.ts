@@ -1,6 +1,7 @@
 import { LearningLevel, Lesson, Exercise } from '../types';
 import { LEARNING_LEVELS, ALL_LESSONS, LESSON_EXERCISES } from '../data/curriculumData';
 import { LocalStorageAdapter } from './storageAdapter';
+import { SupabaseAdapter } from './supabaseAdapter';
 
 export interface ICurriculumService {
   getLevels(): Promise<LearningLevel[]>;
@@ -12,6 +13,11 @@ export interface ICurriculumService {
 
 export class CurriculumService implements ICurriculumService {
   async getLevels(): Promise<LearningLevel[]> {
+    const remoteLevels = await SupabaseAdapter.getLevels();
+    if (remoteLevels && remoteLevels.length > 0) {
+      return remoteLevels;
+    }
+
     const progressList = LocalStorageAdapter.getLessonProgress();
     const completedLessonIds = new Set(
       progressList.filter(p => p.status === 'completed').map(p => p.lesson_id)
@@ -47,6 +53,11 @@ export class CurriculumService implements ICurriculumService {
   }
 
   async getLessonsByLevel(levelNumber: number): Promise<Lesson[]> {
+    const remoteLessons = await SupabaseAdapter.getLessonsByLevel(levelNumber);
+    if (remoteLessons && remoteLessons.length > 0) {
+      return remoteLessons;
+    }
+
     const progressList = LocalStorageAdapter.getLessonProgress();
     const progressMap = new Map(progressList.map(p => [p.lesson_id, p]));
 
@@ -77,9 +88,15 @@ export class CurriculumService implements ICurriculumService {
   }
 
   async getLessonExercises(lessonId: string): Promise<Exercise[]> {
+    const remoteExercises = await SupabaseAdapter.getLessonExercises(lessonId);
+    if (remoteExercises && remoteExercises.length > 0) {
+      return remoteExercises;
+    }
+
     if (LESSON_EXERCISES[lessonId] && LESSON_EXERCISES[lessonId].length > 0) {
       return LESSON_EXERCISES[lessonId];
     }
+
 
     const lesson = ALL_LESSONS.find(l => l.id === lessonId);
     const titleTa = lesson ? lesson.title_ta : 'தமிழ் பாடம்';
