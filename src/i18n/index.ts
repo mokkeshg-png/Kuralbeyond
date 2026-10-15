@@ -5,7 +5,7 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import en from './locales/en.json';
 import ta from './locales/ta.json';
 
-const savedLanguage = localStorage.getItem('tamilpalam_language') || 'en';
+const savedLanguage = localStorage.getItem('kuralbeyond_language') || localStorage.getItem('tamilpalam_language') || 'en';
 
 i18n
   .use(LanguageDetector)
@@ -23,7 +23,7 @@ i18n
     detection: {
       order: ['localStorage', 'navigator'],
       caches: ['localStorage'],
-      lookupLocalStorage: 'tamilpalam_language',
+      lookupLocalStorage: 'kuralbeyond_language',
     },
   });
 

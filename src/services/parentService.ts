@@ -46,7 +46,7 @@ export class ParentService implements IParentService {
   async exportProgressJson(): Promise<string> {
     const data = {
       exported_at: new Date().toISOString(),
-      platform: 'TamilPalam (தமிழ் பாலம்)',
+      platform: 'Kuralbeyond (குறள்பியாண்ட்)',
       profile: LocalStorageAdapter.getProfile(),
       preferences: LocalStorageAdapter.getPreferences(),
       stats: LocalStorageAdapter.getStats(),

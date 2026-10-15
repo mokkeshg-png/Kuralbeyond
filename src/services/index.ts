@@ -10,4 +10,5 @@ export * from './audioService';
 export * from './revisionService';
 export * from './missionService';
 export * from './parentService';
+export * from './adaptiveEngine';
 

@@ -176,7 +176,7 @@ export const LandingPage: React.FC = () => {
         <div className="w-full max-w-7xl mx-auto space-y-12">
           <div className="text-center max-w-2xl mx-auto space-y-3">
             <h2 className="font-heading font-bold text-3xl sm:text-4xl text-ink">
-              {isTa ? 'எப்படி இயங்குகிறது?' : 'How TamilPalam Works'}
+              {isTa ? 'எப்படி இயங்குகிறது?' : 'How Kuralbeyond Works'}
             </h2>
             <p className="text-sm sm:text-base text-ink-muted">
               {isTa 
@@ -443,7 +443,7 @@ export const LandingPage: React.FC = () => {
       {/* Footer */}
       <footer className="mt-auto py-8 px-4 text-center text-xs text-ink-muted border-t border-sand">
         <p className="font-semibold text-ink">
-          TamilPalam (தமிழ் பாலம்) • Built with love for Tamil heritage and young learners.
+          Kuralbeyond (குறள்பியாண்ட்) • Built with love for Tamil heritage and young learners.
         </p>
         <p className="mt-1">
           Compliant with COPPA 2.0 & GDPR-K child safety regulations.

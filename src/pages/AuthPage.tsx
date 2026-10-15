@@ -32,14 +32,14 @@ export const AuthPage: React.FC = () => {
           setError(isTa ? 'மாணவரின் பெயரை உள்ளிடவும்' : 'Please enter learner name');
           return;
         }
-        const profile = await authService.signUp(email, displayName, grade, true);
+        const profile = await authService.signUp(email, password, displayName, grade, true);
         if (profile.is_child && !profile.parental_consent) {
           navigate('/parent-consent');
         } else {
           navigate('/onboarding');
         }
       } else {
-        await authService.signIn(email);
+        await authService.signIn(email, password);
         navigate('/dashboard');
       }
     } catch {
@@ -68,7 +68,11 @@ export const AuthPage: React.FC = () => {
 
         {/* Header */}
         <div className="text-center space-y-2">
-          <div className="w-14 h-14 rounded-2xl bg-teal text-paper font-tamil font-extrabold text-3xl mx-auto flex items-center justify-center shadow-md">
+          <div 
+            onClick={() => { window.location.href = '/'; }}
+            className="w-14 h-14 rounded-2xl bg-teal text-paper font-tamil font-extrabold text-3xl mx-auto flex items-center justify-center shadow-md cursor-pointer hover:scale-105 active:scale-95 transition-transform"
+            title="Kuralbeyond - Click to refresh"
+          >
             அ
           </div>
           <h1 className="font-heading font-extrabold text-2xl text-ink">

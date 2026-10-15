@@ -17,7 +17,17 @@ export const Navbar: React.FC<NavbarProps> = ({ profile, stats }) => {
   const toggleLanguage = () => {
     const nextLang = i18n.language === 'en' ? 'ta' : 'en';
     i18n.changeLanguage(nextLang);
-    localStorage.setItem('tamilpalam_language', nextLang);
+    localStorage.setItem('kuralbeyond_language', nextLang);
+  };
+
+  const handleLogoClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const targetUrl = profile ? '/dashboard' : '/';
+    if (window.location.pathname === targetUrl) {
+      window.location.reload();
+    } else {
+      window.location.href = targetUrl;
+    }
   };
 
   const isLessonActive = location.pathname.startsWith('/lesson/');
@@ -29,23 +39,25 @@ export const Navbar: React.FC<NavbarProps> = ({ profile, stats }) => {
     <header className="sticky top-0 z-40 bg-paper/95 backdrop-blur-md border-b border-sand px-4 sm:px-6 lg:px-8 py-3.5 transition-colors">
       <div className="w-full max-w-7xl mx-auto flex items-center justify-between gap-4">
         {/* Brand Logo & Name */}
-        <Link 
-          to={profile ? "/dashboard" : "/"} 
-          className="flex items-center gap-2.5 group"
-          aria-label="TamilPalam Home"
+        <a 
+          href={profile ? "/dashboard" : "/"} 
+          onClick={handleLogoClick}
+          className="flex items-center gap-2.5 group cursor-pointer select-none"
+          aria-label="Kuralbeyond Home - Click to refresh"
+          title="Click to refresh"
         >
-          <div className="w-10 h-10 rounded-2xl bg-teal flex items-center justify-center text-paper font-bold text-2xl font-tamil shadow-md group-hover:scale-105 transition-transform">
+          <div className="w-10 h-10 rounded-2xl bg-teal flex items-center justify-center text-paper font-bold text-2xl font-tamil shadow-md group-hover:scale-105 active:scale-95 transition-transform">
             அ
           </div>
           <div>
             <span className="font-heading font-bold text-xl sm:text-2xl text-teal tracking-tight block leading-tight">
-              தமிழ் பாலம்
+              குறள்பியாண்ட்
             </span>
             <span className="text-[10px] font-semibold text-ink-muted uppercase tracking-wider block">
-              TamilPalam
+              Kuralbeyond
             </span>
           </div>
-        </Link>
+        </a>
 
         {/* Desktop Quick Links */}
         <nav className="hidden md:flex items-center gap-6">

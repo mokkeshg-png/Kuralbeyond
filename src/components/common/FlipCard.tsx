@@ -125,7 +125,7 @@ export const FlipCard: React.FC<FlipCardProps> = ({
           </div>
 
           <div className="text-xs text-ink-muted font-medium">
-            TamilPalam Phonics Bridge
+            Kuralbeyond Phonics Bridge
           </div>
         </div>
       </div>

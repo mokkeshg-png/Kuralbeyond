@@ -56,7 +56,7 @@ serve(async (req) => {
 
     const exportData = {
       exported_at: new Date().toISOString(),
-      platform: 'TamilPalam (தமிழ் பாலம்)',
+      platform: 'Kuralbeyond (குறள்பியாண்ட்)',
       user_id: user.id,
       email: user.email,
       profiles: profiles.map((p: any) => ({
@@ -78,7 +78,7 @@ serve(async (req) => {
       headers: {
         ...corsHeaders,
         'Content-Type': 'application/json',
-        'Content-Disposition': 'attachment; filename="tamilpalam_user_data.json"',
+        'Content-Disposition': 'attachment; filename="kuralbeyond_user_data.json"',
       },
     });
   } catch (err: any) {

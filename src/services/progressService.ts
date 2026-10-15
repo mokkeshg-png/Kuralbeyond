@@ -1,6 +1,7 @@
 import { QuizAttempt, UserStats, DailyActivityLog, AchievementBadge } from '../types';
 import { LocalStorageAdapter } from './storageAdapter';
 import { SupabaseAdapter } from './supabaseAdapter';
+import { supabase, isSupabaseConfigured } from './supabaseClient';
 
 export interface IProgressService {
   getStats(): Promise<UserStats>;
@@ -210,7 +211,31 @@ export class ProgressService implements IProgressService {
   }
 
   async getBadges(): Promise<AchievementBadge[]> {
-    return LocalStorageAdapter.getBadges();
+    const localBadges = LocalStorageAdapter.getBadges();
+
+    // Try to enrich with real Supabase earned status
+    if (isSupabaseConfigured()) {
+      try {
+        const profile = await SupabaseAdapter.getCurrentUser();
+        if (profile) {
+          const { data: earned } = await supabase
+            .from('user_achievements')
+            .select('achievement_id, earned_at')
+            .eq('profile_id', profile.id);
+
+          if (earned && earned.length > 0) {
+            const earnedMap = new Map((earned as any[]).map(e => [e.achievement_id, e.earned_at]));
+            return localBadges.map(b => ({
+              ...b,
+              is_earned: earnedMap.has(b.id) || b.is_earned,
+              earned_at: earnedMap.get(b.id) || b.earned_at,
+            }));
+          }
+        }
+      } catch { /* fall through */ }
+    }
+
+    return localBadges;
   }
 
   async getActivityLogs(): Promise<DailyActivityLog[]> {

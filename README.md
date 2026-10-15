@@ -1,4 +1,4 @@
-# Kuralbeyond — TamilPalam
+# Kuralbeyond
 
 A Tamil learning platform for school students (Standard 1–12, UI optimised for Std 1–6) who are non-Tamil speakers. Built with React + TypeScript + Vite (frontend) and Supabase (backend).
 
