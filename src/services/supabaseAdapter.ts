@@ -10,6 +10,7 @@ import {
   LearningLevel,
   Lesson,
   Exercise,
+  ExerciseType,
   SkillType,
   TanglishStage,
   StandardGrade,
@@ -233,92 +234,37 @@ export class SupabaseAdapter {
     if (!isSupabaseConfigured()) return null as any;
 
     try {
-      // Single query with nested relation: exercises -> questions -> answer_options
-      const { data: exercises, error } = await supabase
-        .from('exercises')
-        .select(`
-          id,
-          lesson_id,
-          exercise_type,
-          prompt_en,
-          prompt_ta,
-          sequence_order,
-          questions (
-            id,
-            exercise_id,
-            exercise_type,
-            prompt_en,
-            prompt_ta,
-            audio_prompt_id,
-            audio_id,
-            content_ta,
-            content_tanglish,
-            content_en,
-            correct_answer,
-            explanation_en,
-            explanation_ta,
-            word_bank,
-            ordered_solution,
-            pairs,
-            reading_passage_ta,
-            reading_passage_tanglish,
-            story_panels,
-            tracing_data,
-            sequence_order,
-            answer_options (
-              id,
-              option_text,
-              option_tanglish,
-              option_en,
-              is_correct,
-              audio_id,
-              image_url
-            )
-          )
-        `)
+      const { data: items, error } = await supabase
+        .from('lesson_items')
+        .select('*')
         .eq('lesson_id', lessonId)
-        .order('sequence_order', { ascending: true });
+        .order('order_index', { ascending: true });
 
-      if (error || !exercises || (exercises as any[]).length === 0) return null as any;
+      if (error || !items || (items as any[]).length === 0) return null as any;
 
-      return (exercises as any[]).map((ex: any) => ({
-        id: ex.id,
-        lesson_id: ex.lesson_id,
-        exercise_type: ex.exercise_type,
-        prompt_en: ex.prompt_en,
-        prompt_ta: ex.prompt_ta,
-        sequence_order: ex.sequence_order,
-        questions: (ex.questions || []).map((q: any) => ({
-          id: q.id,
-          exercise_id: q.exercise_id,
-          exercise_type: q.exercise_type,
-          prompt_en: q.prompt_en,
-          prompt_ta: q.prompt_ta,
-          audio_prompt_id: q.audio_prompt_id,
-          audio_id: q.audio_id,
-          content_ta: q.content_ta,
-          content_tanglish: q.content_tanglish,
-          content_en: q.content_en,
-          correct_answer: q.correct_answer,
-          explanation_en: q.explanation_en,
-          explanation_ta: q.explanation_ta,
-          word_bank: q.word_bank,
-          ordered_solution: q.ordered_solution,
-          pairs: q.pairs,
-          reading_passage_ta: q.reading_passage_ta,
-          reading_passage_tanglish: q.reading_passage_tanglish,
-          story_panels: q.story_panels,
-          tracing_data: q.tracing_data,
-          options: (q.answer_options || []).map((opt: any) => ({
-            id: opt.id,
-            option_text: opt.option_text,
-            option_tanglish: opt.option_tanglish,
-            option_en: opt.option_en,
-            is_correct: opt.is_correct,
-            audio_id: opt.audio_id,
-            image_url: opt.image_url,
-          })),
-        })),
+      return (items as any[]).map((item: any) => ({
+        id: item.id,
+        lesson_id: item.lesson_id,
+        exercise_type: item.item_type as ExerciseType,
+        prompt_en: item.instruction_en || item.primary_text_en || '',
+        prompt_ta: item.instruction_ta || item.primary_text_ta || '',
+        sequence_order: item.order_index,
+        questions: [
+          {
+            id: item.id + '-q',
+            exercise_id: item.id,
+            exercise_type: item.item_type as ExerciseType,
+            prompt_en: item.instruction_en || item.primary_text_en || '',
+            prompt_ta: item.instruction_ta || item.primary_text_ta || '',
+            content_ta: item.primary_text_ta || '',
+            content_tanglish: item.secondary_text || '',
+            content_en: item.primary_text_en || '',
+            correct_answer: '',
+            explanation_en: '',
+            explanation_ta: '',
+            audio_id: item.audio_url || '',
+          },
+        ],
       }));
     } catch {
       return null as any;
@@ -464,7 +410,7 @@ export class SupabaseAdapter {
         .from('revision_queue')
         .select('*')
         .eq('profile_id', profile.id)
-        .lte('next_review_at', new Date().toISOString());
+        .lte('due_date', new Date().toISOString());
 
       if (error || !data) return LocalStorageAdapter.getRevisionQueue();
 
@@ -477,10 +423,10 @@ export class SupabaseAdapter {
         content_tanglish: d.content_tanglish || '',
         content_en: d.content_en || '',
         audio_id: d.audio_id || '',
-        next_review_at: d.next_review_at,
+        next_review_at: d.due_date,
         interval_days: d.interval_days,
         ease_factor: d.ease_factor,
-        consecutive_correct: d.consecutive_correct,
+        consecutive_correct: d.repetitions,
       }));
     } catch {
       return LocalStorageAdapter.getRevisionQueue();
