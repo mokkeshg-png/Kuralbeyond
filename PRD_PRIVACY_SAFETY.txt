@@ -1,0 +1,134 @@
+63.	Privacy
+Data	Minimisation
+Data	Type
+Collected?
+Purpose
+Retention
+Display	name
+Yes
+Personalization
+Until	deletion
+Email
+Yes
+Auth,	communication
+Until	deletion
+Date	of	birth
+Optional
+Age-appropriate	content
+Until	deletion
+Learning	progress
+Yes
+Core	functionality
+Until	deletion
+Audio	recordings
+Temporary
+Speaking	practice
+24	hours
+Device	info
+Minimal
+Error	monitoring
+90	days
+Location
+No
+—
+—
+Photos
+No
+—
+—
+Privacy	Policy	Requirements
+Clear,	plain-language	privacy	policy	accessible	from	every	screen.
+Separate	children’s	privacy	section.
+Parental	rights:	access,	correction,	deletion.
+Data	processing	purposes	listed.
+Third-party	services	disclosed	(Supabase,	AI	provider	if	used).
+Contact	for	privacy	inquiries.
+64.	Child	Safety
+COPPA	2.0	Compliance	(Effective	June	2025;	Full	Compliance	April	2026)
+Requirement
+Implementation
+Verifiable	parental	consent
+Text-plus	method	(SMS	+	secondary	confirmation)	or	email	verification
+Data	minimisation
+Collect	only	display	name	and	progress	data
+No	behavioural	advertising
+Zero	ad	tracking	for	children
+Data	retention	limits
+Delete	recordings	after	24	hours;	anonymize	analytics	after	12	months
+Parental	access	rights
+Parent	dashboard	with	full	progress	visibility
+Parental	deletion	rights
+Account	deletion	cascades	all	data
+Third-party	SDK	compliance
+Audit	all	embedded	SDKs;	no	non-essential	third	parties
+Voice	data	protection
+Recordings	not	used	for	training;	deleted	after	use
+No	monetisation	of	child	data
+Strict	policy;	no	ads,	no	data	sales
+GDPR-K	Compliance	(EU/UK)
+Requirement
+Implementation
+Age-appropriate	consent
+Consent	age	varies	by	country	(13–16);	geo-detect	and	apply	strictest
+Verifiable	consent
+Parent	must	confirm	via	email	+	secondary	step
+Right	to	erasure
+Full	account	deletion	within	30	days
+Data	portability
+Export	progress	data	as	JSON
+Transparency
+Child-friendly	privacy	summary	in	addition	to	full	policy
+Safe	Defaults
+Public	profiles:
+	Disabled	by	default.	No	social	features	in	MVP.
+Leaderboards:
+	Not	implemented	(child	safety).
+
+=== PAGE 33 ===
+Notifications:
+	Opt-in	only;	parent	controls	for	child	accounts.
+AI	interactions:
+	Logged	and	reviewable;	no	personal	information	requested.
+65.	Content	Management	Strategy
+Content	Creation	Workflow
+Curriculum	Designer	→	Content	Draft	→	Tamil	Reviewer	→	Audio	Recording	→	QA	→	Publication
+Role
+Responsibility
+Tools
+Curriculum	Designer
+Create	lessons,	exercises,	vocabulary	lists
+Google	Sheets	/	CMS
+Tamil	Reviewer
+Verify	spelling,	grammar,	transliteration
+Review	checklist
+Audio	Recorder
+Record	pronunciation	audio
+Audacity	/	Studio
+QA
+Test	rendering,	playback,	exercises
+Test	cases
+Content	Types
+Type
+Source
+Review	Required
+Frequency
+Tamil	letters
+Unicode	standard
+Tamil	speaker
+One-time
+Vocabulary
+Curriculum	designer
+Tamil	speaker
+Per	batch
+Sentences
+Curriculum	designer
+Tamil	speaker
+Per	batch
+Stories
+Tamil	literature	/	original
+Tamil	speaker	+	cultural	reviewer
+Per	story
+Audio
+Native	speaker	recording
+Audio	QA
+Per	recording

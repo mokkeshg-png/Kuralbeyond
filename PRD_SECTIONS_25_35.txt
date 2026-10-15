@@ -1,0 +1,537 @@
+25.	Sentence	Construction
+Progression
+Level
+Sentence	Type
+Example
+Support
+3
+2-word	phrases
+நல்ல	ைபயன்	(
+nalla	paiyan)	—	good
+boy
+Full	Tanglish
+4
+3–4	word	sentences
+என்	ெபயர்	ஆரவ்	(
+en	peyar	Aarav)
+—	my	name	is	Aarav
+Tanglish	on	demand
+4
+Questions
+உனக்	எப்ப	இக்?	(
+unakku
+eppadi	irukku?)	—	how	are	you?
+Audio	+	Tanglish
+5
+Connected	sentences
+எனக்	பழம்	பக்ம்.	ஆல்
+காய்கற	பக்கா.	—	
+I	like	fruit.
+But	I	don’t	like	vegetables.
+Audio	+	minimal	Tanglish
+6
+Paragraph
+Short	descriptive	paragraph
+Audio	only
+Sentence-Building	Exercise	Types
+1.	
+Word	ordering:
+	Drag	words	to	form	a	correct	sentence.
+2.	
+Fill	in	the	blank:
+	Choose	the	correct	word	from	options.
+3.	
+Translation:
+	Given	English,	select/type	Tamil.
+4.	
+Listening	dictation:
+	Hear	Tamil,	type/select	words.
+26.	Listening	Practice
+Audio	Types
+Type
+Description
+Speed	Control
+Repeat
+Letter	pronunciation
+Single	letter	sound
+0.5x,	0.75x,	1x
+Yes
+Word	pronunciation
+Full	word	with	stress
+0.5x,	0.75x,	1x
+Yes
+Sentence	audio
+Full	sentence,	natural	speed
+0.75x,	1x
+Yes
+Dialogue
+Two-speaker	conversation
+0.75x,	1x
+Yes
+Story
+Narrative	passage
+0.75x,	1x
+Yes
+Exercise	Flow
+1.	
+Audio	plays	automatically	(once).
+2.	
+Learner	listens	and	selects	from	3–4	options.
+3.	
+If	incorrect,	audio	repeats	with	highlighted	segment.
+4.	
+If	correct,	visual	confirmation	+	next	item.
+27.	Speaking	Practice
+Scope	Limitation
+
+=== PAGE 11 ===
+Important:
+	Phoneme-level	pronunciation	assessment	for	Tamil	is	not	commercially	reliable	at	MVP	scale.	Tamil	speech	recognition	models
+achieve	WER	of	0.55–0.71	on	dialectal	speech,	and	children’s	speech	performs	worse.	Therefore:
+P0:
+	Speaking	practice	uses	
+record-and-compare
+	(learner	records,	hears	their	voice	alongside	model	audio)	without	AI	scoring.
+P1:
+	Optional	speech-to-text	transcription	via	Web	Speech	API	or	third-party	service,	presented	as	“speech	recognition”	not	“pronunciation
+assessment.”
+P2:
+	Phoneme-level	assessment	if	a	validated	Tamil	assessment	API	becomes	available.
+Recording	Flow
+1.	
+Model	audio	plays.
+2.	
+Learner	taps	“Record.”
+3.	
+Microphone	permission	requested	(with	plain-language	explanation).
+4.	
+Recording	captured	(max	10	seconds).
+5.	
+Playback:	learner’s	voice	→	model	audio.
+6.	
+Self-assessment	prompt:	“How	close	was	your	pronunciation?”
+7.	
+Recording	deleted	from	server	after	24	hours	(or	immediately	if	not	saved).
+Consent	and	Privacy
+Microphone	access	requires	explicit	consent.
+For	users	under	13,	parental	consent	required	before	any	recording.
+Recordings	are	never	shared,	used	for	training,	or	retained	beyond	24	hours.
+Recording	feature	can	be	disabled	by	parent/guardian	in	settings.
+28.	Reading	Practice
+Progression
+Level
+Text	Type
+Length
+Tanglish	Support
+Comprehension
+3
+Single	words
+1	word
+Full
+Picture	match
+4
+Phrases
+2–4	words
+On	demand
+Select	meaning
+5
+Simple	sentences
+3–6	words
+Reduced
+True/false
+6
+Paragraphs
+20–40	words
+Hidden
+MCQ
+7
+Short	stories
+50–100	words
+Hidden
+Open	response
+Reading	Confidence	Measurement
+Reading	confidence	is	measured	through:
+Accuracy:
+	Percentage	of	correctly	read	words	(via	self-report	or	audio	match)
+Fluency:
+	Time	to	read	passage	(logged,	not	scored)
+Comprehension:
+	MCQ	accuracy	on	passage	content
+Self-report:
+	“How	easy	was	this	to	read?”	(1–5	scale)
+Limitation:
+	Self-reported	confidence	is	subjective	and	not	equivalent	to	proficiency.	The	platform	presents	these	metrics	as	learning	indicators,
+not	certified	assessments.
+29.	Story-Based	Learning
+Story	Types
+Type
+Level
+Length
+Audio
+Tanglish
+Picture	story
+2–3
+4	panels
+Yes
+Full
+Short	narrative
+4–5
+50	words
+Yes
+Reduced
+Cultural	story
+5–6
+100	words
+Yes
+Optional
+
+=== PAGE 12 ===
+Folk	tale
+6–7
+200	words
+Yes
+Hidden
+Cultural	Story	Examples
+“The	Clever	Crow”	(panchatantra-style)
+“The	Festival	of	Pongal”
+“Grandmother’s	Kitchen”
+Each	story	includes	vocabulary	preview,	reading,	comprehension	questions,	and	optional	speaking	prompt	(“Tell	the	story	in	your	own	words”).
+30.	Gamification
+Mechanics
+Mechanic
+Description
+Rules
+Ethical	Guardrail
+Daily	Goal
+Target	lessons	per	day
+Default:	1	lesson.
+Adjustable	1–3.
+No	penalty	for	missing
+Streak
+Consecutive	days	of	learning
+1	lesson	=	streak	day.
+Streak	freeze
+available	(1	per
+week).
+No	streak	loss	for	technical	errors.	Grace	period:	1	day.
+Experience	Points	(XP)
+Points	for	completing	activities
+10	XP	per	correct
+answer,	5	XP	per
+lesson	completion,	50
+XP	per	level
+completion
+XP	correlates	with	learning	effort,	not	time	spent
+Badges
+Skill-based	achievements
+“First	Letter,”	“10
+Words,”	“First
+Sentence,”	“Week
+Warrior”
+Badges	tied	to	demonstrated	skills
+Level	Completion
+Unlock	next	level
+80%	mastery	on	unit
+test
+No	pay-to-unlock
+Milestones
+Personal	progress	markers
+“50	Words	Learned,”
+“First	Story	Read”
+No	comparison	to	others
+Prohibited	Gamification	Patterns
+No	punitive	streak	loss
+	for	technical	errors	or	verified	sickness.
+No	public	leaderboards
+	exposing	children’s	names	or	scores.
+No	random	reward	boxes
+	(loot	box	mechanics).
+No	manipulative	notifications
+	(e.g.,	“Your	friend	is	ahead	of	you!”).
+No	monetization	of	children’s	data.
+31.	Rewards	and	Achievements
+Badge	Categories
+Category
+Badge
+Criteria
+Icon
+Letters
+அ	
+Explorer
+Recognize	all	vowels
+Tamil	letter	
+அ
+Letters
+Mei	Master
+Recognize	10	consonants
+Tamil	letter	
+க
+Vocabulary
+Word	Collector
+Learn	25	words
+Book	stack
+Vocabulary
+Word	Master
+Learn	100	words
+Trophy	with	book
+Reading
+First	Reader
+Read	first	word
+Eye	+	book
+Reading
+Story	Reader
+Complete	first	story
+Open	book
+Streak
+Week	Warrior
+7-day	streak
+Flame	with	7
+
+=== PAGE 13 ===
+Streak
+Month	Master
+30-day	streak
+Flame	with	30
+Mastery
+Level	Up
+Complete	Level	1
+Star	with	1
+Mastery
+Script	Independent
+Reach	Stage	E
+Tamil	letter	with
+checkmark
+32.	Personalisation
+Adaptive	Recommendations
+Signal
+Recommendation
+Struggles	with	retroflex	consonants
+Extra	listening	practice	for	
+ள,	ழ,	ண
+Fast	completion	of	vocabulary
+Skip	to	sentence	construction
+Low	speaking	participation
+Non-speaking	alternative	activity
+High	streak,	low	accuracy
+Slower	pace,	more	revision
+Multiple	failures	on	same	item
+Insert	into	revision	queue	with	scaffolded	support
+Personalisation	Rules
+Recommendations	are	
+transparent
+	—	learner	sees	“Why	this?”	explanation.
+Learner	can	
+override
+	recommendations.
+Personalisation	does	not	create	a	filter	bubble	—	new	content	is	always	introduced.
+33.	AI	Requirements
+AI	Feature
+User	Problem
+Input
+Output
+Model	Options
+Non-AI	Fallback
+Priority
+Lesson
+recommendations
+“What	should	I	learn
+next?”
+Progress
+data,
+mastery
+scores
+Next
+lesson/activity
+Rule-based	algorithm	(no	AI
+needed)
+Static	sequence
+P0
+Conversational
+practice
+“I	want	to	practice
+speaking”
+Text/audio
+input
+Contextual
+response
+LLM	API	(OpenAI,
+Anthropic)	with	constrained
+prompts
+Prerecorded	dialogue
+P1
+Contextual	hints
+“I	don’t	understand	this
+word”
+Word,
+context
+Definition,
+example
+Rule-based	dictionary	+
+LLM	for	examples
+Static	dictionary
+P1
+Adaptive	revision
+“What	should	I
+review?”
+Revision
+queue,
+mastery
+Prioritized
+items
+Spaced	repetition	algorithm
+Static	review	list
+P0
+Pronunciation
+feedback
+“How	was	my
+pronunciation?”
+Audio
+recording
+Feedback
+Speech-to-text	+	comparison
+Self-assessment
+P2
+Literary	explanation
+“Explain	this
+Thirukkural”
+Passage,
+language
+Explanation,
+sources
+LLM	+	RAG	with	verified
+sources
+Curated	explanations
+P2
+AI	Safety	Rules
+No	unconstrained	LLM	for	foundational	content
+	(letters,	spelling,	beginner	vocabulary).
+AI	responses	for	children	are	
+filtered	and	constrained
+	with	system	prompts.
+All	AI	interactions	logged
+	for	safety	review	(with	parental	consent).
+AI	
+never	requests	personal	information
+	from	the	learner.
+AI	
+never	pretends	to	be	human
+	—	clearly	labeled	as	“Tamil	helper.”
+34.	Audio	and	Speech	Architecture
+Audio	Types
+Type
+Source
+Format
+Storage
+
+=== PAGE 14 ===
+Letter	pronunciation
+Prerecorded,	reviewed
+MP3,	128kbps
+Supabase	Storage
+Word	pronunciation
+Prerecorded,	reviewed
+MP3
+Supabase	Storage
+Sentence	audio
+Prerecorded,	reviewed
+MP3
+Supabase	Storage
+Story	narration
+Prerecorded,	reviewed
+MP3
+Supabase	Storage
+TTS	fallback
+Browser/cloud	TTS
+Streaming
+Not	stored
+Audio	Strategy
+P0:
+	All	core	lesson	audio	is	
+prerecorded	and	reviewed
+	by	a	Tamil	speaker.
+P0:
+	Audio	playback	uses	HTML5	Audio	element	with	play/pause/repeat/speed	controls.
+P1:
+	Cloud	TTS	for	dynamic	content	(e.g.,	AI-generated	examples).
+P2:
+	Speech	recognition	for	pronunciation	assessment	(if	validated	API	available).
+Audio	Failure	Handling
+Failure
+User	Message
+Recovery
+Audio	fails	to	load
+“Audio	unavailable.	Tap	to	retry.”
+Retry	button;	text	fallback
+Browser	blocks	autoplay
+“Tap	to	enable	audio”
+Manual	play	button
+Microphone	denied
+“Microphone	access	needed	for	speaking	practice”
+Settings	link;	skip	option
+35.	Global	Localisation
+Architecture
+Use	
+structured	translation	dictionaries
+	with	stable	keys.	No	hardcoded	UI	strings.	Recommended	library:	
+react-i18next
+	or	
+react-intl
+.
+Translation	File	Structure
+/locales
+		/en
+				common. json
+				onboarding. json
+				dashboard. json
+				lessons. json
+				errors. json
+		/ta
+				common. json
+				onboarding. json
+				. . .
+Localisation	Coverage
+UI	Element
+English
+Tamil
+Notes
+Navigation	labels
+✓
+✓
+All	labels
+Buttons
+✓
+✓
+All	CTAs
+Form	labels
+✓
+✓
+All	inputs
+Validation	errors
+✓
+✓
+All	error	messages
+Notifications
+✓
+✓
+In-app	and	push
+Dashboard	labels
+✓
+✓
+All	metrics
+Lesson	instructions
+✓
+✓
+Per	lesson
+Accessibility	labels
+✓
+✓
+aria-label,	alt	text
+Learning	Content	vs.	UI
+The	
+interface	language
+	and	
+learning	language
+	are	independent.	A	learner	can	use	the	English	interface	while	learning	Tamil,	or	the	Tamil
+interface	while	learning	Tamil.	The	interface	language	never	changes	the	target	language.
+
+=== PAGE 15 ===

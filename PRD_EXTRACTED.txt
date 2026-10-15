@@ -1,0 +1,5936 @@
+=== PAGE 1 ===
+TamilPalam	PRD
+TamilPalam	—	Enterprise-Grade	Product	Requirements
+Document
+Document	Version:
+	1.0	
+Status:
+	Final	—	Complete	PRD	
+Prepared	for:
+	Hackathon	P10	—	“How	Can	Tamil	Be	Taught	to	Tamil	Children	Living
+Abroad?”	
+Classification:
+	Research-Backed,	Implementation-Ready
+1.	Cover	Page
+Field
+Detail
+Product	Name
+TamilPalam	(working	name)
+Meaning
+“Tamil	Bridge”	—	a	bridge	between	English	and	Tamil
+Product	Category
+Gamified	Tamil	language	learning	platform
+Primary	Audience
+English-speaking	children	abroad	learning	Tamil
+Document	Type
+Product	Requirements	Document	(PRD)
+Version
+1.0	—	Complete
+Date
+2025
+Team	Size
+4	developers	(hackathon	context)
+Hackathon	Duration
+15	hours
+Target	Deployment
+Web	(responsive),	mobile-first	PWA
+Legal	Notice
+Name	and	domain	availability	not	verified
+2.	Document	Control	and	Version	History
+Version
+Date
+Author
+Changes
+0.1
+Day	0
+Product	Lead
+Initial	outline
+0.5
+Day	0
+Full	Team
+Research	integration
+1.0
+Day	0
+Full	Team
+Complete	PRD	finalized
+Document	Owners:
+	Product	Lead	(primary),	Technical	Lead	(secondary)
+Review	Cycle:
+	Post-hackathon,	bi-weekly	during	active	development
+3.	Executive	Summary
+TamilPalam	is	a	gamified,	research-backed	Tamil	language	learning	platform	designed	for	English-speaking	children	living	outside	Tamil	Nadu
+who	have	little	or	no	prior	Tamil	knowledge.	The	platform	uses	
+Tanglish	(Tamil	written	in	English	letters)	as	a	temporary	learning	bridge
+,
+progressively	reducing	transliteration	support	as	learners	gain	mastery	of	Tamil	script,	vocabulary,	sentences,	and	reading	comprehension.
+The	product	addresses	a	critical	gap:	existing	Tamil	learning	apps	for	children	abroad	either	assume	prior	script	knowledge,	lack	progressive
+transliteration	reduction,	or	provide	insufficient	audio-first	instruction.	TamilPalam	differentiates	through	its	
+Progressive	Tanglish	Reduction
+system	—	a	structured	five-stage	pathway	that	moves	learners	from	full	Tanglish	support	to	independent	Tamil	reading.
+Core	deliverables	(P0):
+	English/Tamil	interface	localization,	onboarding	and	assessment,	level-based	curriculum	(Levels	0–7),
+letter/word/sentence	learning,	listening	and	speaking	practice,	quizzes,	persistent	progress,	gamification,	and	responsive	design.
+Differentiating	features	(P1):
+	Progressive	Tanglish	Reduction,	personalized	revision,	real-life	Tamil	missions,	audio-first	learning,	adaptive
+recommendations,	and	cultural	storytelling.
+Future	expansion	(P2):
+	Tamil	Research	Assistant	for	literary	content	explanation.
+
+=== PAGE 2 ===
+The	MVP	is	scoped	for	a	4-person	student	team	with	AI-assisted	development	tools	and	a	15-hour	hackathon	deadline.	The	recommended	stack	is
+React	+	TypeScript	+	Vite	+	Tailwind	CSS
+	on	the	frontend,	
+Supabase	(PostgreSQL	+	Auth	+	Storage	+	RLS)
+	on	the	backend,	with	no
+custom	API	server	unless	justified.
+4.	Product	Vision
+Build	a	polished,	interactive,	gamified	Tamil	learning	platform	that	helps	an	English-speaking	beginner	progress	from	recognizing	Tamil	letters	to
+understanding	words,	reading	sentences,	participating	in	conversations,	and	reading	simple	paragraphs	and	stories.
+Tanglish	is	the	initial	bridge	between	English	and	Tamil.	The	product	must	
+not	stop	at	teaching	Tanglish	spellings
+.	Its	educational	objective	is	to
+progressively	reduce	dependence	on	Tanglish	and	help	learners	recognize	and	read	Tamil	script	independently.
+The	experience	should	feel	like	a	thoughtfully	designed	educational	product	created	by	a	premium	product-design	team	—	not	a	generic	AI-
+generated	website.
+5.	Problem	Statement
+P10	—	How	Can	Tamil	Be	Taught	to	Tamil	Children	Living	Abroad?
+Children	living	abroad	who	do	not	speak	Tamil	at	home	need	an	engaging	online	way	to	learn	Tamil	and	continue	learning	consistently.	The
+learning	platform	should	encourage	their	interest	and	measure	their	learning	progress.
+The	solution	must	specifically	address:
+1.	
+How	to	teach	Tamil	to	children	who	have	little	or	no	prior	Tamil	knowledge.
+2.	
+How	to	make	learning	interesting	and	sustainable.
+3.	
+How	to	measure	learning	progress.
+4.	
+How	to	help	learners	gradually	develop	real	Tamil	reading,	writing,	listening,	and	speaking	skills.
+The	learner	knows	English	and	is	learning	Tamil.	The	problem	is	
+not
+	teaching	English	to	Tamil	speakers.
+6.	Problem	Validation	and	Supporting	Evidence
+Evidence	Area
+Finding
+Source	Type
+Heritage	language	attrition
+Children	who	actively	engage	with
+heritage	language	experience
+academic	success,	stronger	socio-
+emotional	skills,	and	enhanced	well-
+being
+Peer-reviewed	research	(Taylor	&	Francis,	2025)
+Transliteration	dependence
+Existing	apps	show	Tamil	script
+alongside	transliteration	but	lack
+systematic	reduction
+Competitor	analysis	(Google	Play,	App	Store)
+Gamification	effectiveness
+Streaks,	XP,	and	badges	significantly
+predict	continued	app	usage	and
+motivation
+IEEE,	Zenodo,	Lund	University	studies
+Pronunciation	assessment	limitations
+Tamil	speech	recognition	achieves
+WER	of	0.55–0.71	on	dialectal
+speech;	children’s	speech	performs
+worse
+ACL	Anthology,	Semantic	Scholar
+Privacy	regulation	landscape
+COPPA	2.0	(2025)	expands	definition
+of	personal	information;	GDPR-K
+requires	verifiable	parental	consent
+FTC,	Cookie-Script	analysis
+Assumption	requiring	validation:
+	The	specific	efficacy	of	progressive	Tanglish	reduction	as	a	pedagogical	method	has	not	been	independently
+validated.	A	pilot	study	is	recommended	before	making	educational	efficacy	claims.
+7.	Product	Goals
+
+=== PAGE 3 ===
+Goal	ID
+Goal
+Success	Metric
+Priority
+G-001
+Enable	English-
+speaking	children	to
+read	Tamil	script
+independently
+70%	of	active	learners	reach	Stage	D	(audio-only	support)	within
+60	sessions
+P0
+G-002
+Sustain	learning
+engagement	through
+gamification
+40%	weekly	return	rate	among	onboarded	learners
+P0
+G-003
+Provide	measurable
+learning	progress
+Dashboard	shows	skill	mastery	per	level	with	95%	data
+completeness
+P0
+G-004
+Support	both	English
+and	Tamil	interface
+languages	fully
+100%	of	UI	strings	localized;	zero	missing	translation	warnings
+in	production
+P0
+G-005
+Maintain	child	safety
+and	privacy
+compliance
+Zero	unauthorised	access	to	learner	data;	parental	consent	flow
+operational
+P0
+8.	Non-Goals
+Teaching	English	to	Tamil	speakers.
+Claiming	fluency	within	a	fixed	number	of	days.
+Replacing	formal	Tamil	education	or	teacher-led	instruction.
+Providing	certified	language	proficiency	assessments.
+Supporting	languages	other	than	Tamil	(in	MVP).
+Building	a	social	network	or	chat	feature	between	learners.
+Monetization	targeting	children	(subscriptions,	ads,	in-app	purchases	for	the	MVP).
+Full	Tamil	Research	Assistant	module	in	the	MVP.
+9.	Target	Users
+Primary	Persona:	“Aarav”
+Attribute
+Detail
+Name
+Aarav
+Age
+7–12	years
+Location
+United	States	/	United	Kingdom	/	Australia	/	Singapore
+Languages
+English	(primary),	hears	Tamil	from	parents/grandparents
+Tamil	Level
+Little	to	no	reading;	may	understand	some	spoken	words
+Device
+Tablet	(iPad/Android),	sometimes	shared	family	laptop
+Pain	Points
+Cannot	read	Tamil	script;	finds	traditional	Tamil	classes	boring;	feels
+disconnected	from	heritage
+Motivations
+Wants	to	understand	what	grandparents	say;	wants	to	read	Tamil
+storybooks;	enjoys	games	and	rewards
+Tech	Comfort
+High	—	uses	educational	apps	at	school
+Secondary	Personas
+Persona
+Description
+Needs
+Parent	(Priya)
+Wants	child	to	maintain	Tamil	connection
+Progress	visibility,	low	time
+commitment,	safe	platform
+Teacher	(Murugan)
+Weekend	Tamil	school	instructor
+Classroom-friendly	content,	printable
+progress	reports
+Heritage	Learner	(Divya)
+16-year-old	who	understands	spoken	Tamil	but	cannot	read
+Faster	progression,	adult-appropriate
+content	tone
+Adult	Beginner	(Raj)
+35-year-old	spouse	learning	Tamil
+Self-paced,	no	childish	imagery,
+
+=== PAGE 4 ===
+practical	vocabulary
+10.	User	Personas	(Expanded)
+Persona	1:	Aarav	—	The	Curious	Child
+Goals:
+	Read	Tamil	like	his	grandmother;	play	games;	earn	badges.
+Frustrations:
+	Tamil	looks	like	“squiggles”;	adults	speak	too	fast.
+Quote:
+	“I	want	to	surprise	Paati	by	reading	her	a	story.”
+Design	implication:
+	Visual,	audio-heavy,	short	sessions	(5–10	min),	celebratory	feedback.
+Persona	2:	Priya	—	The	Busy	Parent
+Goals:
+	Ensure	child	learns	Tamil;	track	progress	without	hovering.
+Frustrations:
+	No	time	to	teach;	existing	apps	are	too	complex.
+Quote:
+	“I	just	want	to	know	he’s	actually	learning,	not	just	tapping	screens.”
+Design	implication:
+	Parent	dashboard	with	weekly	summary;	email	reports.
+Persona	3:	Murugan	—	The	Weekend	Teacher
+Goals:
+	Supplement	classroom	learning;	assign	homework.
+Frustrations:
+	Students	forget	between	weekend	classes.
+Quote:
+	“If	they	practice	during	the	week,	we	can	move	faster	on	Saturdays.”
+Design	implication:
+	Shareable	progress	reports;	assignment	features	(P1).
+Persona	4:	Divya	—	The	Heritage	Learner
+Goals:
+	Learn	to	read	Tamil	script;	understand	written	Tamil.
+Frustrations:
+	Apps	for	kids	feel	babyish;	adult	courses	are	too	slow.
+Quote:
+	“I	understand	what	Amma	says,	but	I	can’t	read	her	WhatsApp	messages.”
+Design	implication:
+	Tone-neutral	interface;	skip	option	for	oral	vocabulary;	script-focused	pathway.
+Persona	5:	Raj	—	The	Adult	Beginner
+Goals:
+	Learn	Tamil	to	communicate	with	in-laws;	travel	confidence.
+Frustrations:
+	No	structured	self-study	path;	pronunciation	anxiety.
+Quote:
+	“I	don’t	need	to	write	poetry.	I	just	want	to	have	a	conversation.”
+Design	implication:
+	Practical	phrase-first	approach;	optional	script	learning.
+11.	Jobs	to	Be	Done
+Job	ID
+When	I…
+I	want	to…
+So	I	can…
+JTBD-01
+See	Tamil	text
+Recognize	at	least	some	letters
+Feel	less	intimidated
+JTBD-02
+Hear	my	grandmother	speak
+Understand	basic	words
+Respond	appropriately
+JTBD-03
+Have	10	minutes	free
+Complete	a	short	lesson
+Feel	productive
+JTBD-04
+Finish	a	week	of	learning
+See	my	progress
+Stay	motivated
+JTBD-05
+Struggle	with	a	word
+Get	a	hint	without	feeling	stupid
+Keep	trying
+JTBD-06
+Master	a	level
+Earn	recognition
+Feel	proud
+JTBD-07
+Want	to	read	Tamil
+Transition	from	Tanglish	to	script
+Achieve	independence
+12.	User	Pain	Points
+Pain	Point
+Frequency
+Severity
+Current	Workaround
+Tamil	script	looks	unfamiliar	and
+intimidating
+Every	session
+High
+Avoid	script;	rely	on	Tanglish
+Pronunciation	uncertainty	(retroflex,
+Every	lesson
+High
+Guess	or	skip	speaking
+
+=== PAGE 5 ===
+long	vowels)
+Lessons	too	long	/	attention	span
+Every	session
+Medium
+Abandon	app
+No	visible	progress
+Weekly
+Medium
+Lose	motivation
+Content	feels	too	childish	(older
+learners)
+Every	session
+Medium
+Stop	using	app
+No	offline	access
+Travel/commute
+Medium
+Skip	learning	days
+Tanglish	never	goes	away
+Long-term
+High
+Never	learn	real	script
+13.	User	Stories
+ID
+As	a…
+I	want	to…
+So	that…
+Priority
+US-001
+Child	learner
+Choose	English	or	Tamil	for	the	app
+I	understand	everything
+P0
+US-002
+Child	learner
+Take	a	quick	assessment
+Start	at	my	level
+P0
+US-003
+Child	learner
+See	Tamil	letters	with	audio
+Learn	pronunciation
+P0
+US-004
+Child	learner
+Practice	with	Tanglish	support
+Not	feel	overwhelmed
+P0
+US-005
+Child	learner
+Earn	streaks	and	badges
+Stay	motivated
+P0
+US-006
+Child	learner
+Resume	a	lesson	after	interruption
+Not	lose	progress
+P0
+US-007
+Child	learner
+See	Tanglish	gradually	reduce
+Learn	real	Tamil
+P1
+US-008
+Parent
+View	child’s	progress
+Know	they	are	learning
+P1
+US-009
+Teacher
+Assign	lessons	to	students
+Supplement	class
+P2
+US-010
+Adult	learner
+Skip	childish	content
+Learn	at	my	level
+P1
+14.	Product	Scope
+A.	Core	Product	—	Mandatory	(P0)
+1.	
+English	and	Tamil	interface	localization
+2.	
+Learner	onboarding	and	initial	skill	assessment
+3.	
+Level-based	Tamil	learning	curriculum	(Levels	0–7)
+4.	
+Tamil	letters	and	pronunciation
+5.	
+Tamil	words	and	vocabulary
+6.	
+Basic	sentences	and	sentence	construction
+7.	
+Listening	and	speaking	practice
+8.	
+Reading	practice	and	short	paragraphs
+9.	
+Interactive	quizzes	and	educational	games
+10.	
+Tanglish-assisted	learning
+11.	
+Lesson	completion	and	assessment	results
+12.	
+Learning	progress	dashboard
+13.	
+Streaks,	points,	badges,	and	appropriate	rewards
+14.	
+Persistent	data	storage
+15.	
+Responsive	design	for	mobile,	tablet,	and	desktop
+B.	High-Value	Differentiating	Features	(P1)
+1.	
+Progressive	Tanglish	Reduction
+2.	
+Personalised	Revision
+3.	
+Real-Life	Tamil	Missions
+4.	
+Audio-First	Learning
+5.	
+Adaptive	Learning	Recommendations
+6.	
+Structured	transition	from	transliteration	to	native	Tamil	script
+7.	
+Cultural	storytelling	integrated	into	language	learning
+C.	Future	Expansion	(P2)
+
+=== PAGE 6 ===
+Tamil	Research	Assistant:
+	Literary	content	explanation,	Thirukkural	study,	source	verification,	uncertainty	communication,	hallucination
+prevention
+15.	MVP	Prioritisation
+Priority
+Definition
+Features
+P0
+Essential	for	working	prototype
+Localization,	onboarding,	Levels	1–4	curriculum,
+letter/word/sentence	learning,	basic	quizzes,	audio
+playback,	progress	persistence,	gamification
+(streaks/points/badges),	responsive	design,
+Tanglish	support
+P1
+Important	enhancement
+Progressive	Tanglish	Reduction,	personalized
+revision,	real-life	missions,	adaptive
+recommendations,	parent	dashboard,	cultural
+storytelling
+P2
+Future	expansion
+Tamil	Research	Assistant,	teacher	assignments,
+advanced	speech	assessment,	offline	mode,
+multiple	dialect	support
+16.	Competitive	Research
+Competitor
+Target	Audience
+Key	Features
+Transliteration
+Strengths
+Weaknesses
+TamilPalam	Differentiation
+Kinder	Tamil
+Children	3–8
+Play-based
+lessons,	Tamil
+culture,	200+
+words,	podcasts,
+offline
+Not	verified
+Child-
+friendly
+design,
+cultural
+integration
+Limited
+vocabulary,	no
+progressive
+reduction
+Progressive	Tanglish	Reduction,
+structured	levels
+Tamil
+Agaram	Pro
+Children	4–10
+1800+	words,
+animations,	voice-
+overs,	games,
+quizzes,	progress
+tracking
+Phonetic
+pronunciations	shown
+Extensive
+vocabulary,
+parent
+dashboard
+No
+transliteration
+reduction
+strategy
+Audio-first	design,	five-stage	reduction
+Learn	Tamil
+through
+English
+Beginners
+Script	+
+transliteration	+
+meaning,	quizzes
+Yes	(static)
+Clear	triple
+presentation
+No
+gamification
+depth,	no
+progression
+Gamified,	adaptive	progression
+Bhasha:
+Learn	Indian
+Languages
+Adults/teens
+Gamified	levels,
+drag-drop,	MCQ,
+accuracy
+adaptation
+Not	verified
+Multi-
+language
+support
+Not	Tamil-
+focused,	no
+script-first
+approach
+Tamil-specific	depth
+Duolingo
+(reference)
+General
+XP,	streaks,
+leaderboards,
+gamification
+N/A
+Proven
+engagement
+mechanics
+Not	available
+for	Tamil
+Tamil-specific	curriculum,	child-safe
+gamification
+Verified	finding:
+	No	existing	Tamil	learning	app	combines	progressive	transliteration	reduction	with	gamified,	level-based	curriculum.
+TamilPalam	addresses	this	gap.
+Assumption	requiring	validation:
+	Competitor	pricing	and	feature	availability	may	change.	Verify	before	making	public	claims.
+17.	Product	Positioning
+TamilPalam	positions	itself	as	the	
+premier	Tamil	learning	platform	for	English-speaking	children	abroad
+	—	not	a	generic	language	app,	not	a
+Tamil-English	dictionary,	and	not	a	formal	classroom	replacement.	It	occupies	the	space	between	“fun	but	shallow”	children’s	Tamil	apps	and
+“rigorous	but	inaccessible”	formal	Tamil	education.
+Positioning	statement:
+	For	English-speaking	children	abroad	who	want	to	connect	with	their	Tamil	heritage,	TamilPalam	is	a	gamified	learning
+platform	that	uses	Tanglish	as	a	bridge	to	build	real	Tamil	reading	and	comprehension	skills.	Unlike	other	apps,	TamilPalam	progressively	reduces
+transliteration	support	so	learners	achieve	independent	Tamil	script	literacy.
+
+=== PAGE 7 ===
+18.	Differentiation	Strategy
+Differentiator
+Description
+Competitive	Gap
+Defensibility
+Progressive	Tanglish	Reduction
+Five-stage	system	reducing
+transliteration	as	mastery	grows
+No	competitor	implements	this
+High	—	requires	pedagogical	design
+and	data
+Audio-First	Learning
+Pronunciation	before	writing;
+listen-speak-read	sequence
+Most	apps	are	text-first
+Medium
+Child-Safe	Gamification
+Streaks	and	badges	without
+punitive	loss	or	leaderboards
+Duolingo	has	streak	loss	anxiety
+Medium	—	ethical	design
+Real-Life	Missions
+Practical	tasks	(call	grandparent,
+read	menu)
+None	in	Tamil	learning
+High
+Cultural	Storytelling
+Tamil	stories	integrated	into
+lessons
+Limited	in	competitors
+Medium
+19.	Learning	Principles
+Principle
+Description
+Application
+Audio-first
+Learners	hear	correct	pronunciation	before	seeing	text
+Every	new	letter/word	begins	with	audio
+Progressive	disclosure
+Tanglish	support	reduces	as	mastery	increases
+Five-stage	system
+Spaced	repetition
+Review	intervals	expand	with	successful	recall
+Revision	queue	algorithm
+Interleaving
+Mix	related	concepts	in	practice
+Lessons	blend	letters	+	vocabulary	+	sentences
+Active	recall
+Learners	produce	answers,	not	just	recognize
+Speaking,	typing,	matching	exercises
+Immediate	feedback
+Correct/incorrect	feedback	within	1	second
+Quiz	response	handling
+Low-stakes	failure
+Mistakes	are	learning	opportunities,	not	punishments
+No	streak	loss	for	wrong	answers
+Cultural	relevance
+Content	connects	to	Tamil	culture	and	family	life
+Stories,	missions,	proverbs
+20.	Curriculum	Framework
+CEFR	Alignment
+TamilPalam	Level
+CEFR	Equivalent
+Can-Do	Descriptor
+Level	0
+Pre-A1
+Recognize	Tamil	script	exists;	understand	assessment
+Level	1
+Pre-A1
+Recognize	all	vowels	and	basic	consonants	with	audio
+support
+Level	2
+A1	(receptive)
+Understand	50+	spoken	words	with	visual	context
+Level	3
+A1
+Read	simple	2–3	syllable	words	in	Tamil	script
+Level	4
+A1+
+Construct	simple	sentences	about	self	and	family
+Level	5
+A2	(listening)
+Follow	short	guided	dialogues
+Level	6
+A2
+Read	short	paragraphs	with	comprehension
+Level	7
+A2+
+Participate	in	real-world	Tamil	interactions
+Level	Structure
+Every	level	contains:
+Learning	objectives
+	(3–5	per	level)
+Entry	requirements
+	(mastery	of	previous	level	or	assessment	score)
+Skills	taught
+	(reading,	writing,	listening,	speaking,	vocabulary,	grammar)
+Example	lessons
+	(5–8	per	level)
+Lesson	sequence
+	(prerequisite-ordered)
+Activities
+	(matching,	MCQ,	fill-blank,	speaking,	listening,	sentence-building)
+Assessment	types
+	(formative	quiz,	unit	test,	speaking	check)
+
+=== PAGE 8 ===
+Pass/mastery	criteria
+	(80%	accuracy	on	unit	test)
+Remediation	paths
+	(targeted	revision	for	failed	items)
+Completion	criteria
+	(all	lessons	+	unit	test	passed)
+Estimated	time
+	(Level	0:	10	min;	Levels	1–7:	45–90	min	each)
+Tanglish	policy
+	(see	Section	11)
+Audio	requirements
+	(prerecorded	for	all	letters,	words,	sentences)
+Accessibility	requirements
+	(WCAG	2.1	AA,	screen	reader	labels)
+21.	Tamil-Script	Learning	Model
+Unicode	Foundation
+Tamil	script	in	Unicode	occupies	code	points	U+0B80–U+0BFF.	Independent	vowels	(Uyir)	occupy	U+0B85–U+0B94;	consonants	(Mei)	occupy
+U+0B95–U+0BB9.	Vowel	signs	(Uyirmei)	are	combining	characters	that	modify	consonants.	The	virama	(U+0BCD,	்)	suppresses	the	inherent
+vowel.
+Critical	implementation	note:
+	Tamil	is	a	complex	script	requiring	proper	rendering	support.	Browsers	and	OS	font	stacks	must	handle	combining
+characters,	ligatures	(e.g.,	
+R),	
+and	the	split	vowel	sign	ொ	(U+0BCA).	Use	Unicode	NFC	normalization	for	all	stored	and	displayed	text.	Test
+rendering	in	Chrome,	Safari,	Firefox,	and	Edge	on	Windows,	macOS,	iOS,	and	Android.
+Letter	Introduction	Sequence
+Phase
+Content
+Audio
+Tanglish
+Visual
+1
+அ,	ஆ,	இ,	ஈ,	உ,	ஊ
+Yes
+Yes
+Animated	letter	formation
+2
+எ,	ஏ,	ஐ,	ஒ,	ஓ,	ஔ
+Yes
+Yes
+Letter	+	example	word
+3
+க,	ங,	ச,	ஞ,	ட,	ண
+Yes
+Yes
+Letter	+	sound	+	image
+4
+த,	ந,	ப,	ம,	ய,	ர,	ல,	வ,	ழ,	ள,	ற,	ன
+Yes
+Yes
+Retroflex	distinction
+highlighted
+5
+Combined	forms	(
+க்	+	
+vowel
+signs)
+Yes
+Reduced
+Formation	animation
+22.	Tanglish	Transliteration	Model
+The	Challenge
+Tamil	sounds	do	not	map	perfectly	to	English	letters.	Key	issues:
+Long	vs.	short	vowels:
+	ஆ	(
+ā)	vs.	
+அ	(
+a)	—	Tanglish	“aa”	vs	“a”
+Retroflex	consonants:
+	ள	(
+ḷ),	
+ழ	(
+ḻ),	
+ண	(
+ṇ)	—	no	exact	English	equivalent
+Voiced/unvoiced	distinction:
+	க	
+can	be	“ka”	or	“ga”	depending	on	position
+Dental	vs.	retroflex:
+	த	(
+dental	“th”)	vs.	
+ட	(
+retroﬂex	“t”)
+Transliteration	Rules
+Tamil
+IPA
+Tanglish	(Primary)
+Alternative
+Note
+அ
+/a/
+a
+—
+Short
+ஆ
+/aː/
+aa
+a
+Long
+இ
+/i/
+i
+—
+Short
+ஈ
+/iː/
+ee
+i
+Long
+க
+/k/
+ka
+ga
+Context-dependent	voicing
+ங
+/ŋ/
+nga
+—
+Velar	nasal
+ச
+/t͡ʃ/
+cha
+sa
+Context-dependent
+ஞ
+/ɲ/
+nya
+—
+Palatal	nasal
+ட
+/ʈ/
+ta
+da
+Retroflex
+ண
+/ɳ/
+na
+—
+Retroflex	nasal
+
+=== PAGE 9 ===
+த
+/t̪/
+tha
+da
+Dental
+ந
+/n̪/
+na
+—
+Dental	nasal
+ள
+/ɭ/
+la
+—
+Retroflex	lateral
+ழ
+/ɻ/
+zha
+l
+Approximant
+ற
+/r/
+ra
+—
+Trill
+ன
+/n/
+na
+—
+Alveolar	nasal
+Handling	ambiguity:
+	Where	multiple	Tanglish	spellings	are	common	(e.g.,	“zha”	vs	“l”	for	
+ழ),	
+the	platform	uses	one	primary	spelling	and
+displays	alternatives	on	request.	The	audio	is	the	authoritative	pronunciation	reference.
+23.	Progressive	Tanglish	Reduction
+Five-Stage	System
+Stage
+Tamil	Script
+Tanglish
+English	Meaning
+Audio
+Trigger	to	Advance
+A
+Always	shown
+Always	shown
+Always	shown
+Auto-play
+80%	accuracy	on	10	items
+B
+Always	shown
+Always	shown
+On	demand
+Auto-play
+85%	accuracy	on	15	items
+C
+Always	shown
+On	demand
+Hidden
+On	demand
+85%	accuracy	on	15	items	+	3	sessions
+D
+Always	shown
+Hidden
+Hidden
+On	demand
+90%	accuracy	on	20	items
+E
+Always	shown
+Hidden
+Hidden
+Hidden
+Mastery	confirmed
+Readiness	Evidence
+Stage	advancement	is	based	on	
+demonstrated	accuracy	across	multiple	item	types
+	(recognition,	recall,	production).
+Performance	is	tracked	per	skill	(letter	recognition,	word	reading,	sentence	comprehension).
+A	decrease	in	performance	triggers	
+automatic	regression
+	to	the	previous	stage	for	affected	items	only.
+Learners	can	
+manually	request	Tanglish	support
+	at	any	stage	via	a	persistent	“Need	help?”	button.
+Accessibility	support	(larger	text,	audio	repeat,	screen	reader	labels)	is	
+never	removed
+.
+Mastery	Calculation
+skill_mastery	=	(correct_recalls	/	total_attempts)	×	recency_weight	×	difficulty_modifier
+recency_weight
+:	Recent	attempts	weighted	higher	(exponential	decay	over	14	days)
+difficulty_modifier
+:	Harder	items	contribute	more	to	mastery	score
+Mastery	threshold	per	skill:	0.80	for	stage	advancement,	0.90	for	level	completion
+24.	Vocabulary	Learning
+Categories
+Category
+Example	Words
+Level
+Audio
+Visual
+Family
+அம்மா	(
+amma),	
+அப்பா	(
+appa),	
+அக்கா	(
+akka)
+2
+Yes
+Family	illustration
+Greetings
+வணக்கம்	(
+vanakkam),	
+நன்ற	(
+nandri)
+2
+Yes
+Greeting	gesture
+Numbers
+ஒன்	(
+ondru),	
+இரண்	(
+irandu)
+2
+Yes
+Number	+	objects
+Colours
+சவப்	(
+sivappu),	
+பச்ைச	(
+pachai)
+2
+Yes
+Colour	swatch
+Food
+ேசா	(
+soru),	
+தண்ணீர்	(
+thanneer)
+2
+Yes
+Food	image
+Animals
+நாய்	(
+naai),	
+ன	(
+poona)
+2
+Yes
+Animal	image
+Actions
+வா	(
+vaa),	
+ேபா	(
+po)
+3
+Yes
+Action	animation
+Spaced	Repetition	Algorithm
+Interval
+Trigger
+
+=== PAGE 10 ===
+1	day
+Initial	learning
+3	days
+First	successful	recall
+7	days
+Second	successful	recall
+14	days
+Third	successful	recall
+30	days
+Fourth	successful	recall
+60	days
+Mastered
+Failed	recall	resets	interval	to	1	day	for	that	item.
+25.	Sentence	Construction
+Progression
+Level
+Sentence	Type
+Example
+Support
+3
+2-word	phrases
+நல்ல	ைபயன்	(
+nalla	paiyan)	—	good
+boy
+Full	Tanglish
+4
+3–4	word	sentences
+என்	ெபயர்	ஆரவ்	(
+en	peyar	Aarav)
+—	my	name	is	Aarav
+Tanglish	on	demand
+4
+Questions
+உனக்	எப்ப	இக்?	(
+unakku
+eppadi	irukku?)	—	how	are	you?
+Audio	+	Tanglish
+5
+Connected	sentences
+எனக்	பழம்	பக்ம்.	ஆல்
+காய்கற	பக்கா.	—	
+I	like	fruit.
+But	I	don’t	like	vegetables.
+Audio	+	minimal	Tanglish
+6
+Paragraph
+Short	descriptive	paragraph
+Audio	only
+Sentence-Building	Exercise	Types
+1.	
+Word	ordering:
+	Drag	words	to	form	a	correct	sentence.
+2.	
+Fill	in	the	blank:
+	Choose	the	correct	word	from	options.
+3.	
+Translation:
+	Given	English,	select/type	Tamil.
+4.	
+Listening	dictation:
+	Hear	Tamil,	type/select	words.
+26.	Listening	Practice
+Audio	Types
+Type
+Description
+Speed	Control
+Repeat
+Letter	pronunciation
+Single	letter	sound
+0.5x,	0.75x,	1x
+Yes
+Word	pronunciation
+Full	word	with	stress
+0.5x,	0.75x,	1x
+Yes
+Sentence	audio
+Full	sentence,	natural	speed
+0.75x,	1x
+Yes
+Dialogue
+Two-speaker	conversation
+0.75x,	1x
+Yes
+Story
+Narrative	passage
+0.75x,	1x
+Yes
+Exercise	Flow
+1.	
+Audio	plays	automatically	(once).
+2.	
+Learner	listens	and	selects	from	3–4	options.
+3.	
+If	incorrect,	audio	repeats	with	highlighted	segment.
+4.	
+If	correct,	visual	confirmation	+	next	item.
+27.	Speaking	Practice
+Scope	Limitation
+
+=== PAGE 11 ===
+Important:
+	Phoneme-level	pronunciation	assessment	for	Tamil	is	not	commercially	reliable	at	MVP	scale.	Tamil	speech	recognition	models
+achieve	WER	of	0.55–0.71	on	dialectal	speech,	and	children’s	speech	performs	worse.	Therefore:
+P0:
+	Speaking	practice	uses	
+record-and-compare
+	(learner	records,	hears	their	voice	alongside	model	audio)	without	AI	scoring.
+P1:
+	Optional	speech-to-text	transcription	via	Web	Speech	API	or	third-party	service,	presented	as	“speech	recognition”	not	“pronunciation
+assessment.”
+P2:
+	Phoneme-level	assessment	if	a	validated	Tamil	assessment	API	becomes	available.
+Recording	Flow
+1.	
+Model	audio	plays.
+2.	
+Learner	taps	“Record.”
+3.	
+Microphone	permission	requested	(with	plain-language	explanation).
+4.	
+Recording	captured	(max	10	seconds).
+5.	
+Playback:	learner’s	voice	→	model	audio.
+6.	
+Self-assessment	prompt:	“How	close	was	your	pronunciation?”
+7.	
+Recording	deleted	from	server	after	24	hours	(or	immediately	if	not	saved).
+Consent	and	Privacy
+Microphone	access	requires	explicit	consent.
+For	users	under	13,	parental	consent	required	before	any	recording.
+Recordings	are	never	shared,	used	for	training,	or	retained	beyond	24	hours.
+Recording	feature	can	be	disabled	by	parent/guardian	in	settings.
+28.	Reading	Practice
+Progression
+Level
+Text	Type
+Length
+Tanglish	Support
+Comprehension
+3
+Single	words
+1	word
+Full
+Picture	match
+4
+Phrases
+2–4	words
+On	demand
+Select	meaning
+5
+Simple	sentences
+3–6	words
+Reduced
+True/false
+6
+Paragraphs
+20–40	words
+Hidden
+MCQ
+7
+Short	stories
+50–100	words
+Hidden
+Open	response
+Reading	Confidence	Measurement
+Reading	confidence	is	measured	through:
+Accuracy:
+	Percentage	of	correctly	read	words	(via	self-report	or	audio	match)
+Fluency:
+	Time	to	read	passage	(logged,	not	scored)
+Comprehension:
+	MCQ	accuracy	on	passage	content
+Self-report:
+	“How	easy	was	this	to	read?”	(1–5	scale)
+Limitation:
+	Self-reported	confidence	is	subjective	and	not	equivalent	to	proficiency.	The	platform	presents	these	metrics	as	learning	indicators,
+not	certified	assessments.
+29.	Story-Based	Learning
+Story	Types
+Type
+Level
+Length
+Audio
+Tanglish
+Picture	story
+2–3
+4	panels
+Yes
+Full
+Short	narrative
+4–5
+50	words
+Yes
+Reduced
+Cultural	story
+5–6
+100	words
+Yes
+Optional
+
+=== PAGE 12 ===
+Folk	tale
+6–7
+200	words
+Yes
+Hidden
+Cultural	Story	Examples
+“The	Clever	Crow”	(panchatantra-style)
+“The	Festival	of	Pongal”
+“Grandmother’s	Kitchen”
+Each	story	includes	vocabulary	preview,	reading,	comprehension	questions,	and	optional	speaking	prompt	(“Tell	the	story	in	your	own	words”).
+30.	Gamification
+Mechanics
+Mechanic
+Description
+Rules
+Ethical	Guardrail
+Daily	Goal
+Target	lessons	per	day
+Default:	1	lesson.
+Adjustable	1–3.
+No	penalty	for	missing
+Streak
+Consecutive	days	of	learning
+1	lesson	=	streak	day.
+Streak	freeze
+available	(1	per
+week).
+No	streak	loss	for	technical	errors.	Grace	period:	1	day.
+Experience	Points	(XP)
+Points	for	completing	activities
+10	XP	per	correct
+answer,	5	XP	per
+lesson	completion,	50
+XP	per	level
+completion
+XP	correlates	with	learning	effort,	not	time	spent
+Badges
+Skill-based	achievements
+“First	Letter,”	“10
+Words,”	“First
+Sentence,”	“Week
+Warrior”
+Badges	tied	to	demonstrated	skills
+Level	Completion
+Unlock	next	level
+80%	mastery	on	unit
+test
+No	pay-to-unlock
+Milestones
+Personal	progress	markers
+“50	Words	Learned,”
+“First	Story	Read”
+No	comparison	to	others
+Prohibited	Gamification	Patterns
+No	punitive	streak	loss
+	for	technical	errors	or	verified	sickness.
+No	public	leaderboards
+	exposing	children’s	names	or	scores.
+No	random	reward	boxes
+	(loot	box	mechanics).
+No	manipulative	notifications
+	(e.g.,	“Your	friend	is	ahead	of	you!”).
+No	monetization	of	children’s	data.
+31.	Rewards	and	Achievements
+Badge	Categories
+Category
+Badge
+Criteria
+Icon
+Letters
+அ	
+Explorer
+Recognize	all	vowels
+Tamil	letter	
+அ
+Letters
+Mei	Master
+Recognize	10	consonants
+Tamil	letter	
+க
+Vocabulary
+Word	Collector
+Learn	25	words
+Book	stack
+Vocabulary
+Word	Master
+Learn	100	words
+Trophy	with	book
+Reading
+First	Reader
+Read	first	word
+Eye	+	book
+Reading
+Story	Reader
+Complete	first	story
+Open	book
+Streak
+Week	Warrior
+7-day	streak
+Flame	with	7
+
+=== PAGE 13 ===
+Streak
+Month	Master
+30-day	streak
+Flame	with	30
+Mastery
+Level	Up
+Complete	Level	1
+Star	with	1
+Mastery
+Script	Independent
+Reach	Stage	E
+Tamil	letter	with
+checkmark
+32.	Personalisation
+Adaptive	Recommendations
+Signal
+Recommendation
+Struggles	with	retroflex	consonants
+Extra	listening	practice	for	
+ள,	ழ,	ண
+Fast	completion	of	vocabulary
+Skip	to	sentence	construction
+Low	speaking	participation
+Non-speaking	alternative	activity
+High	streak,	low	accuracy
+Slower	pace,	more	revision
+Multiple	failures	on	same	item
+Insert	into	revision	queue	with	scaffolded	support
+Personalisation	Rules
+Recommendations	are	
+transparent
+	—	learner	sees	“Why	this?”	explanation.
+Learner	can	
+override
+	recommendations.
+Personalisation	does	not	create	a	filter	bubble	—	new	content	is	always	introduced.
+33.	AI	Requirements
+AI	Feature
+User	Problem
+Input
+Output
+Model	Options
+Non-AI	Fallback
+Priority
+Lesson
+recommendations
+“What	should	I	learn
+next?”
+Progress
+data,
+mastery
+scores
+Next
+lesson/activity
+Rule-based	algorithm	(no	AI
+needed)
+Static	sequence
+P0
+Conversational
+practice
+“I	want	to	practice
+speaking”
+Text/audio
+input
+Contextual
+response
+LLM	API	(OpenAI,
+Anthropic)	with	constrained
+prompts
+Prerecorded	dialogue
+P1
+Contextual	hints
+“I	don’t	understand	this
+word”
+Word,
+context
+Definition,
+example
+Rule-based	dictionary	+
+LLM	for	examples
+Static	dictionary
+P1
+Adaptive	revision
+“What	should	I
+review?”
+Revision
+queue,
+mastery
+Prioritized
+items
+Spaced	repetition	algorithm
+Static	review	list
+P0
+Pronunciation
+feedback
+“How	was	my
+pronunciation?”
+Audio
+recording
+Feedback
+Speech-to-text	+	comparison
+Self-assessment
+P2
+Literary	explanation
+“Explain	this
+Thirukkural”
+Passage,
+language
+Explanation,
+sources
+LLM	+	RAG	with	verified
+sources
+Curated	explanations
+P2
+AI	Safety	Rules
+No	unconstrained	LLM	for	foundational	content
+	(letters,	spelling,	beginner	vocabulary).
+AI	responses	for	children	are	
+filtered	and	constrained
+	with	system	prompts.
+All	AI	interactions	logged
+	for	safety	review	(with	parental	consent).
+AI	
+never	requests	personal	information
+	from	the	learner.
+AI	
+never	pretends	to	be	human
+	—	clearly	labeled	as	“Tamil	helper.”
+34.	Audio	and	Speech	Architecture
+Audio	Types
+Type
+Source
+Format
+Storage
+
+=== PAGE 14 ===
+Letter	pronunciation
+Prerecorded,	reviewed
+MP3,	128kbps
+Supabase	Storage
+Word	pronunciation
+Prerecorded,	reviewed
+MP3
+Supabase	Storage
+Sentence	audio
+Prerecorded,	reviewed
+MP3
+Supabase	Storage
+Story	narration
+Prerecorded,	reviewed
+MP3
+Supabase	Storage
+TTS	fallback
+Browser/cloud	TTS
+Streaming
+Not	stored
+Audio	Strategy
+P0:
+	All	core	lesson	audio	is	
+prerecorded	and	reviewed
+	by	a	Tamil	speaker.
+P0:
+	Audio	playback	uses	HTML5	Audio	element	with	play/pause/repeat/speed	controls.
+P1:
+	Cloud	TTS	for	dynamic	content	(e.g.,	AI-generated	examples).
+P2:
+	Speech	recognition	for	pronunciation	assessment	(if	validated	API	available).
+Audio	Failure	Handling
+Failure
+User	Message
+Recovery
+Audio	fails	to	load
+“Audio	unavailable.	Tap	to	retry.”
+Retry	button;	text	fallback
+Browser	blocks	autoplay
+“Tap	to	enable	audio”
+Manual	play	button
+Microphone	denied
+“Microphone	access	needed	for	speaking	practice”
+Settings	link;	skip	option
+35.	Global	Localisation
+Architecture
+Use	
+structured	translation	dictionaries
+	with	stable	keys.	No	hardcoded	UI	strings.	Recommended	library:	
+react-i18next
+	or	
+react-intl
+.
+Translation	File	Structure
+/locales
+		/en
+				common. json
+				onboarding. json
+				dashboard. json
+				lessons. json
+				errors. json
+		/ta
+				common. json
+				onboarding. json
+				. . .
+Localisation	Coverage
+UI	Element
+English
+Tamil
+Notes
+Navigation	labels
+✓
+✓
+All	labels
+Buttons
+✓
+✓
+All	CTAs
+Form	labels
+✓
+✓
+All	inputs
+Validation	errors
+✓
+✓
+All	error	messages
+Notifications
+✓
+✓
+In-app	and	push
+Dashboard	labels
+✓
+✓
+All	metrics
+Lesson	instructions
+✓
+✓
+Per	lesson
+Accessibility	labels
+✓
+✓
+aria-label,	alt	text
+Learning	Content	vs.	UI
+The	
+interface	language
+	and	
+learning	language
+	are	independent.	A	learner	can	use	the	English	interface	while	learning	Tamil,	or	the	Tamil
+interface	while	learning	Tamil.	The	interface	language	never	changes	the	target	language.
+
+=== PAGE 15 ===
+36.	UX	Principles
+Principle
+Description
+Implementation
+Clarity
+No	ambiguity	in	instructions
+Plain	language;	max	8	words	per	instruction
+Consistency
+Same	action	=	same	result
+Design	tokens	for	colors,	spacing,	typography
+Feedback
+Every	action	gets	response
+Visual	confirmation	within	100ms
+Forgiveness
+Mistakes	are	recoverable
+Undo,	retry,	skip	options
+Progressive	disclosure
+Show	only	what’s	needed
+Tanglish	reduction;	optional	hints
+Accessibility
+Usable	by	all
+WCAG	2.1	AA;	keyboard	navigation
+Performance
+Fast	on	low-end	devices
+<3s	initial	load;	<1s	interaction
+Child	safety
+No	harmful	content
+Content	review;	moderation
+37.	Visual	Identity
+Design	Direction
+The	visual	identity	draws	from	
+Tamil	literary	heritage
+	—	palm-leaf	manuscripts,	temple	architecture,	and	kolam	patterns	—	interpreted	through
+a	modern	educational	design	lens.
+Proposed	Palette
+Token
+Color
+Hex
+Usage
+--color-paper
+Warm	Ivory
+#FDF8F0
+Background
+--color-ink
+Deep	Charcoal
+#1A1A2E
+Primary	text
+--color-teal
+Heritage	Teal
+#0F4C5C
+Primary	action
+--color-maroon
+Temple	Maroon
+#7B2D26
+Accent,	errors
+--color-gold
+Turmeric	Gold
+#E8B84B
+Rewards,	achievements
+--color-leaf
+Palm	Green
+#4A7C59
+Success,	correct
+--color-sand
+Soft	Sand
+#E8DCC8
+Cards,	surfaces
+--color-sky
+Morning	Sky
+#8ECAE6
+Info,	secondary
+Typography
+Usage
+Font
+Weight
+Size
+Headings
+Noto	Serif	Tamil	/	Lora
+600–700
+24–48px
+Body
+Inter	/	Noto	Sans
+400–500
+16–18px
+Tamil	script
+Noto	Sans	Tamil
+400–700
+18–32px
+Tanglish
+Inter
+400
+14–16px
+UI	labels
+Inter
+500
+14px
+38.	Design	Tokens
+{
+		
+"spacing"
+:
+	
+{
+	
+"xs"
+:
+	
+"4px"
+,
+	
+"sm"
+:
+	
+"8px"
+,
+	
+"md"
+:
+	
+"16px"
+,
+	
+"lg"
+:
+	
+"24px"
+,
+	
+"xl"
+:
+	
+"32px"
+,
+	
+"2xl"
+:
+	
+"48px"
+	
+},
+		
+"radius"
+:
+	
+{
+	
+"sm"
+:
+	
+"4px"
+,
+	
+"md"
+:
+	
+"8px"
+,
+	
+"lg"
+:
+	
+"16px"
+,
+	
+"full"
+:
+	
+"9999px"
+	
+},
+		
+"shadow"
+:
+	
+{
+				
+"sm"
+:
+	
+"0	1px	2px	rgba(0,0,0,0. 05)"
+,
+				
+"md"
+:
+	
+"0	4px	6px	rgba(0,0,0,0. 07)"
+,
+				
+"lg"
+:
+	
+"0	10px	15px	rgba(0,0,0,0. 1)"
+		
+},
+		
+"transition"
+:
+	
+{
+	
+"fast"
+:
+	
+"150ms	ease"
+,
+	
+"base"
+:
+	
+"250ms	ease"
+,
+	
+"slow"
+:
+	
+"400ms	ease"
+	
+},
+		
+"fontSize"
+:
+	
+{
+	
+"xs"
+:
+	
+"12px"
+,
+	
+"sm"
+:
+	
+"14px"
+,
+	
+"base"
+:
+	
+"16px"
+,
+	
+"lg"
+:
+	
+"18px"
+,
+	
+"xl"
+:
+	
+"24px"
+,
+	
+"2xl"
+:
+	
+"32px"
+	
+}
+}
+
+=== PAGE 16 ===
+39.	Typography
+Font	Stack
+Tamil	Rendering	Rules
+Use	
+font-feature-settings:	"liga"	1,	"kern"	1;
+	for	proper	ligatures.
+Set	
+line-height:	1. 8
+	for	Tamil	text	to	accommodate	vowel	signs	above	and	below.
+Test	with	
+lang="ta"
+	attribute	on	Tamil	text	containers.
+Avoid	
+text-transform
+	on	Tamil	text.
+40.	Motion	Design
+Animation	Principles
+Principle
+Description
+Duration
+Purposeful
+Every	animation	explains	a	concept
+—
+Fast
+No	animation	exceeds	400ms
+150–400ms
+Subtle
+Movement	supports,	not	distracts
+2–8px	displacement
+Accessible
+Respects	
+prefers-reduced-motion
+Instant	fallback
+Animation	Types
+Type
+Usage
+Duration
+Easing
+Fade
+Screen	transitions
+200ms
+ease-out
+Slide
+Modal	entrance
+250ms
+ease-out
+Scale
+Button	press
+150ms
+ease-in-out
+Letter	formation
+Tamil	letter	animation
+400ms
+ease-in-out
+Celebration
+Correct	answer
+300ms
+spring
+Progress
+Progress	bar	fill
+400ms
+ease-out
+Reduced	Motion
+When	
+prefers-reduced-motion:	reduce
+	is	detected:
+Replace	animated	transitions	with	instant	state	changes.
+Disable	letter	formation	animations	(show	static	letters).
+Disable	celebration	particles.
+Keep	progress	bar	updates	but	remove	animation.
+41.	3D	Visual	Strategy
+Where	3D	Helps
+Context
+3D	Approach
+Justification
+Letter	formation
+3D	letter	objects	that	rotate/assemble
+Spatial	understanding	of	letter	structure
+Word	building
+3D	tiles	snapping	together
+Physical	metaphor	for	construction
+Level	progression
+3D	path	with	milestones
+Engaging	progress	visualization
+Celebration
+Lightweight	particle	burst
+Reward	feedback
+--font-heading
+:	'Noto
+	Serif	Tamil'
+,
+	'Lora'
+,
+	Georgia
+,
+	serif;
+--font-body
+:	'Inter
+'
+,
+	'Noto	Sans'
+,
+	system-ui
+,
+	sans-serif;
+--font-tamil
+:	'Noto
+	Sans	Tamil'
+,
+	'Latha'
+,
+	sans-serif;
+--font-mono
+:	'JetBrains
+	Mono'
+,
+	monospace;
+
+=== PAGE 17 ===
+Where	2D	Is	Better
+Context
+2D	Approach
+Justification
+Reading	passages
+Flat	text	layout
+Reading	comfort
+Quiz	interfaces
+Flat	cards
+Clarity,	speed
+Dashboard
+Flat	charts/graphs
+Data	readability
+Settings
+Flat	forms
+Convention
+Implementation
+P0:
+	CSS	transforms	and	SVG	animations	for	letter	tiles	and	transitions.
+P1:
+	Three.js	for	letter	formation	objects	(lazy-loaded).
+Fallback:
+	Static	images	when	WebGL	not	supported	or	reduced	motion	enabled.
+42.	Accessibility
+WCAG	2.1	AA	Compliance	Targets
+Criterion
+Target
+Implementation
+Color	contrast
+4.5:1	normal	text,	3:1	large	text
+Design	token	validation
+Keyboard	navigation
+All	interactive	elements
+Focus	indicators,	tab	order
+Screen	reader
+All	content	accessible
+Semantic	HTML,	ARIA	labels
+Touch	targets
+44×44px	minimum
+Button	sizing
+Text	resizing
+Up	to	200%	without	loss
+Responsive	typography
+Motion
+Reduced	motion	support
+prefers-reduced-motion
+Audio
+Captions	for	all	audio
+Text	alternatives
+Language
+lang
+	attribute	set
+Per-element	language	marking
+Tamil-Specific	Accessibility
+Screen	readers	must	handle	Tamil	Unicode	correctly	(test	with	NVDA,	VoiceOver).
+Provide	text	alternatives	for	all	Tamil	audio	content.
+Allow	slower	audio	playback	(0.5x)	for	processing	difficulties.
+Ensure	Tamil	vowel	signs	are	not	clipped	at	line	boundaries.
+43.	Responsive	Design
+Breakpoints
+Breakpoint
+Width
+Layout
+Mobile
+<	640px
+Single	column,	bottom	navigation
+Tablet
+640–1024px
+Two	column,	side	navigation
+Desktop
+>	1024px
+Three	column,	top	navigation
+Responsive	Behavior
+Element
+Mobile
+Tablet
+Desktop
+Lesson	player
+Full	screen
+Centered	card
+Split	view
+Dashboard
+Stacked	cards
+2-column	grid
+3-column	grid
+Navigation
+Bottom	tabs
+Side	drawer
+Top	bar
+Audio	controls
+Sticky	bottom
+Inline
+Inline
+
+=== PAGE 18 ===
+44.	Information	Architecture
+TamilPalam
+├──	Landing
+│			├──	Hero
+│			├──	How	it	works
+│			├──	Language	selector
+│			└──	CTA	(Sign	up	/	Demo)
+├──	Auth
+│			├──	Sign	up
+│			├──	Sign	in
+│			└──	Parental	consent
+├──	Onboarding
+│			├──	Welcome
+│			├──	Assessment
+│			└──	Level	recommendation
+├──	Dashboard
+│			├──	Daily	goal
+│			├──	Continue	learning
+│			├──	Progress	summary
+│			└──	Achievements
+├──	Learn
+│			├──	Level	map
+│			├──	Lesson	player
+│			│			├──	Letter	learning
+│			│			├──	Vocabulary
+│			│			├──	Sentence	building
+│			│			├──	Listening
+│			│			├──	Speaking
+│			│			└──	Reading
+│			└──	Quiz	results
+├──	Progress
+│			├──	Skill	mastery
+│			├──	Streak	calendar
+│			└──	Badge	collection
+├──	Profile
+│			├──	Settings
+│			├──	Language	preference
+│			└──	Account	management
+└──	Parent	Dashboard	(P1)
+				├──	Child	progress
+				└──	Weekly	report
+45.	Navigation	Model
+Navigation	Type
+Mobile
+Desktop
+Primary
+Bottom	tab	bar	(Home,	Learn,
+Progress,	Profile)
+Top	nav	bar
+Secondary
+Hamburger	menu
+Sidebar
+In-lesson
+Progress	bar	+	exit	button
+Same
+Modal
+Bottom	sheet
+Centered	dialog
+46.	Full	Screen	Inventory
+#
+Screen
+Purpose
+Priority
+1
+Landing
+Introduce	product,	capture	interest
+P0
+2
+Sign	up	/	Sign	in
+Authenticate	user
+P0
+3
+Language	selector
+Choose	English/Tamil	interface
+P0
+4
+Onboarding
+Explain	platform,	collect	minimal	info
+P0
+5
+Initial	assessment
+Determine	starting	level
+P0
+6
+Dashboard
+Overview	of	progress	and	next	actions
+P0
+7
+Level	selection
+Choose	learning	level
+P0
+8
+Lesson	player
+Deliver	learning	content
+P0
+9
+Tamil	letter	screen
+Learn	individual	letters
+P0
+
+=== PAGE 19 ===
+10
+Vocabulary	screen
+Learn	words	with	audio
+P0
+11
+Sentence-building	screen
+Construct	sentences
+P0
+12
+Listening	activity
+Audio	comprehension
+P0
+13
+Speaking	activity
+Pronunciation	practice
+P0
+14
+Reading	activity
+Reading	comprehension
+P0
+15
+Quiz	results
+Show	assessment	results
+P0
+16
+Progress	&	achievements
+Show	badges,	mastery,	streak
+P0
+17
+Profile	&	settings
+Manage	account
+P0
+18
+Parent	dashboard
+View	child	progress
+P1
+19
+Empty/loading/error/offline
+Handle	edge	states
+P0
+20
+Research	assistant
+Literary	explanation
+P2
+47.	Wireframes	(Text-Based)
+Screen	6:	Dashboard
++------------------------------------------+
+|	[Logo]	TamilPalam				[EN/TA]	[Profile]			|
++------------------------------------------+
+|																																										|
+|		Welcome	back,	Aarav!																				|
+|		
+
+	5-day	streak																									|
+|																																										|
+|		+------------------------------------+		|
+|		|	Daily	Goal:	1	lesson															|		|
+|		|	[========>										]	1/1										|		|
+|		|	[Continue	Learning]																|		|
+|		+------------------------------------+		|
+|																																										|
+|		+------------------------------------+		|
+|		|	Current	Level:	Level	2													|		|
+|		|	Progress:	60%																						|		|
+|		|	[==========>							]															|		|
+|		|	[View	Level	Map]																			|		|
+|		+------------------------------------+		|
+|																																										|
+|		Recent	Achievements																					|
+|		[Badge:	10	Words]	[Badge:	3-day	streak]|
+|																																										|
++------------------------------------------+
+Screen	8:	Lesson	Player
++------------------------------------------+
+|	[←	Exit]			Lesson	3	of	8				[========>]	|
++------------------------------------------+
+|																																										|
+|		Tamil	Letter																												|
+|																																										|
+|									
+அ
+																																|
+|																																										|
+|		[
+
+	Play	Audio]																									|
+|																																										|
+|		Tanglish:	a																														|
+|																																										|
+|		+------------------------------------+		|
+|		|	Which	letter	makes	the	sound	"a"?		|		|
+|		|																																				|		|
+|		|		[
+அ
+]		[
+ஆ
+]		[
+இ
+]		[
+ஈ
+]													|		|
+|		+------------------------------------+		|
+|																																										|
+|		[Need	help?]																												|
+|																																										|
++------------------------------------------+
+48.	Detailed	Screen	Specifications
+
+=== PAGE 20 ===
+Screen	1:	Landing	Page
+Attribute
+Specification
+Purpose
+Introduce	TamilPalam,	communicate	value,	drive	sign-up
+Target	User
+Parents,	older	learners
+Layout
+Hero	section,	3	feature	cards,	testimonial,	CTA
+Components
+Logo,	tagline,	language	toggle,	“How	it	works”	section,	Sign	up	button,	Demo	button
+Actions
+Toggle	language,	scroll	to	features,	click	CTA
+States
+Default;	language	selected
+Navigation
+Sign	up	→	Auth;	Demo	→	Guest	dashboard
+Responsive
+Mobile:	stacked;	Desktop:	2-column
+Accessibility
+All	images	have	alt	text;	keyboard	navigable
+Data
+None	(static)
+Acceptance
+Page	loads	<2s;	language	toggle	works;	CTA	navigates	correctly
+Screen	8:	Lesson	Player
+Attribute
+Specification
+Purpose
+Deliver	interactive	learning	content
+Target	User
+All	learners
+Layout
+Progress	bar	(top),	content	area	(center),	controls	(bottom)
+Components
+Progress	indicator,	letter/word	display,	audio	button,	Tanglish	toggle,	exercise	area,	feedback
+area,	continue	button
+Actions
+Play	audio,	select	answer,	request	hint,	continue,	exit
+States
+Loading,	presenting,	awaiting	response,	correct	feedback,	incorrect	feedback,	complete
+Navigation
+Exit	→	Dashboard;	Complete	→	Quiz	results
+Responsive
+Full	width	on	mobile;	centered	800px	on	desktop
+Accessibility
+Screen	reader	announces	content;	keyboard	selectable;	focus	management
+Data
+Lesson	items,	user	progress,	audio	assets
+Acceptance
+Lesson	completes	within	10	min;	progress	saved	after	each	item;	resume	works
+49.	User	Journeys
+Main	User	Journey
+
+=== PAGE 21 ===
+flowchart	TD
+				A[Visit	Landing	Page]	-->	B{Choose	Interface	Language}
+				B	-->|English|	C[Read	English	Content]
+				B	-->|Tamil|	D[Read	Tamil	Content]
+				C	-->	E[Click	Sign	Up]
+				D	-->	E
+				E	-->	F[Create	Account	or	Demo]
+				F	-->	G[Onboarding:	How	it	Works]
+				G	-->	H[Initial	Assessment]
+				H	-->	I{Assessment	Complete?}
+				I	-->|Yes|	J[Receive	Level	Recommendation]
+				I	-->|Skip|	K[Start	Level	0]
+				J	-->	L[Dashboard]
+				K	-->	L
+				L	-->	M[Open	Lesson]
+				M	-->	N[Complete	Lesson	Items]
+				N	-->	O{Item	Correct?}
+				O	-->|Yes|	P[Positive	Feedback	+	XP]
+				O	-->|No|	Q[Hint	or	Correct	Answer]
+				P	-->	R[Continue	to	Next	Item]
+				Q	-->	R
+				R	-->	S{Lesson	Complete?}
+				S	-->|No|	N
+				S	-->|Yes|	T[Update	Progress]
+				T	-->	U[Update	Dashboard]
+				U	-->	V{Streak	Maintained?}
+				V	-->|Yes|	W[Streak	Increment]
+				V	-->|No|	X[Streak	Reset	with	Grace]
+				W	-->	Y[Recommend	Next	Lesson]
+				X	-->	Y
+				Y	-->	Z[Return	to	Dashboard	or	Continue]
+Authentication	Flow
+flowchart	TD
+				A[User	Clicks	Sign	Up]	-->	B{Has	Account?}
+				B	-->|No|	C[Enter	Email	+	Password]
+				B	-->|Yes|	D[Enter	Email	+	Password]
+				C	-->	E[Validate	Input]
+				D	-->	E
+				E	-->	F{Valid?}
+				F	-->|No|	G[Show	Error	Message]
+				F	-->|Yes|	H{Email	Confirmation	Required?}
+				H	-->|Yes|	I[Send	Confirmation	Email]
+				H	-->|No|	J[Create	Session]
+				I	-->	K[User	Confirms	Email]
+				K	-->	J
+				J	-->	L{Under	13?}
+				L	-->|Yes|	M[Request	Parental	Consent]
+				L	-->|No|	N[Access	Dashboard]
+				M	-->	O{Consent	Given?}
+				O	-->|Yes|	N
+				O	-->|No|	P[Limited	Demo	Mode]
+Parent	Progress	Review	Flow
+flowchart	TD
+				A[Parent	Logs	In]	-->	B[View	Linked	Children]
+				B	-->	C[Select	Child]
+				C	-->	D[View	Progress	Dashboard]
+				D	-->	E{What	to	View?}
+				E	-->|Overview|	F[Weekly	Summary]
+				E	-->|Details|	G[Skill	Mastery	Breakdown]
+				E	-->|Activity|	H[Lesson	History]
+				F	-->	I[Email	Report	Option]
+				G	-->	J[Export	CSV]
+				H	-->	K[View	Lesson	Details]
+				I	-->	L[Done]
+				J	-->	L
+				K	-->	L
+50.	Workflow	Diagrams
+Lesson	Interaction	Flow
+
+=== PAGE 22 ===
+sequenceDiagram
+				participant	Learner
+				participant	LessonPlayer
+				participant	AudioService
+				participant	ProgressService
+				participant	Database
+				Learner->>LessonPlayer:	Open	lesson
+				LessonPlayer->>Database:	Fetch	lesson	items
+				Database-->>LessonPlayer:	Return	items
+				LessonPlayer->>Learner:	Display	item	1
+				Learner->>LessonPlayer:	Play	audio
+				LessonPlayer->>AudioService:	Request	audio
+				AudioService-->>LessonPlayer:	Stream	audio
+				LessonPlayer->>Learner:	Play	audio
+				Learner->>LessonPlayer:	Submit	answer
+				LessonPlayer->>LessonPlayer:	Evaluate	answer
+				alt	Correct
+								LessonPlayer->>Learner:	Show	correct	feedback
+								LessonPlayer->>ProgressService:	Record	correct
+				else	Incorrect
+								LessonPlayer->>Learner:	Show	hint
+								Learner->>LessonPlayer:	Retry
+								LessonPlayer->>ProgressService:	Record	attempt
+				end
+				LessonPlayer->>Learner:	Show	next	item
+				Note	over	Learner,Database:	Repeat	for	all	items
+				LessonPlayer->>Database:	Save	lesson	completion
+				Database-->>LessonPlayer:	Confirm
+				LessonPlayer->>Learner:	Show	lesson	complete
+51.	System	Architecture
+Overview
++-------------------+
+|			Client	(SPA)				|
+|	React	+	TypeScript|
+|	Tailwind	CSS						|
+|	Vite	Build								|
++--------+----------+
+									|
+									|	HTTPS
+									|
++--------v----------+
+|			Supabase								|
+|		+-------------+		|
+|		|	PostgreSQL		|		|
+|		|	(Database)		|		|
+|		+-------------+		|
+|		+-------------+		|
+|		|	Auth								|		|
+|		|	(GoTrue)				|		|
+|		+-------------+		|
+|		+-------------+		|
+|		|	Storage					|		|
+|		|	(S3-compat)	|		|
+|		+-------------+		|
+|		+-------------+		|
+|		|	Realtime				|		|
+|		|	(WebSocket)	|		|
+|		+-------------+		|
+|		+-------------+		|
+|		|	Edge	Funcs		|		|
+|		|	(Deno)						|		|
+|		+-------------+		|
++-------------------+
+									|
+									|	External	(optional)
+									|
++--------v----------+
+|	AI	Provider	API			|
+|	(P1/P2	only)						|
++-------------------+
+Architecture	Decisions
+
+=== PAGE 23 ===
+Decision
+Choice
+Rationale
+Alternatives	Considered
+Frontend	framework
+React	+	TypeScript
+Component	model,	ecosystem,
+AI	tool	support
+Vue	(smaller	ecosystem),	Svelte	(less	mature	tooling)
+Build	tool
+Vite
+Fast	HMR,	simple	config,
+TypeScript	support
+Webpack	(slower,	complex	config)
+CSS	framework
+Tailwind	CSS
+Utility-first,	design	token
+friendly,	small	bundle
+CSS	Modules	(more	verbose),	styled-components	(runtime	cost)
+Backend
+Supabase
+Auth	+	DB	+	Storage	+	RLS	in
+one;	PostgreSQL;	generous	free
+tier
+Firebase	(NoSQL,	less	relational),	custom	Express	(more	work)
+Database
+PostgreSQL	(via
+Supabase)
+Relational	integrity,	RLS,
+JSON	support,	mature
+MongoDB	(no	RLS),	SQLite	(not	serverless)
+Auth
+Supabase	Auth
+Integrated	with	RLS,	OAuth
+support,	email/password
+Auth0	(expensive),	custom	JWT	(more	work)
+File	storage
+Supabase	Storage
+Integrated	with	auth,	CDN,
+simple	API
+S3	(complex	setup),	Cloudinary	(extra	service)
+Hosting
+Vercel	/	Netlify
+Free	tier,	Git	integration,	CDN
+AWS	Amplify	(complex),	self-hosted	(maintenance)
+Rejected	architecture	components:
+FastAPI	separate	backend:
+	Not	justified.	Supabase	client	+	RLS	handles	all	MVP	needs.	Edge	functions	for	protected	operations	only.
+Vector	database:
+	Not	needed.	No	semantic	search	in	MVP.
+Graph	database:
+	Not	needed.	Relational	model	sufficient.
+Multiple	AI	frameworks:
+	One	LLM	provider	API	maximum	for	P1	features.
+52.	Technology	Decisions
+Category
+Technology
+Version
+Justification
+Language
+TypeScript
+5.x
+Type	safety,	AI	tool	compatibility
+Framework
+React
+18.x
+Component	model,	hooks,	ecosystem
+Build
+Vite
+5.x
+Speed,	simplicity,	TypeScript
+Styling
+Tailwind	CSS
+3.x
+Utility-first,	design	tokens
+i18n
+react-i18next
+Latest
+Structured	dictionaries,	interpolation
+Routing
+React	Router
+6.x
+Declarative,	nested	routes
+State
+Zustand	/	React	Query
+Latest
+Lightweight;	server	state	caching
+Forms
+React	Hook	Form	+	Zod
+Latest
+Performance,	validation
+Audio
+HTML5	Audio	+	Howler.js
+Latest
+Cross-browser,	sprite	support
+Animation
+Framer	Motion
+Latest
+Declarative,	reduced-motion	support
+Charts
+Recharts
+Latest
+React-native,	responsive
+Testing
+Vitest	+	Playwright
+Latest
+Unit	+	E2E
+Linting
+ESLint	+	Prettier
+Latest
+Code	quality
+Backend
+Supabase
+Latest
+Auth,	DB,	Storage,	RLS
+Database
+PostgreSQL
+15+
+Via	Supabase
+Deployment
+Vercel
+—
+Zero-config,	CDN
+Monitoring
+Sentry
+—
+Error	tracking	(free	tier)
+53.	Frontend	Architecture
+Component	Structure
+
+=== PAGE 24 ===
+src/
+├──	app/																				#	Route	definitions
+│			├──	routes. tsx
+│			└──	App. tsx
+├──	components/
+│			├──	ui/																	#	Reusable	UI	primitives
+│			│			├──	Button. tsx
+│			│			├──	Card. tsx
+│			│			├──	Input. tsx
+│			│			├──	Modal. tsx
+│			│			├──	ProgressBar. tsx
+│			│			└──	AudioPlayer. tsx
+│			├──	layout/													#	Layout	components
+│			│			├──	AppShell. tsx
+│			│			├──	BottomNav. tsx
+│			│			└──	TopNav. tsx
+│			└──	features/											#	Feature-specific	components
+│							├──	auth/
+│							├──	dashboard/
+│							├──	lesson/
+│							├──	progress/
+│							└──	parent/
+├──	hooks/																		#	Custom	React	hooks
+│			├──	useAuth. ts
+│			├──	useLesson. ts
+│			├──	useProgress. ts
+│			└──	useAudio. ts
+├──	lib/																				#	Utilities	and	clients
+│			├──	supabase. ts
+│			├──	i18n. ts
+│			└──	audio. ts
+├──	stores/																	#	Zustand	stores
+│			├──	authStore. ts
+│			├──	lessonStore. ts
+│			└──	uiStore. ts
+├──	types/																		#	TypeScript	types
+│			├──	database. ts
+│			├──	lesson. ts
+│			└──	user. ts
+├──	locales/																#	Translation	files
+│			├──	en/
+│			└──	ta/
+└──	styles/																	#	Global	styles
+				└──	globals. css
+Key	Patterns
+Server	state:
+	React	Query	for	data	fetching,	caching,	and	mutation.
+Client	state:
+	Zustand	for	UI	state	(lesson	progress,	modals).
+Auth:
+	Supabase	Auth	context	provider	wrapping	app.
+i18n:
+	react-i18next	with	lazy-loaded	translation	files.
+Error	boundaries:
+	Per-feature	error	boundaries	with	fallback	UI.
+Code	splitting:
+	Route-based	lazy	loading.
+54.	Backend	Architecture
+Supabase	Services	Used
+Service
+Usage
+Priority
+Auth
+Email/password,	OAuth	(Google),	session
+management
+P0
+PostgreSQL
+All	relational	data
+P0
+Row	Level	Security
+Data	isolation	per	user
+P0
+Storage
+Audio	files,	images
+P0
+Edge	Functions
+Protected	operations	(AI	calls,	admin
+actions)
+P1
+Realtime
+Live	progress	updates	(optional)
+P2
+
+=== PAGE 25 ===
+API	Strategy
+The	MVP	uses	
+Supabase	client	operations
+	directly	from	the	frontend	for:
+User	profile	CRUD	(with	RLS)
+Lesson	data	fetching
+Progress	recording
+Achievement	retrieval
+Edge	Functions
+	used	only	for:
+AI	provider	API	calls	(P1)	—	keeps	API	keys	server-side
+Admin	operations	(content	management)
+Webhook	handling	(payment,	if	added	later)
+No	custom	REST	API	server
+	is	required	for	the	MVP.
+55.	Database	Architecture
+Design	Principles
+Normalized	relational	schema
+	with	foreign	key	constraints.
+RLS	on	every	table
+	with	both	
+USING
+	and	
+WITH	CHECK
+	policies.
+UUID	primary	keys
+	for	all	user-facing	tables.
+Timestamps
+	(
+created_at
+,	
+updated_at
+)	on	all	tables.
+Soft	deletes
+	where	data	recovery	is	needed.
+Indexes
+	on	all	foreign	keys	and	frequent	query	columns.
+56.	ER	Diagram
+erDiagram
+				profiles	||--o{	user_preferences	:	has
+				profiles	||--o{	lesson_progress	:	tracks
+				profiles	||--o{	quiz_attempts	:	makes
+				profiles	||--o{	learner_skill_mastery	:	has
+				profiles	||--o{	user_achievements	:	earns
+				profiles	||--o{	daily_learning_activity	:	logs
+				profiles	||--o{	parent_child_relationships	:	"parent	of"
+				learning_levels	||--o{	lessons	:	contains
+				lessons	||--o{	lesson_items	:	contains
+				lessons	||--o{	exercises	:	has
+				exercises	||--o{	questions	:	contains
+				questions	||--o{	answer_options	:	has
+				tamil_letters	||--o{	pronunciation_assets	:	has
+				vocabulary_items	||--o{	pronunciation_assets	:	has
+				lesson_items	||--o{	vocabulary_items	:	references
+				lesson_items	||--o{	tamil_letters	:	references
+				achievements	||--o{	user_achievements	:	earned
+57.	Data	Dictionary
+profiles
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK,	DEFAULT	gen_random_uuid()
+Profile	ID
+user_id
+UUID
+FK	→	auth.users,	UNIQUE,	NOT	NULL
+Supabase	auth	user
+display_name
+TEXT
+NOT	NULL
+Learner	display	name
+interface_language
+TEXT
+CHECK	IN	(‘en’,‘ta’),	DEFAULT	‘en’
+UI	language
+date_of_birth
+DATE
+NULL
+For	age-based	features
+is_child
+BOOLEAN
+DEFAULT	false
+Under-13	flag
+
+=== PAGE 26 ===
+parental_consent
+BOOLEAN
+DEFAULT	false
+Consent	status
+created_at
+TIMESTAMPTZ
+DEFAULT	now()
+updated_at
+TIMESTAMPTZ
+DEFAULT	now()
+user_preferences
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+profile_id
+UUID
+FK	→	profiles,	UNIQUE
+daily_goal
+INTEGER
+DEFAULT	1,	CHECK	1–3
+Lessons	per	day
+audio_speed
+NUMERIC
+DEFAULT	1.0
+Playback	speed
+reduced_motion
+BOOLEAN
+DEFAULT	false
+Accessibility
+tanglish_enabled
+BOOLEAN
+DEFAULT	true
+Manual	override
+notifications_enabled
+BOOLEAN
+DEFAULT	true
+learning_levels
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+level_number
+INTEGER
+UNIQUE,	0–7
+Level	number
+title_en
+TEXT
+NOT	NULL
+English	title
+title_ta
+TEXT
+NOT	NULL
+Tamil	title
+description_en
+TEXT
+description_ta
+TEXT
+prerequisite_level
+UUID
+FK	→	learning_levels
+lessons
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+level_id
+UUID
+FK	→	learning_levels
+title_en
+TEXT
+NOT	NULL
+title_ta
+TEXT
+NOT	NULL
+sequence_order
+INTEGER
+NOT	NULL
+lesson_type
+TEXT
+CHECK	IN
+(‘letters’,‘vocabulary’,‘sentences’,‘listening’,‘speaking’,‘reading’,‘story’)
+estimated_minutes
+INTEGER
+DEFAULT	10
+tanglish_stage
+TEXT
+CHECK	IN	(‘A’,‘B’,‘C’,‘D’,‘E’)
+Required	stage
+lesson_items
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+lesson_id
+UUID
+FK	→	lessons
+item_type
+TEXT
+CHECK	IN	(‘letter’,‘word’,‘sentence’,‘passage’)
+content_ta
+TEXT
+NOT	NULL
+Tamil	script
+content_tanglish
+TEXT
+Transliteration
+content_en
+TEXT
+English	meaning
+audio_url
+TEXT
+Storage	path
+image_url
+TEXT
+Storage	path
+
+=== PAGE 27 ===
+sequence_order
+INTEGER
+tamil_letters
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+letter
+TEXT
+UNIQUE,	NOT	NULL
+Tamil	character
+unicode_codepoint
+TEXT
+e.g.,	U+0B85
+letter_type
+TEXT
+CHECK	IN
+(‘vowel’,‘consonant’,‘vowel_sign’,‘virama’)
+tanglish_primary
+TEXT
+tanglish_alternatives
+TEXT[]
+ipa
+TEXT
+IPA	notation
+example_word_ta
+TEXT
+example_word_en
+TEXT
+exercises
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+lesson_id
+UUID
+FK	→	lessons
+exercise_type
+TEXT
+CHECK	IN
+(‘mcq’,‘matching’,‘fill_blank’,‘ordering’,‘speaking’,‘listening’)
+prompt_en
+TEXT
+prompt_ta
+TEXT
+sequence_order
+INTEGER
+questions
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+exercise_id
+UUID
+FK	→	exercises
+question_text
+TEXT
+NOT	NULL
+correct_answer
+TEXT
+NOT	NULL
+explanation
+TEXT
+Shown	on	incorrect
+answer_options
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+question_id
+UUID
+FK	→	questions
+option_text
+TEXT
+NOT	NULL
+is_correct
+BOOLEAN
+DEFAULT	false
+sequence_order
+INTEGER
+lesson_progress
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+profile_id
+UUID
+FK	→	profiles
+lesson_id
+UUID
+FK	→	lessons
+status
+TEXT
+CHECK	IN	(‘not_started’,‘in_progress’,‘completed’)
+
+=== PAGE 28 ===
+score
+NUMERIC
+0–100
+attempts
+INTEGER
+DEFAULT	0
+last_item_index
+INTEGER
+For	resume
+completed_at
+TIMESTAMPTZ
+UNIQUE(profile_id,	lesson_id)
+quiz_attempts
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+profile_id
+UUID
+FK	→	profiles
+lesson_id
+UUID
+FK	→	lessons
+score
+NUMERIC
+correct_count
+INTEGER
+total_count
+INTEGER
+time_spent_seconds
+INTEGER
+created_at
+TIMESTAMPTZ
+DEFAULT	now()
+learner_skill_mastery
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+profile_id
+UUID
+FK	→	profiles
+skill_type
+TEXT
+CHECK	IN
+(‘letter_recognition’,‘word_reading’,‘sentence_comprehension’,‘listening’,‘speaking’)
+skill_item_id
+TEXT
+ID	of	letter/word
+mastery_score
+NUMERIC
+0–1
+attempts
+INTEGER
+correct
+INTEGER
+last_attempted_at
+TIMESTAMPTZ
+UNIQUE(profile_id,
+skill_type,	skill_item_id)
+revision_queue
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+profile_id
+UUID
+FK	→	profiles
+item_type
+TEXT
+item_id
+TEXT
+next_review_at
+TIMESTAMPTZ
+interval_days
+INTEGER
+DEFAULT	1
+ease_factor
+NUMERIC
+DEFAULT	2.5
+consecutive_correct
+INTEGER
+DEFAULT	0
+achievements
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+name_en
+TEXT
+NOT	NULL
+
+=== PAGE 29 ===
+name_ta
+TEXT
+NOT	NULL
+description_en
+TEXT
+description_ta
+TEXT
+icon
+TEXT
+Icon	identifier
+criteria_type
+TEXT
+e.g.,	‘streak_days’,‘words_learned’
+criteria_value
+INTEGER
+user_achievements
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+profile_id
+UUID
+FK	→	profiles
+achievement_id
+UUID
+FK	→	achievements
+earned_at
+TIMESTAMPTZ
+DEFAULT	now()
+UNIQUE(profile_id,	achievement_id)
+daily_learning_activity
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+profile_id
+UUID
+FK	→	profiles
+activity_date
+DATE
+NOT	NULL
+lessons_completed
+INTEGER
+DEFAULT	0
+minutes_spent
+INTEGER
+DEFAULT	0
+xp_earned
+INTEGER
+DEFAULT	0
+UNIQUE(profile_id,	activity_date)
+parent_child_relationships
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+parent_profile_id
+UUID
+FK	→	profiles
+child_profile_id
+UUID
+FK	→	profiles
+relationship_type
+TEXT
+‘parent’,‘guardian’
+verified
+BOOLEAN
+DEFAULT	false
+created_at
+TIMESTAMPTZ
+UNIQUE(parent_profile_id,	child_profile_id)
+58.	Data	Lifecycle
+Data	Type
+Retention
+Deletion	Method
+Trigger
+Profile
+Until	account	deletion
+Cascade	delete
+User/parent	request
+Lesson	progress
+Until	account	deletion
+Cascade	delete
+Account	deletion
+Quiz	attempts
+Until	account	deletion
+Cascade	delete
+Account	deletion
+Audio	recordings	(speaking)
+24	hours
+Automatic
+Timer
+AI	interaction	logs
+90	days
+Automatic
+Timer
+Analytics	events
+12	months
+Anonymized
+Timer
+Parent	relationship
+Until	unlinked
+Manual
+Parent/child	request
+
+=== PAGE 30 ===
+59.	API	Specification
+Supabase	Client	Operations	(Primary)
+Operation
+Method
+Table
+Auth
+Description
+Get	profile
+SELECT
+profiles
+Required
+Fetch	own	profile
+Update	profile
+UPDATE
+profiles
+Required
+Update	own	profile
+Get	lessons
+SELECT
+lessons
+Required
+Fetch	lessons	for	level
+Get	lesson	items
+SELECT
+lesson_items
+Required
+Fetch	items	for	lesson
+Record	progress
+INSERT/UPDATE
+lesson_progress
+Required
+Save	progress
+Get	achievements
+SELECT
+user_achievements
+Required
+Fetch	earned	badges
+Get	daily	activity
+SELECT
+daily_learning_activity
+Required
+Fetch	activity	log
+Get	revision	queue
+SELECT
+revision_queue
+Required
+Fetch	due	items
+Edge	Functions	(Protected)
+Function
+Method
+Auth
+Description
+Priority
+ai-hint
+POST
+Required	+	rate
+limit
+AI	hint	generation
+P1
+ai-conversation
+POST
+Required	+	rate
+limit
+Conversational	practice
+P1
+admin-content
+POST
+Admin	only
+Content	management
+P1
+parent-report
+POST
+Parent	only
+Generate	progress	report
+P1
+Security:
+	All	Edge	Functions	validate	JWT,	check	RLS-equivalent	permissions	server-side,	and	never	expose	API	keys	to	the	client.
+60.	Authentication
+Supabase	Auth	Configuration
+Setting
+Value
+Rationale
+Email/password
+Enabled
+Primary	auth
+Google	OAuth
+Enabled
+Convenience
+Apple	OAuth
+Enabled
+iOS	users
+Email	confirmation
+Required	for	production;	disabled	for
+demo
+Security	vs.	demo	speed
+Password	minimum
+8	characters
+Security
+Session	expiry
+7	days	(refresh	token)
+Balance	security	and	UX
+MFA
+Optional	(P1)
+Child	accounts	often	managed	by	parents
+Child	Account	Flow
+Child	signs	up	→	Age	entered	→	If	<13:
+		→	Parent	email	requested
+		→	Consent	email	sent	to	parent
+		→	Child	can	access	demo	mode	only
+		→	Parent	clicks	consent	link
+		→	Child	account	activated	with	full	access
+		→	Parent	can	view	progress
+61.	Authorisation
+Role-Based	Access	Control
+
+=== PAGE 31 ===
+Role
+Permissions
+Assignment
+anon
+Read	public	content	(landing)
+Unauthenticated
+authenticated
+Full	own-data	CRUD
+Any	logged-in	user
+parent
+View	linked	child’s	progress
+Parent	relationship
+teacher
+View	assigned	students	(P2)
+Teacher	relationship
+admin
+Content	management,	user	management
+Internal	only
+RLS	Policy	Examples
+62.	Security
+Security	Layer
+Implementation
+Authentication
+Supabase	Auth	with	JWT,	email	confirmation,	OAuth
+Authorisation
+Row	Level	Security	on	all	tables;	role-based	policies
+API	security
+Edge	Functions	validate	JWT;	no	service_role	key	in	client
+Data	encryption
+TLS	in	transit;	Supabase	encrypts	at	rest
+Input	validation
+Zod	schemas	on	client;	Supabase	constraints	on	server
+Rate	limiting
+Supabase	auth	rate	limits;	Edge	Function	custom	limits
+CORS
+Restricted	to	application	domain
+Secrets
+Environment	variables;	never	committed;	Edge	Function	env
+Dependency	scanning
+npm	audit;	Dependabot
+Penetration	testing
+Basic	OWASP	checklist	before	launch
+Critical	rule:
+	The	
+SUPABASE_SERVICE_ROLE_KEY
+	is	
+never
+	exposed	to	the	client.	All	privileged	operations	go	through	Edge	Functions.
+--	Profiles:	Users	can	read/update	their	own
+CREATE
+	POLICY	
+"Users	can	view	own	profile"
+ON
+	profiles	
+FOR
+	
+SELECT
+TO
+	
+authenticated
+USING
+	(auth.
+uid
+()	
+=
+	user_id);
+CREATE
+	POLICY	
+"Users	can	update	own	profile"
+ON
+	profiles	
+FOR
+	
+UPDATE
+TO
+	
+authenticated
+USING
+	(auth.
+uid
+()	
+=
+	user_id)
+WITH
+	
+CHECK
+	(auth.
+uid
+()	
+=
+	user_id);
+--	Lesson	progress:	Users	can	CRUD	own	progress
+CREATE
+	POLICY	
+"Users	can	view	own	progress"
+ON
+	lesson_progress	
+FOR
+	
+SELECT
+TO
+	
+authenticated
+USING
+	(profile_id	
+IN
+	(
+		
+SELECT
+	
+id
+	
+FROM
+	profiles	
+WHERE
+	user_id	
+=
+	auth.
+uid
+()
+));
+CREATE
+	POLICY	
+"Users	can	insert	own	progress"
+ON
+	lesson_progress	
+FOR
+	
+INSERT
+TO
+	
+authenticated
+WITH
+	
+CHECK
+	(profile_id	
+IN
+	(
+		
+SELECT
+	
+id
+	
+FROM
+	profiles	
+WHERE
+	user_id	
+=
+	auth.
+uid
+()
+));
+--	Parent	access	to	child	progress
+CREATE
+	POLICY	
+"Parents	can	view	child	progress"
+ON
+	lesson_progress	
+FOR
+	
+SELECT
+TO
+	
+authenticated
+USING
+	(profile_id	
+IN
+	(
+		
+SELECT
+	child_profile_id	
+FROM
+	parent_child_relationships
+		
+WHERE
+	parent_profile_id	
+IN
+	(
+				
+SELECT
+	
+id
+	
+FROM
+	profiles	
+WHERE
+	user_id	
+=
+	auth.
+uid
+()
+		)	
+AND
+	verified	
+=
+	
+true
+));
+
+=== PAGE 32 ===
+63.	Privacy
+Data	Minimisation
+Data	Type
+Collected?
+Purpose
+Retention
+Display	name
+Yes
+Personalization
+Until	deletion
+Email
+Yes
+Auth,	communication
+Until	deletion
+Date	of	birth
+Optional
+Age-appropriate	content
+Until	deletion
+Learning	progress
+Yes
+Core	functionality
+Until	deletion
+Audio	recordings
+Temporary
+Speaking	practice
+24	hours
+Device	info
+Minimal
+Error	monitoring
+90	days
+Location
+No
+—
+—
+Photos
+No
+—
+—
+Privacy	Policy	Requirements
+Clear,	plain-language	privacy	policy	accessible	from	every	screen.
+Separate	children’s	privacy	section.
+Parental	rights:	access,	correction,	deletion.
+Data	processing	purposes	listed.
+Third-party	services	disclosed	(Supabase,	AI	provider	if	used).
+Contact	for	privacy	inquiries.
+64.	Child	Safety
+COPPA	2.0	Compliance	(Effective	June	2025;	Full	Compliance	April	2026)
+Requirement
+Implementation
+Verifiable	parental	consent
+Text-plus	method	(SMS	+	secondary	confirmation)	or	email	verification
+Data	minimisation
+Collect	only	display	name	and	progress	data
+No	behavioural	advertising
+Zero	ad	tracking	for	children
+Data	retention	limits
+Delete	recordings	after	24	hours;	anonymize	analytics	after	12	months
+Parental	access	rights
+Parent	dashboard	with	full	progress	visibility
+Parental	deletion	rights
+Account	deletion	cascades	all	data
+Third-party	SDK	compliance
+Audit	all	embedded	SDKs;	no	non-essential	third	parties
+Voice	data	protection
+Recordings	not	used	for	training;	deleted	after	use
+No	monetisation	of	child	data
+Strict	policy;	no	ads,	no	data	sales
+GDPR-K	Compliance	(EU/UK)
+Requirement
+Implementation
+Age-appropriate	consent
+Consent	age	varies	by	country	(13–16);	geo-detect	and	apply	strictest
+Verifiable	consent
+Parent	must	confirm	via	email	+	secondary	step
+Right	to	erasure
+Full	account	deletion	within	30	days
+Data	portability
+Export	progress	data	as	JSON
+Transparency
+Child-friendly	privacy	summary	in	addition	to	full	policy
+Safe	Defaults
+Public	profiles:
+	Disabled	by	default.	No	social	features	in	MVP.
+Leaderboards:
+	Not	implemented	(child	safety).
+
+=== PAGE 33 ===
+Notifications:
+	Opt-in	only;	parent	controls	for	child	accounts.
+AI	interactions:
+	Logged	and	reviewable;	no	personal	information	requested.
+65.	Content	Management	Strategy
+Content	Creation	Workflow
+Curriculum	Designer	→	Content	Draft	→	Tamil	Reviewer	→	Audio	Recording	→	QA	→	Publication
+Role
+Responsibility
+Tools
+Curriculum	Designer
+Create	lessons,	exercises,	vocabulary	lists
+Google	Sheets	/	CMS
+Tamil	Reviewer
+Verify	spelling,	grammar,	transliteration
+Review	checklist
+Audio	Recorder
+Record	pronunciation	audio
+Audacity	/	Studio
+QA
+Test	rendering,	playback,	exercises
+Test	cases
+Content	Types
+Type
+Source
+Review	Required
+Frequency
+Tamil	letters
+Unicode	standard
+Tamil	speaker
+One-time
+Vocabulary
+Curriculum	designer
+Tamil	speaker
+Per	batch
+Sentences
+Curriculum	designer
+Tamil	speaker
+Per	batch
+Stories
+Tamil	literature	/	original
+Tamil	speaker	+	cultural	reviewer
+Per	story
+Audio
+Native	speaker	recording
+Audio	QA
+Per	recording
+66.	Content	Verification
+Verification	Checklist
+Tamil	spelling	verified	by	native	speaker
+Letter-sound	association	verified
+Transliteration	reviewed	for	consistency
+English	meaning	accurate	and	natural
+Example	sentences	grammatically	correct
+Cultural	references	appropriate	and	respectful
+Audio	matches	text	exactly
+Audio	pronunciation	natural	and	clear
+No	regional	dialect	bias	(or	dialect	explicitly	noted)
+Content	age-appropriate
+Error	Reporting
+In-app	“Report	an	issue”	button	on	every	lesson	item.
+Reports	routed	to	content	team	with	item	ID	and	screenshot.
+Correction	history	tracked	in	
+content_versions
+	table	(P1).
+Verified	corrections	pushed	to	production	within	48	hours.
+67.	Analytics
+Events	Tracked
+Event
+Properties
+Purpose
+Privacy
+app_open
+language,	session_id
+Usage
+Anonymized
+lesson_start
+lesson_id,	level
+Engagement
+User-linked
+
+=== PAGE 34 ===
+lesson_complete
+lesson_id,	score,	time
+Learning
+User-linked
+item_answer
+item_id,	correct,	attempts
+Skill	mastery
+User-linked
+audio_play
+item_id,	type
+Audio	engagement
+User-linked
+speaking_record
+item_id,	duration
+Speaking	practice
+Not	stored
+streak_update
+streak_days
+Motivation
+User-linked
+achievement_earned
+achievement_id
+Motivation
+User-linked
+error_occurred
+error_type,	screen
+Reliability
+Anonymized
+Analytics	Privacy
+No	third-party	analytics	SDKs	in	MVP.
+All	events	stored	in	Supabase	
+analytics_events
+	table	(P1).
+Parent	can	opt	out	of	analytics	for	child	accounts.
+IP	addresses	not	stored.
+68.	Success	Metrics
+Metric
+Formula
+Data	Source
+Frequency
+Target
+Limitation
+Onboarding
+completion
+Users	completing
+assessment	/	users
+starting
+Event	logs
+Weekly
+>70%
+Doesn’t	measure	learning
+First	lesson
+completion
+Users	completing	1
+lesson	/	onboarded
+Progress	table
+Weekly
+>80%
+—
+Weekly	active
+learners
+Unique	users	with	≥1
+session	/	total
+Activity	table
+Weekly
+>40%
+—
+Lessons	per	learner
+Total	lessons	/	active
+learners
+Progress	table
+Weekly
+≥3
+—
+Session	duration
+Avg	time	per	session
+Activity	table
+Weekly
+8–15	min
+Time	≠	learning
+Return	rate	(D7)
+Users	active	on	day	7
+/	day	1
+Activity	table
+Weekly
+>30%
+—
+Quiz	accuracy
+Correct	/	total
+answers
+Quiz	attempts
+Weekly
+>75%
+—
+Vocabulary
+retention
+Words	recalled	after
+7	days	/	words
+learned
+Skill	mastery
+Weekly
+>70%
+—
+Reading	accuracy
+Correctly	read	words
+/	total
+Reading	exercises
+Weekly
+>80%
+Self-reported
+Tanglish	reduction
+Learners	advancing
+stages	/	total
+Mastery	data
+Monthly
+>60%	reach	C
+—
+Speaking
+participation
+Users	recording	/
+users	in	speaking
+lessons
+Event	logs
+Weekly
+>50%
+—
+Parent	engagement
+Parents	viewing
+dashboard	/	parents
+linked
+Parent	table
+Monthly
+>40%
+P1
+Critical	disclaimer:
+	Time	spent	in	the	application	is	
+not
+	equivalent	to	learning.	Quiz	accuracy	and	retention	metrics	are	the	primary	indicators	of
+learning	progress.
+69.	Functional	Requirements
+FR-001	—	Global	Interface	Language	Switching
+Description:
+	When	a	user	selects	English	or	Tamil	in	the	global	language	selector,	every	supported	interface	string	must	update	to	the	selected
+language	without	resetting	the	user’s	lesson	progress.
+
+=== PAGE 35 ===
+Priority:
+	P0
+User	Story:
+	As	a	learner,	I	want	to	switch	the	interface	language	so	that	I	can	use	the	app	in	my	preferred	language.
+Preconditions:
+	User	is	on	any	authenticated	screen	with	language	selector	visible.
+Trigger:
+	User	taps	language	selector	and	chooses	English	or	Tamil.
+Main	Flow:
+	1.	User	taps	language	selector.	2.	Dropdown/modal	shows	“English”	and	“
+தம ழ்”	
+options.	3.	User	selects	one.	4.	All	UI	strings	update
+immediately.	5.	Selection	persists	in	
+user_preferences
+.
+Alternative	Flows:
+	-	User	cancels	selection	→	no	change.	-	Selected	language	is	already	active	→	no	change.
+Error	Cases:
+	-	Missing	translation	key	→	fallback	to	English;	log	warning.	-	Network	offline	→	apply	locally;	sync	when	online.
+Data	Changes:
+	
+user_preferences. interface_language
+	updated.
+Security:
+	RLS	ensures	user	can	only	update	own	preference.
+Acceptance	Criteria:
+	-	All	navigation	labels	use	selected	language.	-	All	buttons	and	validation	messages	use	selected	language.	-	Current	lesson
+remains	open	after	switching.	-	Language	persists	across	sessions.	-	Tamil	learning	content	unchanged	by	UI	language.	-	Missing	translations
+detected	in	development.
+Dependencies:
+	i18n	library	configured;	translation	files	complete.
+Test	Scenarios:
+	-	Switch	from	EN	to	TA	on	dashboard	→	all	labels	change.	-	Switch	mid-lesson	→	lesson	content	remains,	UI	changes.	-	Refresh
+page	→	language	persists.
+FR-002	—	User	Onboarding
+Description:
+	New	users	complete	a	guided	onboarding	flow	that	explains	the	platform	and	collects	minimal	information.
+Priority:
+	P0
+User	Story:
+	As	a	new	user,	I	want	to	understand	how	the	platform	works	before	starting.
+Main	Flow:
+	1.	User	lands	on	onboarding	screen.	2.	Screen	1:	Welcome	+	how	it	works	(3	slides).	3.	Screen	2:	Display	name	input.	4.	Screen	3:
+Date	of	birth	(optional)	→	age	detection.	5.	If	under	13:	Parental	consent	flow.	6.	Screen	4:	Initial	assessment	intro.	7.	User	completes	or	skips
+assessment.
+Acceptance	Criteria:
+	-	Onboarding	completes	in	<2	minutes.	-	Only	display	name	and	optional	DOB	collected.	-	Under-13	users	cannot	proceed
+without	parental	consent.	-	Skip	option	available	for	assessment.
+FR-003	—	Initial	Assessment
+Description:
+	Optional	assessment	determines	starting	level.
+Priority:
+	P0
+Main	Flow:
+	1.	System	presents	10	adaptive	questions.	2.	Questions	range	from	letter	recognition	to	sentence	comprehension.	3.	System	calculates
+starting	level	(0–7).	4.	Recommendation	shown	with	option	to	override.
+Acceptance	Criteria:
+	-	Assessment	completes	in	<5	minutes.	-	Recommendation	is	reasonable	(not	too	high/low).	-	User	can	choose	different
+level.
+FR-004	—	Lesson	Playback
+Description:
+	Learner	can	play,	pause,	repeat,	and	adjust	speed	of	audio.
+Priority:
+	P0
+Main	Flow:
+	1.	Audio	auto-plays	on	item	display	(if	enabled).	2.	User	can	tap	play/pause.	3.	User	can	tap	repeat.	4.	Speed	control	(0.5x,	0.75x,	1x)
+available.
+Acceptance	Criteria:
+	-	Audio	loads	<2	seconds.	-	Controls	respond	<200ms.	-	Speed	change	applies	immediately.
+
+=== PAGE 36 ===
+FR-005	—	Progress	Persistence
+Description:
+	Lesson	progress	is	saved	after	each	item	and	survives	navigation,	refresh,	and	device	change.
+Priority:
+	P0
+Main	Flow:
+	1.	User	answers	item.	2.	System	saves	progress	to	
+lesson_progress
+.	3.	User	exits	lesson.	4.	User	returns	→	lesson	resumes	at	last	item.
+Acceptance	Criteria:
+	-	Progress	saved	within	1	second	of	item	completion.	-	Resume	works	after	browser	refresh.	-	Progress	syncs	across	devices
+(if	logged	in).
+70.	Non-Functional	Requirements
+ID
+Requirement
+Target
+Validation	Method
+NFR-001
+Initial	load	time
+<3s	on	3G
+Lighthouse
+NFR-002
+Interaction	response
+<200ms
+Performance	API
+NFR-003
+Audio	load
+<2s
+Network	timing
+NFR-004
+Accessibility
+WCAG	2.1	AA
+axe-core	audit
+NFR-005
+Uptime
+99.5%
+Monitoring
+NFR-006
+Data	durability
+99.99%
+Supabase	SLA
+NFR-007
+Mobile	responsiveness
+Works	on	320px	width
+Device	testing
+NFR-008
+Browser	support
+Chrome,	Safari,	Firefox,
+Edge	(last	2	versions)
+Cross-browser	testing
+NFR-009
+Low-bandwidth
+Functional	on	2G
+Throttled	testing
+NFR-010
+Error	recovery
+No	data	loss	on	network
+failure
+Chaos	testing
+NFR-011
+Tamil	rendering
+Correct	in	all	supported
+browsers
+Visual	regression
+NFR-012
+Security
+No	critical	vulnerabilities
+OWASP	scan
+71.	Error	Handling
+Error
+User	Message	(EN)
+User	Message	(TA)
+Recovery
+Incorrect	login
+“Email	or	password	incorrect.	Try	again.”
+“ம ன்னஞ்சல்	அல்ல	கட¡ச்ெசால்	தவ.	மீண்ம்
+¢யற்சக்க¡ம்.”
+Retry;	forgot	password	link
+Expired	session
+“Your	session	expired.	Please	sign	in	again.”
+“உங்கள்	அமர்¡	காலாவதியான.	மீண்ம்
+உள்¤ைழய¡ம்.”
+Redirect	to	login
+Lost	network
+“You’re	offline.	Some	features	unavailable.”
+“நீங்கள்	ஆஃப்லனல்	உள்ளீர்கள்.”
+Retry;	offline	queue
+Audio	unavailable
+“Audio	can’t	play	right	now.”
+“ஆேயா	இப்ேபா	இயங்கா.”
+Retry;	text	fallback
+Microphone
+denied
+“Microphone	access	needed	for	speaking.”
+“ேபச	ைமக்ேராஃேபான்	ேதைவ.”
+Settings	link;	skip
+AI	timeout
+“Tamil	helper	is	busy.	Try	again.”
+“தம ழ்	உதவயாளர்	பஸயாக	உள்ளார்.”
+Retry;	fallback	content
+Invalid	AI
+response
+“Something	went	wrong.	Let’s	try	another	way.”
+“ஏேதா	தவ	நடந்த.”
+Fallback	to	static	content
+DB	write	failure
+“Progress	couldn’t	save.	Retrying…”
+“¢ன்ேனற்றம்	ேசம க்க	¢யவல்ல.”
+Retry	with	backoff
+Duplicate
+completion
+(Silent	—	idempotent)
+(Silent)
+Idempotency	key
+Browser	refresh
+mid-lesson
+(Resume	prompt)	“Continue	where	you	left	off?”
+“ெதாடரவா?”
+Resume	from	last	item
+Missing
+translation
+(Fallback	to	English)
+(Fallback	to	English)
+Dev	warning
+Corrupted	lesson
+data
+“This	lesson	has	an	issue.	Skipping…”
+“இந்த	பாடத்தில்	சக்கல்.”
+Skip;	report
+
+=== PAGE 37 ===
+Parent	not
+authorised
+“You	don’t	have	access	to	this	profile.”
+“உங்க¨க்	அ©கல்	இல்ல.”
+Redirect	to	own	dashboard
+Account	deletion
+“Your	account	and	data	will	be	permanently	deleted.”
+“உங்கள்	கணக்	நிரந்தரமாக	நீக்கப்பம்.”
+Confirm	dialog;	cascade
+delete
+72.	Edge	Cases
+Edge	Case
+Handling
+User	changes	device	mid-lesson
+Progress	synced	via	Supabase;	resume	on	new	device
+User	loses	streak	due	to	technical	error
+Streak	freeze	applied;	no	penalty
+Slow/low-memory	device
+Lazy	loading;	reduced	animations;	audio-only	mode
+Unsupported	language	selection
+Fallback	to	English;	log	unsupported	locale
+Tamil	text	overflow
+Text	wrapping	with	proper	line-height;	no	clipping
+Combining	character	input
+NFC	normalization;	correct	rendering
+Duplicate	lesson	submission
+Idempotency	key;	only	one	record
+Offline	lesson	completion
+Queued	locally;	synced	when	online
+Multiple	children	under	one	parent
+Parent	can	switch	between	child	profiles
+Child	turns	13
+Account	automatically	transitions	to	standard	privacy	settings
+73.	Integrations
+Integration
+Purpose
+Priority
+Notes
+Supabase
+Backend	(DB,	Auth,	Storage,	RLS)
+P0
+Core	infrastructure
+Vercel	/	Netlify
+Hosting
+P0
+Free	tier	sufficient
+Sentry
+Error	monitoring
+P1
+Free	tier
+AI	Provider	API
+Conversational	practice,	hints
+P1
+Edge	Function	only
+Cloud	TTS
+Dynamic	audio
+P1
+Fallback	for	prerecorded
+Web	Speech	API
+Speech	recognition	(optional)
+P2
+Browser	support	varies
+74.	Testing	Strategy
+Test	Pyramid
+Level
+Coverage	Target
+Tools
+Frequency
+Unit
+80%	of	utility	functions
+Vitest
+Every	commit
+Component
+70%	of	UI	components
+Vitest	+	Testing	Library
+Every	PR
+Integration
+Critical	user	flows
+Playwright
+Daily
+E2E
+Onboarding	→	lesson	→	progress
+Playwright
+Pre-deploy
+Database
+RLS	policies,	constraints
+Supabase	test	runner
+Every	migration
+Localization
+All	translation	keys	exist
+Custom	script
+Every	PR
+Accessibility
+WCAG	2.1	AA
+axe-core
+Weekly
+Performance
+Load	time,	interaction
+Lighthouse	CI
+Weekly
+Security
+OWASP	Top	10
+Manual	+	tools
+Pre-launch
+75.	Test	Cases
+ID
+Test
+Preconditions
+Steps
+Expected
+Severity
+Priority
+TC-001
+Language
+User	logged	in
+Tap	language
+All	UI	strings	change	to
+High
+P0
+
+=== PAGE 38 ===
+switch
+selector	→	select
+Tamil
+Tamil
+TC-002
+Lesson
+resume
+Lesson	in	progress
+Close	lesson	→
+reopen
+Resumes	at	last	item
+High
+P0
+TC-003
+Correct
+answer
+Lesson	active
+Submit	correct
+answer
+Positive	feedback	+	XP
+awarded
+Medium
+P0
+TC-004
+Incorrect
+answer
+Lesson	active
+Submit	incorrect
+answer
+Hint	shown;	retry
+allowed
+Medium
+P0
+TC-005
+Audio
+playback
+Lesson	with	audio
+Tap	play
+Audio	plays	within	2s
+High
+P0
+TC-006
+Progress
+persist
+Lesson	complete
+Refresh	page
+Progress	unchanged
+High
+P0
+TC-007
+RLS
+isolation
+Two	users
+User	A	queries
+User	B	data
+No	results
+Critical
+P0
+TC-008
+Tamil
+rendering
+Any	screen
+Display	Tamil
+text
+Correct	ligatures;	no
+clipping
+High
+P0
+TC-009
+Child
+consent
+Under-13	signup
+Attempt	full
+access
+Blocked	until	parental
+consent
+Critical
+P0
+TC-010
+Streak
+calculation
+Daily	activity
+Complete	lesson
+on	consecutive
+days
+Streak	increments
+Medium
+P0
+TC-011
+Tanglish
+reduction
+Stage	A
+Achieve	80%
+accuracy
+Advance	to	Stage	B
+High
+P1
+TC-012
+Offline
+handling
+No	network
+Attempt	lesson
+Offline	message;	queued
+Medium
+P1
+TC-013
+Parent
+dashboard
+Parent	linked
+View	child
+progress
+Data	visible;	read-only
+Medium
+P1
+TC-014
+AI	hint
+Lesson	with	hint
+Request	hint
+Contextual	hint	shown
+Low
+P1
+TC-015
+Account
+deletion
+User	logged	in
+Request	deletion
+All	data	deleted	within
+30	days
+Critical
+P0
+76.	AI	Evaluation
+Evaluation	Criteria	for	AI	Features	(P1)
+Feature
+Metric
+Target
+Method
+Hint	generation
+Relevance	(1–5)
+>4.0
+Human	review	of	50	samples
+Hint	generation
+Safety	(pass/fail)
+100%	pass
+Content	filter	+	human	review
+Conversational	practice
+Response	appropriateness
+>80%
+Human	review
+Conversational	practice
+Grammar	accuracy
+>85%
+Native	speaker	review
+Adaptive	revision
+Precision	of	recommendations
+>75%
+A/B	test
+Literary	explanation
+Source	accuracy
+100%
+Citation	verification
+Literary	explanation
+Hallucination	rate
+0%
+Manual	review	of	100	outputs
+Critical:
+	AI	is	never	used	as	the	sole	source	of	truth	for	foundational	Tamil	content.
+77.	Accessibility	Evaluation
+Automated	+	Manual	Testing
+Check
+Tool
+Frequency
+Color	contrast
+axe-core,	Stark
+Every	component
+Keyboard	navigation
+Manual
+Every	screen
+
+=== PAGE 39 ===
+Screen	reader	(NVDA)
+Manual
+Weekly
+Screen	reader	(VoiceOver)
+Manual
+Weekly
+Reduced	motion
+Manual
+Every	animation
+Tamil	Unicode	rendering
+Visual	regression
+Every	content	update
+Text	resizing	(200%)
+Manual
+Monthly
+78.	Performance	Evaluation
+Metric
+Target
+Tool
+Frequency
+LCP	(Largest	Contentful	Paint)
+<2.5s
+Lighthouse
+Weekly
+FID	(First	Input	Delay)
+<100ms
+Lighthouse
+Weekly
+CLS	(Cumulative	Layout	Shift)
+<0.1
+Lighthouse
+Weekly
+Bundle	size	(initial)
+<200KB	gzipped
+Vite	build
+Every	PR
+Audio	load	time
+<2s
+Network	panel
+Every	audio	asset
+Tamil	text	render	time
+<500ms
+Performance	API
+Every	content	update
+79.	Deployment
+Environments
+Environment
+Purpose
+URL
+Database
+Development
+Local	development
+localhost:5173
+Supabase	local
+Staging
+Pre-production	testing
+staging.tamilpalam.vercel.app
+Supabase	staging	project
+Production
+Live	users
+tamilpalam.vercel.app
+Supabase	production	project
+Deployment	Pipeline
+GitHub	Push	→	Vercel	Build	→	Preview	Deploy	→	Manual	Approval	→	Production	Deploy
+Step
+Tool
+Command
+Build
+Vite
+npm	run	build
+Test
+Vitest	+	Playwright
+npm	test
+Deploy
+Vercel	CLI	/	Git	integration
+Auto	on	main	branch
+Database	migrations
+Supabase	CLI
+supabase	db	push
+Environment	Variables
+Variable
+Scope
+Secret
+Description
+VITE_SUPABASE_URL
+Client
+No
+Supabase	project	URL
+VITE_SUPABASE_ANON_KEY
+Client
+No
+Supabase	anon	key
+SUPABASE_SERVICE_ROLE_KEY
+Server	(Edge	Function)
+Yes
+Admin	access
+AI_API_KEY
+Server	(Edge	Function)
+Yes
+AI	provider	key
+SENTRY_DSN
+Client
+No
+Error	monitoring
+80.	Monitoring
+What
+Tool
+Alert	Threshold
+Uptime
+Vercel	/	UptimeRobot
+>99.5%
+Error	rate
+Sentry
+>1%	of	sessions
+API	latency
+Supabase	Dashboard
+P95	>2s
+
+=== PAGE 40 ===
+API	latency
+Supabase	Dashboard
+P95	>2s
+Database	size
+Supabase	Dashboard
+>80%	of	plan
+Storage	usage
+Supabase	Dashboard
+>80%	of	plan
+Auth	failures
+Supabase	Dashboard
+>10%	of	attempts
+81.	Backup	and	Recovery
+Data
+Backup	Frequency
+Retention
+Recovery	Time
+PostgreSQL
+Daily	(Supabase)
+7	days	(free),	30	days	(paid)
+<1	hour
+Storage	(audio)
+Weekly	export
+30	days
+<4	hours
+Code
+Git	(GitHub)
+Permanent
+<15	min
+Environment
+config
+Documented	in	secure	vault
+Permanent
+<30	min
+Recovery	procedure:
+	1.	Identify	failure	scope.	2.	Restore	database	from	most	recent	backup.	3.	Verify	data	integrity.	4.	Restore	storage	assets	if
+affected.	5.	Redeploy	application.	6.	Notify	affected	users.
+82.	Development	Environments
+Local	Setup
+Required	Tools
+Tool
+Version
+Purpose
+Node.js
+20+
+Runtime
+npm
+10+
+Package	manager
+Supabase	CLI
+Latest
+Local	DB
+Git
+Latest
+Version	control
+VS	Code	/	Cursor
+Latest
+IDE
+83.	Repository	Organisation
+#	Prerequisites
+Node. js
+	20+
+npm
+	10+
+Supabase
+	CLI
+#	Steps
+git
+	clone	https://github. com/team/tamilpalam. git
+cd
+	tamilpalam
+npm
+	install
+cp
+	. env. example	. env. local
+#	Fill	in	Supab ase	credentials
+supabase
+	start		
+#	Local	Supab ase
+npm
+	run	dev					
+#	Start	Vite	dev	server
+
+=== PAGE 41 ===
+tamilpalam/
+├──	. github/
+│			└──	workflows/										#	CI/CD
+├──	public/
+│			├──	audio/														#	Static	audio	fallbacks
+│			└──	images/													#	Static	images
+├──	src/
+│			├──	app/
+│			├──	components/
+│			├──	hooks/
+│			├──	lib/
+│			├──	locales/
+│			├──	stores/
+│			├──	styles/
+│			└──	types/
+├──	supabase/
+│			├──	migrations/									#	SQL	migrations
+│			├──	functions/										#	Edge	Functions
+│			└──	seed. sql												#	Seed	data
+├──	tests/
+│			├──	unit/
+│			├──	component/
+│			└──	e2e/
+├──	docs/																			#	PRD,	architecture	docs
+├──	. env. example
+├──	package. json
+├──	tsconfig. json
+├──	vite. config. ts
+├──	tailwind. config. js
+└──	README. md
+84.	Coding	Conventions
+Convention
+Rule
+Example
+File	naming
+kebab-case	for	files,	PascalCase
+for	components
+lesson-player. tsx
+,	
+LessonPlayer
+Component	structure
+One	component	per	file
+—
+TypeScript
+Strict	mode;	no	
+any
+interface	LessonProps
+Imports
+Absolute	imports	with	
+@/
+	alias
+import	{	Button	}	from
+	
+'@/components/ui/Button'
+State
+Zustand	for	global;	React	state	for
+local
+—
+CSS
+Tailwind	utility	classes;	no	custom
+CSS	unless	necessary
+className="flex	items-center	gap-4"
+i18n
+No	hardcoded	strings;	use	
+t('key')
+t('lesson. playAudio')
+Commits
+Conventional	commits
+feat:	add	language	selector
+Branches
+feature/
+,	
+fix/
+,	
+chore/
+feature/tanglish-reduction
+85.	Team	Responsibilities
+Role
+Primary	Responsibilities
+Secondary
+Frontend	Lead
+UI	components,	routing,	state	management,	responsive	design
+Visual	design
+Backend	Lead
+Supabase	setup,	RLS	policies,	Edge	Functions,	database	migrations
+API	design
+Curriculum	Lead
+Lesson	content,	exercises,	vocabulary	lists,	Tanglish	rules
+Content	review	coordination
+Integration/QA
+Lead
+Testing,	deployment,	monitoring,	audio	assets,	demo	preparation
+Documentation
+86.	Fifteen-Hour	Execution	Plan
+
+=== PAGE 42 ===
+Hour-by-Hour
+Hour
+Frontend	Lead
+Backend	Lead
+Curriculum	Lead
+QA/Integration	Lead
+0–1
+Project	setup,	routing,	design
+tokens
+Supabase	project,	schema
+migration
+Level	1	content	outline
+Repo	setup,	CI	config
+1–2
+Auth	UI,	language	selector
+Auth	setup,	RLS	policies
+Level	1	letters	+	audio
+Audio	asset	collection
+2–3
+Dashboard	skeleton
+Profiles	table,	preferences
+Level	1	vocabulary
+Test	plan	drafting
+3–4
+Lesson	player	shell
+Lessons,	lesson_items	tables
+Level	2	content
+Unit	tests	for	utils
+4–5
+Letter	learning	screen
+Seed	data	for	Levels	1–2
+Level	2	audio
+Component	tests
+5–6
+Vocabulary	screen
+Progress	tables,	RLS
+Level	3	content
+E2E	test:	onboarding
+6–7
+Quiz/assessment	screen
+Achievements,	XP	logic
+Level	3	audio
+E2E	test:	lesson	flow
+7–8
+Progress	dashboard
+Daily	activity,	streak	logic
+Tanglish	reduction	rules
+Accessibility	audit
+8–9
+Progress	charts,	badges
+Revision	queue	logic
+Level	4	content
+Performance	test
+9–10
+Tanglish	reduction	UI
+Mastery	calculation
+Level	4	audio
+Cross-browser	test
+10–11
+Parent	dashboard	(P1)
+Edge	Function:	AI	hint	(P1)
+Content	QA
+Bug	fixes
+11–12
+Polish,	animations
+Deployment	config
+Demo	script
+Demo	rehearsal
+12–13
+Demo	prep
+Monitoring	setup
+Backup	content
+Final	testing
+13–14
+Buffer
+Buffer
+Buffer
+Buffer
+14–15
+Demo
+Demo
+Demo
+Demo
+Critical	Path
+Supabase	schema	→	Auth	→	Dashboard	→	Lesson	player	→	Progress	→	Demo
+Feature	Cut	List	(If	Behind	Schedule)
+1.	
+Cut	parent	dashboard	(P1)
+2.	
+Cut	AI	features	(P1)
+3.	
+Cut	advanced	animations
+4.	
+Cut	Levels	5–7	content	(keep	Levels	0–4)
+5.	
+Cut	speaking	practice	(keep	listening	+	reading)
+6.	
+Never	cut:
+	Auth,	lesson	player,	progress	persistence,	language	switching,	Tanglish	reduction	demo
+Demo	Strategy
+Demo	flow	(5	minutes):
+	1.	Landing	page	→	language	toggle	(30s)	2.	Sign	up	→	onboarding	(30s)	3.	Assessment	→	level	recommendation	(30s)	4.
+Complete	a	letter	lesson	with	audio	(60s)	5.	Show	Tanglish	reduction	progression	(60s)	6.	View	dashboard	with	progress,	streak,	badges	(60s)	7.
+Show	parent	dashboard	(30s)
+Backup	demo:
+	Pre-recorded	video	+	deployed	staging	URL	+	local	build.
+87.	Task	Dependency	Map
+flowchart	TD
+				A[Supabase	Schema]	-->	B[Auth	Setup]
+				A	-->	C[Lesson	Tables]
+				B	-->	D[Dashboard]
+				C	-->	E[Lesson	Player]
+				D	-->	F[Progress	Display]
+				E	-->	G[Quiz	Logic]
+				G	-->	H[Mastery	Calculation]
+				H	-->	I[Tanglish	Reduction]
+				C	-->	J[Seed	Content]
+				J	-->	E
+				B	-->	K[RLS	Policies]
+				K	-->	D
+				K	-->	F
+
+=== PAGE 43 ===
+88.	Definition	of	Done
+A	feature	is	“done”	when:
+Code	reviewed	by	at	least	one	other	team	member
+Unit	tests	written	and	passing
+Component	test	(if	UI)	passing
+E2E	test	covering	happy	path
+Accessibility	check	(keyboard,	screen	reader)
+Tamil	rendering	verified
+Translation	keys	added	for	both	languages
+Responsive	on	mobile,	tablet,	desktop
+No	console	errors
+Deployed	to	staging
+Demo	script	updated
+89.	Demo	Strategy
+Element
+Detail
+Duration
+5	minutes
+Narrative
+“Aarav	learns	Tamil”	—	follow	a	child	from	sign-up	to	first	achievement
+Key	moments
+Language	toggle,	audio	playback,	Tanglish	reduction,	progress	celebration
+Backup
+Pre-recorded	video,	staging	URL,	local	build	on	presenter	laptop
+Judges’	Q&A	prep
+Privacy	compliance,	progressive	reduction	algorithm,	architecture	choices
+90.	Acceptance	Criteria
+Feature
+Acceptance	Criteria
+Priority
+Language	switching
+All	UI	strings	change;	persists;	lesson	unaffected
+P0
+Onboarding
+Completes	<2	min;	collects	only	display	name	+	DOB
+P0
+Assessment
+10	questions;	recommends	level;	can	override
+P0
+Lesson	playback
+Audio	<2s	load;	controls	responsive
+P0
+Progress	persistence
+Saved	after	each	item;	survives	refresh
+P0
+Tamil	rendering
+No	clipping,	correct	ligatures	in	all	browsers
+P0
+Gamification
+Streak,	XP,	badges	visible	and	accurate
+P0
+Tanglish	reduction
+Stage	advancement	based	on	accuracy
+P1
+Child	safety
+Under-13	blocked	until	parental	consent
+P0
+RLS	isolation
+Users	cannot	access	other	users’	data
+P0
+91.	Risk	Register
+Risk
+Likelihood
+Impact
+Detection
+Mitigation
+Fallback
+Owner
+Residual
+Incorrect
+Tamil	content
+Medium
+High
+Reviewer	check
+Native	speaker	review
+Content	freeze;
+correction	sprint
+Curriculum
+Lead
+Low
+Poor
+transliteration
+Medium
+Medium
+Learner	confusion
+Multiple	alternatives
+shown
+Audio	as	authority
+Curriculum
+Lead
+Low
+Tanglish
+dependence
+Medium
+High
+Mastery	data
+stagnant
+Progressive	reduction
+enforced
+Manual	stage
+adjustment
+Product
+Lead
+Medium
+Inaccurate	AI
+feedback
+Medium
+High
+User	reports
+Constrained	prompts;
+human	review
+Disable	AI	feature
+Backend
+Lead
+Medium
+Pronunciation
+High
+Medium
+WER	testing
+No	phoneme	claims;
+Skip	AI
+Backend
+Low
+
+=== PAGE 44 ===
+assessment
+unreliable
+self-assessment
+pronunciation
+Lead
+Children	lose
+interest
+Medium
+High
+Retention	metrics
+Gamification;	short
+sessions
+Content	refresh
+Product
+Lead
+Medium
+Scope	creep
+High
+High
+Timeline	slip
+Strict	P0	focus
+Cut	P1/P2	features
+Product
+Lead
+Medium
+Insufficient
+content
+Medium
+High
+Lesson	completion
+low
+Seed	Levels	1–4	only
+Generate	with
+review
+Curriculum
+Lead
+Low
+Animation
+performance
+Medium
+Medium
+Device	testing
+CSS-first;	lazy	3D
+Disable	animations
+Frontend
+Lead
+Low
+Network
+reliability
+Medium
+Medium
+Offline	testing
+Offline	queue;	sync
+Text-only	mode
+Backend
+Lead
+Low
+Privacy	non-
+compliance
+Low
+Critical
+Legal	review
+COPPA/GDPR-K
+checklist
+Disable	data
+collection
+Product
+Lead
+Low
+Service
+outage
+Low
+High
+Monitoring
+Multi-provider	fallback
+Static	demo
+Backend
+Lead
+Low
+Copyright
+issues
+Medium
+High
+Content	review
+Original	content;
+licensed	audio
+Remove	contested
+content
+Curriculum
+Lead
+Low
+Incomplete
+localization
+Medium
+Medium
+Missing	key	script
+Automated	check
+English	fallback
+Frontend
+Lead
+Low
+Hackathon
+integration
+failure
+Medium
+High
+Demo	rehearsal
+Integration	early;
+contracts
+Backup	demo
+QA	Lead
+Medium
+92.	Assumptions
+1.	
+The	hackathon	team	has	4	members	with	basic	web	development	skills.
+2.	
+Supabase	free	tier	is	sufficient	for	MVP.
+3.	
+Prerecorded	audio	can	be	sourced	from	team	members	or	free	libraries.
+4.	
+Tamil	content	can	be	reviewed	by	a	native	speaker	on	the	team	or	a	volunteer.
+5.	
+The	hackathon	provides	internet	access	and	deployment	platform	access.
+6.	
+Judges	evaluate	based	on	working	demo,	not	production	readiness.
+7.	
+English-speaking	children	abroad	are	the	primary	audience.
+8.	
+Tanglish	is	a	familiar	concept	to	the	target	audience’s	families.
+9.	
+Progressive	Tanglish	reduction	is	pedagogically	sound	(requiring	validation).
+10.	
+AI	features	are	optional	enhancements,	not	core	requirements.
+93.	Constraints
+Constraint
+Impact
+Mitigation
+15-hour	deadline
+Limits	feature	scope
+Strict	P0	prioritisation
+4-person	team
+Limited	parallel	work
+Clear	role	separation
+No	budget
+Free	tiers	only
+Supabase/Vercel	free	tier
+No	professional	audio
+Quality	risk
+Team	recordings	+	free	assets
+No	formal	user	testing
+Assumptions	unvalidated
+Post-hackathon	pilot	plan
+Browser	compatibility
+Tamil	rendering	varies
+Extensive	testing
+Child	privacy	compliance
+Limits	data	collection
+Minimal	data	design
+94.	Open	Questions
+#
+Question
+Owner
+Deadline
+Impact	if	Unresolved
+1
+Is	a	native	Tamil	speaker
+available	for	content	review?
+Product	Lead
+Hour	1
+Content	quality	risk
+
+=== PAGE 45 ===
+2
+Can	we	source	free	Tamil
+audio	assets?
+Curriculum	Lead
+Hour	2
+Audio	quality	risk
+3
+What	is	the	exact	COPPA
+consent	method	we	can
+implement	in	15	hours?
+Product	Lead
+Hour	3
+Child	safety	compliance
+4
+Is	AI	API	access	available
+within	the	hackathon?
+Backend	Lead
+Hour	2
+P1	feature	scope
+5
+What	is	the	deployment
+platform?
+QA	Lead
+Hour	1
+Deployment	timeline
+6
+Can	we	validate	Tamil
+rendering	on	all	target
+browsers?
+Frontend	Lead
+Hour	4
+UX	quality
+7
+What	is	the	demo	narrative?
+Product	Lead
+Hour	10
+Demo	impact
+95.	Decision	Log
+Decision
+Date
+Rationale
+Alternatives	Considered
+Use	Supabase	over	Firebase
+Day	0
+PostgreSQL	+	RLS	>	NoSQL
+Firebase	(no	RLS)
+Use	React	+	Vite
+Day	0
+Speed,	TypeScript,	AI	tools
+Next.js	(overkill),	Vue	(less	tooling)
+No	custom	backend	server
+Day	0
+Supabase	client	+	RLS	sufficient
+Express	(unnecessary)
+P0	scope:	Levels	0–4	only
+Day	0
+15-hour	constraint
+Full	curriculum	(impossible)
+No	AI	in	MVP
+Day	0
+Reliability,	scope
+AI	hints	(P1)
+Prerecorded	audio	only
+Day	0
+Quality,	offline
+TTS	(lower	quality)
+No	leaderboards
+Day	0
+Child	safety
+Leaderboards	(exposure	risk)
+English/Tamil	full	localization
+Day	0
+Core	requirement
+English-only	(incomplete)
+96.	Future	Roadmap
+Stage	1	—	Hackathon	MVP	(Now)
+User	Value:
+	Working	Tamil	learning	demo	with	core	features.	
+Features:
+	P0	features	as	defined.	
+Dependencies:
+	Supabase,	Vercel,	audio	assets.
+Success	Metrics:
+	Working	demo;	all	P0	acceptance	criteria	met.	
+Risks:
+	Timeline;	content	quality.
+Stage	2	—	Improved	Learning	Experience	(Month	1–3)
+User	Value:
+	Polished,	production-ready	Tamil	learning.	
+Features:
+	Progressive	Tanglish	Reduction	fully	implemented;	personalized	revision;
+adaptive	recommendations;	cultural	storytelling;	more	content	(Levels	5–7).	
+Dependencies:
+	User	testing;	content	expansion.	
+Success	Metrics:
+40%	weekly	return;	70%	reach	Stage	C.	
+Risks:
+	Content	velocity;	engagement.
+Stage	3	—	Parent	and	Teacher	Support	(Month	3–6)
+User	Value:
+	Parents	and	teachers	can	track	and	support	learning.	
+Features:
+	Parent	dashboard;	teacher	assignments;	progress	reports;	email
+summaries.	
+Dependencies:
+	Parent-child	linking;	consent	management.	
+Success	Metrics:
+	40%	parent	engagement;	20%	teacher	adoption.	
+Risks:
+Privacy	complexity;	adoption.
+Stage	4	—	Advanced	Speech	and	Personalization	(Month	6–12)
+User	Value:
+	Pronunciation	feedback;	truly	adaptive	learning.	
+Features:
+	Speech	recognition	(optional);	phoneme-level	assessment	(if	validated);
+advanced	personalization.	
+Dependencies:
+	Tamil	speech	API	availability.	
+Success	Metrics:
+	50%	speaking	participation;	measurable	pronunciation
+improvement.	
+Risks:
+	API	accuracy;	cost.
+Stage	5	—	Broader	Curriculum	(Year	2)
+User	Value:
+	Full	Tamil	literacy	from	beginner	to	intermediate.	
+Features:
+	Complete	Levels	0–10;	advanced	reading;	writing	practice;	dialect
+awareness.	
+Dependencies:
+	Content	team;	reviewer	network.	
+Success	Metrics:
+	60%	completion	to	Level	6.	
+Risks:
+	Content	scaling;	quality
+maintenance.
+
+=== PAGE 46 ===
+Stage	6	—	Tamil	Research	Assistant	(Year	2+)
+User	Value:
+	Literary	Tamil	understanding;	Thirukkural	study.	
+Features:
+	Passage	explanation;	source	verification;	uncertainty	communication;
+hallucination	prevention.	
+Dependencies:
+	Licensed	content;	RAG	infrastructure.	
+Success	Metrics:
+	100%	source	accuracy;	zero	hallucinations.
+Risks:
+	Licensing;	accuracy.
+97.	Tamil	Research	Assistant	Specification	(Future	Module)
+Workflow
+1.	
+User	selects	or	enters	Tamil	literary	passage.
+2.	
+User	selects	explanation	language	(English/Tamil).
+3.	
+System	identifies	available	source	(Thirukkural,	classical	literature,	proverbs).
+4.	
+System	presents	original	passage	separately	from	explanation.
+5.	
+System	provides	beginner-friendly	explanation.
+6.	
+Tanglish	assistance	offered	for	relevant	words.
+7.	
+Source	details	and	uncertainty	displayed.
+8.	
+If	authenticity	cannot	be	established,	system	says	so.
+Content	Sources
+Source
+Licensing	Status
+Verification	Required
+Thirukkural
+Public	domain	(ancient	text)
+Standard	text	confirmation
+Classical	literature
+Varies	by	work
+Licensing	check
+Proverbs
+Oral	tradition
+Source	attribution
+Historical	passages
+Varies
+Archive	verification
+Safety	Requirements
+Never	invent	quotations.
+Never	claim	unverified	information	is	authentic.
+Always	distinguish	original	text	from	explanation.
+Always	cite	sources	where	available.
+Always	communicate	uncertainty.
+Never	present	AI	interpretation	as	scholarly	consensus.
+Evaluation
+Metric
+Target
+Method
+Source	accuracy
+100%
+Manual	verification
+Hallucination	rate
+0%
+100-output	review
+Uncertainty	communication
+100%
+Checklist	review
+User	comprehension
+>80%
+Post-explanation	quiz
+98.	Content	Sourcing	and	Licensing
+Content	Type
+Source
+License
+Attribution	Required
+Tamil	letters
+Unicode	standard
+Open
+No
+Vocabulary
+Original	creation
+Team-owned
+No
+Sentences
+Original	creation
+Team-owned
+No
+Stories	(original)
+Team	creation
+Team-owned
+No
+Stories	(folk	tales)
+Public	domain
+Public	domain
+Yes	(source)
+Audio	(team)
+Team	recordings
+Team-owned
+No
+Audio	(licensed)
+Free	libraries
+Check	license
+Yes
+
+=== PAGE 47 ===
+Images
+Original	/	licensed
+Check	license
+Yes
+Critical:
+	Do	not	use	copyrighted	Tamil	textbooks,	proprietary	audio,	or	unlicensed	literary	content.
+99.	Budget	and	Operating-Cost	Estimates
+Item
+Free	Tier
+Paid	Estimate
+Notes
+Supabase
+500MB	DB,	1GB	storage
+$25/month	(Pro)
+Sufficient	for	MVP
+Vercel
+100GB	bandwidth
+$20/month	(Pro)
+Free	tier	sufficient
+Domain
+—
+$12/year
+. app
+	or	
+. com
+AI	API
+Limited	free
+$10–50/month
+P1	only
+Audio	recording
+Team
+$0–100	one-time
+If	professional	needed
+Sentry
+5K	events/month
+$26/month
+Free	tier	sufficient
+Total	(MVP)
+$0
+—
+Free	tier	sufficient
+Total	(Year	1,	paid)
+—
+~$800
+With	AI	+	Pro	tiers
+100.	Maintenance	Strategy
+Task
+Frequency
+Owner
+Tool
+Dependency	updates
+Monthly
+Frontend	Lead
+Dependabot
+Security	patches
+As	needed
+Backend	Lead
+npm	audit
+Content	corrections
+As	reported
+Curriculum	Lead
+CMS
+Database	backup	verification
+Monthly
+Backend	Lead
+Supabase
+Performance	review
+Monthly
+QA	Lead
+Lighthouse
+User	feedback	review
+Weekly
+Product	Lead
+In-app	reports
+Accessibility	audit
+Quarterly
+QA	Lead
+axe-core
+Privacy	policy	review
+Annually
+Product	Lead
+Legal
+101.	Product	Validation	Plan
+Phase
+Method
+Sample
+Duration
+Success	Criteria
+Alpha
+Team	testing
+4	users
+Week	1
+No	critical	bugs
+Beta
+Friends/family
+10	users
+Week	2–3
+70%	complete	onboarding
+Pilot
+Tamil	school
+partnership
+20	children
+Month	2
+50%	weekly	return
+Validation
+Formal	study
+100	learners
+Month	3–6
+Measurable	script	improvement
+Critical:
+	Do	not	claim	educational	efficacy	until	validated	by	a	controlled	study.
+102.	User	Research	Plan
+Research	Question
+Method
+Sample
+Timeline
+Do	children	find	the	interface	intuitive?
+Moderated	usability	test
+5	children
+Week	2
+Does	Tanglish	reduction	feel	natural?
+Diary	study
+10	learners
+Week	4
+What	motivates	continued	use?
+Survey	+	interviews
+20	users
+Month	2
+Do	parents	find	the	dashboard	useful?
+Parent	interviews
+10	parents
+Month	2
+Are	Tamil	educators	satisfied	with	content?
+Expert	review
+3	educators
+Month	1
+
+=== PAGE 48 ===
+103.	Pilot	Deployment	Plan
+Step
+Detail
+Timeline
+Partner	identification
+Tamil	school	/	community	organisation
+Week	1
+Consent	collection
+Parental	consent	for	all	participants
+Week	2
+Onboarding	session
+In-person	or	video	call	setup
+Week	3
+Pilot	period
+4	weeks	of	regular	use
+Weeks	3–7
+Data	collection
+Usage	+	quiz	data	(anonymized)
+Continuous
+Exit	interviews
+Learners	+	parents
+Week	7
+Report
+Findings	+	recommendations
+Week	8
+104.	Growth	and	Adoption	Strategy
+Channel
+Tactics
+Target
+Tamil	community	organisations
+Partnerships	with	Tamil	schools
+5	schools	in	Year	1
+Parent	networks
+Referral	programme	(non-monetary)
+20%	referral	rate
+Social	media
+Tamil	parenting	groups
+Organic	reach
+Content	marketing
+Blog	posts	on	Tamil	learning
+SEO	for	“learn	Tamil	for	kids”
+App	stores
+PWA	distribution
+—
+Teacher	ambassadors
+Free	classroom	accounts
+10	teachers
+Child	safety	in	marketing:
+	No	targeting	of	children	with	ads.	Marketing	directed	at	parents	and	educators.
+105.	Final	Requirements	Traceability	Matrix
+Requirement
+Source
+Priority
+Test	Case
+Status
+FR-001	Language	switching
+P10	problem
+P0
+TC-001
+Planned
+FR-002	Onboarding
+Section	9
+P0
+TC-001
+Planned
+FR-003	Assessment
+Section	9
+P0
+—
+Planned
+FR-004	Audio	playback
+Section	14
+P0
+TC-005
+Planned
+FR-005	Progress	persistence
+Section	9
+P0
+TC-006
+Planned
+FR-006	RLS	isolation
+Section	19
+P0
+TC-007
+Planned
+FR-007	Tamil	rendering
+Section	8
+P0
+TC-008
+Planned
+FR-008	Child	consent
+Section	19
+P0
+TC-009
+Planned
+FR-009	Tanglish	reduction
+Section	11
+P1
+TC-011
+Planned
+FR-010	AI	hints
+Section	13
+P1
+TC-014
+Planned
+FR-011	Parent	dashboard
+Section	16
+P1
+TC-013
+Planned
+FR-012	Research	assistant
+Section	15
+P2
+—
+Future
+106.	Glossary
+Term
+Definition
+Tanglish
+Tamil	language	written	using	English/Latin	script
+Uyir
+Tamil	independent	vowels	(12	letters)
+Mei
+Tamil	consonants	(18	letters)
+Uyirmei
+Combined	consonant	+	vowel	forms	(216	forms)
+Virama/Pulli
+Diacritic	that	suppresses	inherent	vowel	(்)
+
+=== PAGE 49 ===
+Retroflex
+Consonants	pronounced	with	tongue	curled	back	(
+ட,	ண,	ள,	ழ,	ற)
+RLS
+Row	Level	Security	—	PostgreSQL	feature	for	row-level	access	control
+CEFR
+Common	European	Framework	of	Reference	for	Languages
+COPPA
+Children’s	Online	Privacy	Protection	Act	(US)
+GDPR-K
+General	Data	Protection	Regulation	—	children’s	provisions	(EU)
+NFC
+Unicode	Normalization	Form	C	—	canonical	composition
+WER
+Word	Error	Rate	—	speech	recognition	accuracy	metric
+SRS
+Spaced	Repetition	System
+LCP
+Largest	Contentful	Paint	—	performance	metric
+PWA
+Progressive	Web	App
+107.	Appendices
+Appendix	A:	Tamil	Unicode	Quick	Reference
+Category
+Range
+Count
+Independent	vowels
+U+0B85–U+0B94
+12
+Consonants
+U+0B95–U+0BB9
+18
+Vowel	signs
+U+0BBE–U+0BCC
+13
+Virama
+U+0BCD
+1
+Numerals
+U+0BE6–U+0BEF
+10
+Appendix	B:	Sample	Seed	Data
+Appendix	C:	RLS	Policy	Template
+--	Sample	learning	level
+INSERT
+	
+INTO
+	learning_levels	(level_number,	title_en,	title_ta,	description_en)
+VALUES
+	(
+1
+,	
+'Tamil	Letters	and	Sounds'
+,	
+'
+தம ழ்
+	
+எ«த்க்கள்
+'
+,	
+'Learn	vowels	and	consonants'
+);
+--	Sample	lesson
+INSERT
+	
+INTO
+	lessons	(level_id,	title_en,	title_ta,	sequence_order,	lesson_type)
+VALUES
+	((
+SELECT
+	
+id
+	
+FROM
+	learning_levels	
+WHERE
+	level_number	
+=
+	
+1
+),
+								
+'Vowels:	
+அ
+	
+ஆ
+	
+இ
+	
+ஈ
+'
+,	
+'
+உயர்
+	
+எ«த்க்கள்
+'
+,	
+1
+,	
+'letters'
+);
+--	Sample	letter
+INSERT
+	
+INTO
+	tamil_letters	(letter,	unicode_codepoint,	letter_type,	tanglish_primary,	ipa)
+VALUES
+	(
+'
+அ
+'
+,	
+'U+0B85'
+,	
+'vowel'
+,	
+'a'
+,	
+'/a/'
+);
+
+=== PAGE 50 ===
+Appendix	D:	COPPA/GDPR-K	Compliance	Checklist
+Verifiable	parental	consent	before	data	collection	(under-13)
+Clear,	plain-language	privacy	policy
+Separate	children’s	privacy	section
+Parental	access	to	child	data
+Parental	deletion	rights
+Data	minimisation	(collect	only	what’s	needed)
+No	behavioural	advertising
+No	third-party	data	sharing	without	consent
+Data	retention	limits	defined
+Voice	data	protection	(24-hour	deletion)
+No	monetisation	of	child	data
+Third-party	SDK	audit	completed
+108.	Reference	List
+1.	
+Unicode	Consortium.	(2024).	
+Tamil
+.	Unicode	Standard.	https://unicode.org/charts/PDF/U0B80.pdf
+2.	
+W3C.	(2024).	
+Tamil	Gap	Analysis
+.	World	Wide	Web	Consortium.
+3.	
+Supabase.	(2026).	
+Row	Level	Security
+.	Supabase	Documentation.	https://supabase.com/docs/guides/database/postgres/row-level-security
+4.	
+Federal	Trade	Commission.	(2025).	
+FTC	Finalizes	Changes	to	Children’s	Privacy	Rule
+.	https://www.ftc.gov
+5.	
+Cookie-Script.	(2025).	
+Kid-Safe	Online:	COPPA,	GDPR-K	and	Age	Verification
+.	https://cookie-script.com/guides/kid-safe-online
+6.	
+Council	of	Europe.	(2020).	
+Common	European	Framework	of	Reference	for	Languages:	Companion	Volume
+.	https://rm.coe.int
+7.	
+Malge,	K.	P.	(2026).	
+Levelling	Up	Literacy:	Investigating	the	Impact	of	Duolingo’s	Gamification
+.	Journal	of	Research	and	Development,
+18(4),	25–28.
+8.	
+Lund	University.	(2025).	
+What	drives	language	learners’	to	keep	using	Duolingo?
+	LUP	Student	Papers.
+9.	
+IEEE.	(2026).	
+How	Duolingo	users	perceive	the	use	of	game	elements	in	their	learning	motivation
+.
+10.	
+ACL	Anthology.	(2026).	
+Wave2Word@DravidianLangTech	2026:	WhisTam
+.	Association	for	Computational	Linguistics.
+11.	
+Semantic	Scholar.	(2025).	
+Automated	evaluation	of	children’s	speech	fluency	for	low-resource	languages
+.
+12.	
+Taylor	&	Francis.	(2025).	
+Assessing	the	Impact	of	a	Heritage	Language	Intervention	in	Preschool
+.	Open	Access.
+13.	
+Duolingo.	(2025).	
+Research	on	Streak	Effects
+.	Duolingo	Blog.	https://blog.duolingo.com
+14.	
+Google	Play.	(2025).	
+Tamil	Agaram	Pro
+.	https://play.google.com
+15.	
+Apple	App	Store.	(2025).	
+Kinder	Tamil	—	Learn	Tamil
+.	https://apps.apple.com
+--	Standard	user-owned	tab le	policy
+ALTER
+	
+TABLE
+	{table_name}	
+ENABLE
+	
+ROW
+	
+LEVEL
+	SECURITY;
+CREATE
+	POLICY	
+"Users	can	view	own	{table_name}"
+ON
+	{table_name}	
+FOR
+	
+SELECT
+TO
+	
+authenticated
+USING
+	(profile_id	
+IN
+	(
+		
+SELECT
+	
+id
+	
+FROM
+	profiles	
+WHERE
+	user_id	
+=
+	auth.
+uid
+()
+));
+CREATE
+	POLICY	
+"Users	can	insert	own	{table_name}"
+ON
+	{table_name}	
+FOR
+	
+INSERT
+TO
+	
+authenticated
+WITH
+	
+CHECK
+	(profile_id	
+IN
+	(
+		
+SELECT
+	
+id
+	
+FROM
+	profiles	
+WHERE
+	user_id	
+=
+	auth.
+uid
+()
+));
+CREATE
+	POLICY	
+"Users	can	update	own	{table_name}"
+ON
+	{table_name}	
+FOR
+	
+UPDATE
+TO
+	
+authenticated
+USING
+	(profile_id	
+IN
+	(
+		
+SELECT
+	
+id
+	
+FROM
+	profiles	
+WHERE
+	user_id	
+=
+	auth.
+uid
+()
+))
+WITH
+	
+CHECK
+	(profile_id	
+IN
+	(
+		
+SELECT
+	
+id
+	
+FROM
+	profiles	
+WHERE
+	user_id	
+=
+	auth.
+uid
+()
+));
+CREATE
+	POLICY	
+"Users	can	delete	own	{table_name}"
+ON
+	{table_name}	
+FOR
+	
+DELETE
+TO
+	
+authenticated
+USING
+	(profile_id	
+IN
+	(
+		
+SELECT
+	
+id
+	
+FROM
+	profiles	
+WHERE
+	user_id	
+=
+	auth.
+uid
+()
+));
+
+=== PAGE 51 ===
+16.	
+Speechmatics.	(2025).	
+Free	Tamil	Speech	to	Text
+.	https://www.speechmatics.com
+17.	
+Project	Madurai.	
+Tamil	Digital	Library
+.	https://www.projectmadurai.org
+18.	
+Digital	Archives.	
+CICT	Digital	Archives
+.	https://www.digitalarchives.cict.in
+END	OF	PRD	—	TamilPalam	v1.0
+This	document	constitutes	the	complete	Product	Requirements	Document	for	TamilPalam.	All	sections	(1–108)	are	included.	No	part	has	been
+omitted	or	marked	“to	be	continued.”
+

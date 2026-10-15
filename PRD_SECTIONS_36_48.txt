@@ -1,0 +1,738 @@
+36.	UX	Principles
+Principle
+Description
+Implementation
+Clarity
+No	ambiguity	in	instructions
+Plain	language;	max	8	words	per	instruction
+Consistency
+Same	action	=	same	result
+Design	tokens	for	colors,	spacing,	typography
+Feedback
+Every	action	gets	response
+Visual	confirmation	within	100ms
+Forgiveness
+Mistakes	are	recoverable
+Undo,	retry,	skip	options
+Progressive	disclosure
+Show	only	what’s	needed
+Tanglish	reduction;	optional	hints
+Accessibility
+Usable	by	all
+WCAG	2.1	AA;	keyboard	navigation
+Performance
+Fast	on	low-end	devices
+<3s	initial	load;	<1s	interaction
+Child	safety
+No	harmful	content
+Content	review;	moderation
+37.	Visual	Identity
+Design	Direction
+The	visual	identity	draws	from	
+Tamil	literary	heritage
+	—	palm-leaf	manuscripts,	temple	architecture,	and	kolam	patterns	—	interpreted	through
+a	modern	educational	design	lens.
+Proposed	Palette
+Token
+Color
+Hex
+Usage
+--color-paper
+Warm	Ivory
+#FDF8F0
+Background
+--color-ink
+Deep	Charcoal
+#1A1A2E
+Primary	text
+--color-teal
+Heritage	Teal
+#0F4C5C
+Primary	action
+--color-maroon
+Temple	Maroon
+#7B2D26
+Accent,	errors
+--color-gold
+Turmeric	Gold
+#E8B84B
+Rewards,	achievements
+--color-leaf
+Palm	Green
+#4A7C59
+Success,	correct
+--color-sand
+Soft	Sand
+#E8DCC8
+Cards,	surfaces
+--color-sky
+Morning	Sky
+#8ECAE6
+Info,	secondary
+Typography
+Usage
+Font
+Weight
+Size
+Headings
+Noto	Serif	Tamil	/	Lora
+600–700
+24–48px
+Body
+Inter	/	Noto	Sans
+400–500
+16–18px
+Tamil	script
+Noto	Sans	Tamil
+400–700
+18–32px
+Tanglish
+Inter
+400
+14–16px
+UI	labels
+Inter
+500
+14px
+38.	Design	Tokens
+{
+		
+"spacing"
+:
+	
+{
+	
+"xs"
+:
+	
+"4px"
+,
+	
+"sm"
+:
+	
+"8px"
+,
+	
+"md"
+:
+	
+"16px"
+,
+	
+"lg"
+:
+	
+"24px"
+,
+	
+"xl"
+:
+	
+"32px"
+,
+	
+"2xl"
+:
+	
+"48px"
+	
+},
+		
+"radius"
+:
+	
+{
+	
+"sm"
+:
+	
+"4px"
+,
+	
+"md"
+:
+	
+"8px"
+,
+	
+"lg"
+:
+	
+"16px"
+,
+	
+"full"
+:
+	
+"9999px"
+	
+},
+		
+"shadow"
+:
+	
+{
+				
+"sm"
+:
+	
+"0	1px	2px	rgba(0,0,0,0. 05)"
+,
+				
+"md"
+:
+	
+"0	4px	6px	rgba(0,0,0,0. 07)"
+,
+				
+"lg"
+:
+	
+"0	10px	15px	rgba(0,0,0,0. 1)"
+		
+},
+		
+"transition"
+:
+	
+{
+	
+"fast"
+:
+	
+"150ms	ease"
+,
+	
+"base"
+:
+	
+"250ms	ease"
+,
+	
+"slow"
+:
+	
+"400ms	ease"
+	
+},
+		
+"fontSize"
+:
+	
+{
+	
+"xs"
+:
+	
+"12px"
+,
+	
+"sm"
+:
+	
+"14px"
+,
+	
+"base"
+:
+	
+"16px"
+,
+	
+"lg"
+:
+	
+"18px"
+,
+	
+"xl"
+:
+	
+"24px"
+,
+	
+"2xl"
+:
+	
+"32px"
+	
+}
+}
+
+=== PAGE 16 ===
+39.	Typography
+Font	Stack
+Tamil	Rendering	Rules
+Use	
+font-feature-settings:	"liga"	1,	"kern"	1;
+	for	proper	ligatures.
+Set	
+line-height:	1. 8
+	for	Tamil	text	to	accommodate	vowel	signs	above	and	below.
+Test	with	
+lang="ta"
+	attribute	on	Tamil	text	containers.
+Avoid	
+text-transform
+	on	Tamil	text.
+40.	Motion	Design
+Animation	Principles
+Principle
+Description
+Duration
+Purposeful
+Every	animation	explains	a	concept
+—
+Fast
+No	animation	exceeds	400ms
+150–400ms
+Subtle
+Movement	supports,	not	distracts
+2–8px	displacement
+Accessible
+Respects	
+prefers-reduced-motion
+Instant	fallback
+Animation	Types
+Type
+Usage
+Duration
+Easing
+Fade
+Screen	transitions
+200ms
+ease-out
+Slide
+Modal	entrance
+250ms
+ease-out
+Scale
+Button	press
+150ms
+ease-in-out
+Letter	formation
+Tamil	letter	animation
+400ms
+ease-in-out
+Celebration
+Correct	answer
+300ms
+spring
+Progress
+Progress	bar	fill
+400ms
+ease-out
+Reduced	Motion
+When	
+prefers-reduced-motion:	reduce
+	is	detected:
+Replace	animated	transitions	with	instant	state	changes.
+Disable	letter	formation	animations	(show	static	letters).
+Disable	celebration	particles.
+Keep	progress	bar	updates	but	remove	animation.
+41.	3D	Visual	Strategy
+Where	3D	Helps
+Context
+3D	Approach
+Justification
+Letter	formation
+3D	letter	objects	that	rotate/assemble
+Spatial	understanding	of	letter	structure
+Word	building
+3D	tiles	snapping	together
+Physical	metaphor	for	construction
+Level	progression
+3D	path	with	milestones
+Engaging	progress	visualization
+Celebration
+Lightweight	particle	burst
+Reward	feedback
+--font-heading
+:	'Noto
+	Serif	Tamil'
+,
+	'Lora'
+,
+	Georgia
+,
+	serif;
+--font-body
+:	'Inter
+'
+,
+	'Noto	Sans'
+,
+	system-ui
+,
+	sans-serif;
+--font-tamil
+:	'Noto
+	Sans	Tamil'
+,
+	'Latha'
+,
+	sans-serif;
+--font-mono
+:	'JetBrains
+	Mono'
+,
+	monospace;
+
+=== PAGE 17 ===
+Where	2D	Is	Better
+Context
+2D	Approach
+Justification
+Reading	passages
+Flat	text	layout
+Reading	comfort
+Quiz	interfaces
+Flat	cards
+Clarity,	speed
+Dashboard
+Flat	charts/graphs
+Data	readability
+Settings
+Flat	forms
+Convention
+Implementation
+P0:
+	CSS	transforms	and	SVG	animations	for	letter	tiles	and	transitions.
+P1:
+	Three.js	for	letter	formation	objects	(lazy-loaded).
+Fallback:
+	Static	images	when	WebGL	not	supported	or	reduced	motion	enabled.
+42.	Accessibility
+WCAG	2.1	AA	Compliance	Targets
+Criterion
+Target
+Implementation
+Color	contrast
+4.5:1	normal	text,	3:1	large	text
+Design	token	validation
+Keyboard	navigation
+All	interactive	elements
+Focus	indicators,	tab	order
+Screen	reader
+All	content	accessible
+Semantic	HTML,	ARIA	labels
+Touch	targets
+44×44px	minimum
+Button	sizing
+Text	resizing
+Up	to	200%	without	loss
+Responsive	typography
+Motion
+Reduced	motion	support
+prefers-reduced-motion
+Audio
+Captions	for	all	audio
+Text	alternatives
+Language
+lang
+	attribute	set
+Per-element	language	marking
+Tamil-Specific	Accessibility
+Screen	readers	must	handle	Tamil	Unicode	correctly	(test	with	NVDA,	VoiceOver).
+Provide	text	alternatives	for	all	Tamil	audio	content.
+Allow	slower	audio	playback	(0.5x)	for	processing	difficulties.
+Ensure	Tamil	vowel	signs	are	not	clipped	at	line	boundaries.
+43.	Responsive	Design
+Breakpoints
+Breakpoint
+Width
+Layout
+Mobile
+<	640px
+Single	column,	bottom	navigation
+Tablet
+640–1024px
+Two	column,	side	navigation
+Desktop
+>	1024px
+Three	column,	top	navigation
+Responsive	Behavior
+Element
+Mobile
+Tablet
+Desktop
+Lesson	player
+Full	screen
+Centered	card
+Split	view
+Dashboard
+Stacked	cards
+2-column	grid
+3-column	grid
+Navigation
+Bottom	tabs
+Side	drawer
+Top	bar
+Audio	controls
+Sticky	bottom
+Inline
+Inline
+
+=== PAGE 18 ===
+44.	Information	Architecture
+TamilPalam
+├──	Landing
+│			├──	Hero
+│			├──	How	it	works
+│			├──	Language	selector
+│			└──	CTA	(Sign	up	/	Demo)
+├──	Auth
+│			├──	Sign	up
+│			├──	Sign	in
+│			└──	Parental	consent
+├──	Onboarding
+│			├──	Welcome
+│			├──	Assessment
+│			└──	Level	recommendation
+├──	Dashboard
+│			├──	Daily	goal
+│			├──	Continue	learning
+│			├──	Progress	summary
+│			└──	Achievements
+├──	Learn
+│			├──	Level	map
+│			├──	Lesson	player
+│			│			├──	Letter	learning
+│			│			├──	Vocabulary
+│			│			├──	Sentence	building
+│			│			├──	Listening
+│			│			├──	Speaking
+│			│			└──	Reading
+│			└──	Quiz	results
+├──	Progress
+│			├──	Skill	mastery
+│			├──	Streak	calendar
+│			└──	Badge	collection
+├──	Profile
+│			├──	Settings
+│			├──	Language	preference
+│			└──	Account	management
+└──	Parent	Dashboard	(P1)
+				├──	Child	progress
+				└──	Weekly	report
+45.	Navigation	Model
+Navigation	Type
+Mobile
+Desktop
+Primary
+Bottom	tab	bar	(Home,	Learn,
+Progress,	Profile)
+Top	nav	bar
+Secondary
+Hamburger	menu
+Sidebar
+In-lesson
+Progress	bar	+	exit	button
+Same
+Modal
+Bottom	sheet
+Centered	dialog
+46.	Full	Screen	Inventory
+#
+Screen
+Purpose
+Priority
+1
+Landing
+Introduce	product,	capture	interest
+P0
+2
+Sign	up	/	Sign	in
+Authenticate	user
+P0
+3
+Language	selector
+Choose	English/Tamil	interface
+P0
+4
+Onboarding
+Explain	platform,	collect	minimal	info
+P0
+5
+Initial	assessment
+Determine	starting	level
+P0
+6
+Dashboard
+Overview	of	progress	and	next	actions
+P0
+7
+Level	selection
+Choose	learning	level
+P0
+8
+Lesson	player
+Deliver	learning	content
+P0
+9
+Tamil	letter	screen
+Learn	individual	letters
+P0
+
+=== PAGE 19 ===
+10
+Vocabulary	screen
+Learn	words	with	audio
+P0
+11
+Sentence-building	screen
+Construct	sentences
+P0
+12
+Listening	activity
+Audio	comprehension
+P0
+13
+Speaking	activity
+Pronunciation	practice
+P0
+14
+Reading	activity
+Reading	comprehension
+P0
+15
+Quiz	results
+Show	assessment	results
+P0
+16
+Progress	&	achievements
+Show	badges,	mastery,	streak
+P0
+17
+Profile	&	settings
+Manage	account
+P0
+18
+Parent	dashboard
+View	child	progress
+P1
+19
+Empty/loading/error/offline
+Handle	edge	states
+P0
+20
+Research	assistant
+Literary	explanation
+P2
+47.	Wireframes	(Text-Based)
+Screen	6:	Dashboard
++------------------------------------------+
+|	[Logo]	TamilPalam				[EN/TA]	[Profile]			|
++------------------------------------------+
+|																																										|
+|		Welcome	back,	Aarav!																				|
+|		
+
+	5-day	streak																									|
+|																																										|
+|		+------------------------------------+		|
+|		|	Daily	Goal:	1	lesson															|		|
+|		|	[========>										]	1/1										|		|
+|		|	[Continue	Learning]																|		|
+|		+------------------------------------+		|
+|																																										|
+|		+------------------------------------+		|
+|		|	Current	Level:	Level	2													|		|
+|		|	Progress:	60%																						|		|
+|		|	[==========>							]															|		|
+|		|	[View	Level	Map]																			|		|
+|		+------------------------------------+		|
+|																																										|
+|		Recent	Achievements																					|
+|		[Badge:	10	Words]	[Badge:	3-day	streak]|
+|																																										|
++------------------------------------------+
+Screen	8:	Lesson	Player
++------------------------------------------+
+|	[←	Exit]			Lesson	3	of	8				[========>]	|
++------------------------------------------+
+|																																										|
+|		Tamil	Letter																												|
+|																																										|
+|									
+அ
+																																|
+|																																										|
+|		[
+
+	Play	Audio]																									|
+|																																										|
+|		Tanglish:	a																														|
+|																																										|
+|		+------------------------------------+		|
+|		|	Which	letter	makes	the	sound	"a"?		|		|
+|		|																																				|		|
+|		|		[
+அ
+]		[
+ஆ
+]		[
+இ
+]		[
+ஈ
+]													|		|
+|		+------------------------------------+		|
+|																																										|
+|		[Need	help?]																												|
+|																																										|
++------------------------------------------+
+48.	Detailed	Screen	Specifications
+
+=== PAGE 20 ===
+Screen	1:	Landing	Page
+Attribute
+Specification
+Purpose
+Introduce	TamilPalam,	communicate	value,	drive	sign-up
+Target	User
+Parents,	older	learners
+Layout
+Hero	section,	3	feature	cards,	testimonial,	CTA
+Components
+Logo,	tagline,	language	toggle,	“How	it	works”	section,	Sign	up	button,	Demo	button
+Actions
+Toggle	language,	scroll	to	features,	click	CTA
+States
+Default;	language	selected
+Navigation
+Sign	up	→	Auth;	Demo	→	Guest	dashboard
+Responsive
+Mobile:	stacked;	Desktop:	2-column
+Accessibility
+All	images	have	alt	text;	keyboard	navigable
+Data
+None	(static)
+Acceptance
+Page	loads	<2s;	language	toggle	works;	CTA	navigates	correctly
+Screen	8:	Lesson	Player
+Attribute
+Specification
+Purpose
+Deliver	interactive	learning	content
+Target	User
+All	learners
+Layout
+Progress	bar	(top),	content	area	(center),	controls	(bottom)
+Components
+Progress	indicator,	letter/word	display,	audio	button,	Tanglish	toggle,	exercise	area,	feedback
+area,	continue	button
+Actions
+Play	audio,	select	answer,	request	hint,	continue,	exit
+States
+Loading,	presenting,	awaiting	response,	correct	feedback,	incorrect	feedback,	complete
+Navigation
+Exit	→	Dashboard;	Complete	→	Quiz	results
+Responsive
+Full	width	on	mobile;	centered	800px	on	desktop
+Accessibility
+Screen	reader	announces	content;	keyboard	selectable;	focus	management
+Data
+Lesson	items,	user	progress,	audio	assets
+Acceptance
+Lesson	completes	within	10	min;	progress	saved	after	each	item;	resume	works

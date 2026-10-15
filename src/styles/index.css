@@ -1,0 +1,157 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-paper: #FAF9F5;
+    --color-paper-dark: #F5EFE6;
+    --color-ink: #1A1A2E;
+    --color-ink-muted: #4A4A68;
+    --color-teal: #0F4C5C;
+    --color-maroon: #7B2D26;
+    --color-gold: #E8B84B;
+    --color-leaf: #4A7C59;
+    --color-sand: #EAE3D5;
+    --color-sky: #8ECAE6;
+
+    /* Base touch target and font tokens */
+    --min-touch-target: 52px;
+    --primary-btn-height: 56px;
+    --tamil-glyph-size: 56px;
+    --app-radius: 16px;
+    --app-font-density: 1;
+  }
+
+  /* Sprouts Mode: Standards 1–3 (~ages 6–9) */
+  [data-age-mode="sprouts"] {
+    --min-touch-target: 64px;
+    --primary-btn-height: 72px;
+    --tamil-glyph-size: 110px;
+    --app-radius: 24px;
+    --app-font-density: 1.25;
+  }
+
+  /* Explorers Mode: Standards 4–6 (~ages 9–12) */
+  [data-age-mode="explorers"] {
+    --min-touch-target: 52px;
+    --primary-btn-height: 56px;
+    --tamil-glyph-size: 64px;
+    --app-radius: 16px;
+    --app-font-density: 1;
+  }
+
+  /* Scholars Mode: Standards 7–12 (~ages 12–18) */
+  [data-age-mode="scholars"] {
+    --min-touch-target: 44px;
+    --primary-btn-height: 48px;
+    --tamil-glyph-size: 44px;
+    --app-radius: 10px;
+    --app-font-density: 0.95;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: 'Inter', 'Noto Sans', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Tamil rendering rules per PRD Section 39 */
+  :lang(ta), [lang="ta"] {
+    font-family: 'Noto Sans Tamil', 'Latha', sans-serif;
+    line-height: 1.85 !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+    font-feature-settings: "liga" 1, "kern" 1;
+  }
+
+  /* Ensure Tamil vowel signs are never clipped */
+  .tamil-text {
+    font-family: 'Noto Sans Tamil', 'Latha', sans-serif;
+    line-height: 1.85 !important;
+    letter-spacing: normal !important;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+  }
+
+  /* Large Tamil Letter Hero Card */
+  .tamil-hero-letter {
+    font-family: 'Noto Sans Tamil', 'Latha', sans-serif;
+    line-height: 1.4 !important;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+/* 3D Perspective and Card Flipping Utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Word wrapping and overflow safety */
+.break-words {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* Accessible focus styling */
+:focus-visible {
+  outline: 3px solid #0F4C5C;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Touch & tap feedback */
+.tap-bounce {
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.tap-bounce:active {
+  transform: scale(0.97) translateY(2px);
+}
+
+/* Clean, Natural Light Background without dark dot matrix effect */
+.bg-kolam-subtle {
+  background-image: none;
+  background-color: var(--color-paper);
+}
+
+/* Palm Leaf Subtle Texture */
+.bg-palm-subtle {
+  background: linear-gradient(135deg, rgba(245, 239, 230, 0.4) 0%, rgba(255, 255, 255, 0.85) 100%);
+}
+
+/* Reduced Motion Override */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.reduced-motion *,
+.reduced-motion ::before,
+.reduced-motion ::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}

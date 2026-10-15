@@ -1,0 +1,265 @@
+1.	Cover	Page
+2.	Document	Control	and	Version	History
+3.	Executive	Summary
+4.	Product	Vision
+5.	Problem	Statement
+1.	
+How	to	teach	Tamil	to	children	who	have	little	or	no	prior	Tamil	knowledge.
+2.	
+How	to	make	learning	interesting	and	sustainable.
+3.	
+How	to	measure	learning	progress.
+4.	
+How	to	help	learners	gradually	develop	real	Tamil	reading,	writing,	listening,	and	speaking	skills.
+6.	Problem	Validation	and	Supporting	Evidence
+7.	Product	Goals
+8.	Non-Goals
+9.	Target	Users
+10.	User	Personas	(Expanded)
+11.	Jobs	to	Be	Done
+12.	User	Pain	Points
+13.	User	Stories
+14.	Product	Scope
+1.	
+English	and	Tamil	interface	localization
+2.	
+Learner	onboarding	and	initial	skill	assessment
+3.	
+Level-based	Tamil	learning	curriculum	(Levels	0–7)
+4.	
+Tamil	letters	and	pronunciation
+5.	
+Tamil	words	and	vocabulary
+6.	
+Basic	sentences	and	sentence	construction
+7.	
+Listening	and	speaking	practice
+8.	
+Reading	practice	and	short	paragraphs
+9.	
+Interactive	quizzes	and	educational	games
+10.	
+Tanglish-assisted	learning
+11.	
+Lesson	completion	and	assessment	results
+12.	
+Learning	progress	dashboard
+13.	
+Streaks,	points,	badges,	and	appropriate	rewards
+14.	
+Persistent	data	storage
+15.	
+Responsive	design	for	mobile,	tablet,	and	desktop
+1.	
+Progressive	Tanglish	Reduction
+2.	
+Personalised	Revision
+3.	
+Real-Life	Tamil	Missions
+4.	
+Audio-First	Learning
+5.	
+Adaptive	Learning	Recommendations
+6.	
+Structured	transition	from	transliteration	to	native	Tamil	script
+7.	
+Cultural	storytelling	integrated	into	language	learning
+15.	MVP	Prioritisation
+16.	Competitive	Research
+17.	Product	Positioning
+18.	Differentiation	Strategy
+19.	Learning	Principles
+20.	Curriculum	Framework
+21.	Tamil-Script	Learning	Model
+22.	Tanglish	Transliteration	Model
+23.	Progressive	Tanglish	Reduction
+24.	Vocabulary	Learning
+25.	Sentence	Construction
+1.	
+Word	ordering:
+2.	
+Fill	in	the	blank:
+3.	
+Translation:
+4.	
+Listening	dictation:
+26.	Listening	Practice
+1.	
+Audio	plays	automatically	(once).
+2.	
+Learner	listens	and	selects	from	3–4	options.
+3.	
+If	incorrect,	audio	repeats	with	highlighted	segment.
+4.	
+If	correct,	visual	confirmation	+	next	item.
+27.	Speaking	Practice
+1.	
+Model	audio	plays.
+2.	
+Learner	taps	“Record.”
+3.	
+Microphone	permission	requested	(with	plain-language	explanation).
+4.	
+Recording	captured	(max	10	seconds).
+5.	
+Playback:	learner’s	voice	→	model	audio.
+6.	
+Self-assessment	prompt:	“How	close	was	your	pronunciation?”
+7.	
+Recording	deleted	from	server	after	24	hours	(or	immediately	if	not	saved).
+28.	Reading	Practice
+29.	Story-Based	Learning
+30.	Gamification
+31.	Rewards	and	Achievements
+32.	Personalisation
+33.	AI	Requirements
+34.	Audio	and	Speech	Architecture
+35.	Global	Localisation
+36.	UX	Principles
+37.	Visual	Identity
+38.	Design	Tokens
+39.	Typography
+40.	Motion	Design
+41.	3D	Visual	Strategy
+42.	Accessibility
+43.	Responsive	Design
+44.	Information	Architecture
+45.	Navigation	Model
+46.	Full	Screen	Inventory
+47.	Wireframes	(Text-Based)
+48.	Detailed	Screen	Specifications
+49.	User	Journeys
+50.	Workflow	Diagrams
+51.	System	Architecture
+52.	Technology	Decisions
+53.	Frontend	Architecture
+54.	Backend	Architecture
+55.	Database	Architecture
+56.	ER	Diagram
+57.	Data	Dictionary
+58.	Data	Lifecycle
+59.	API	Specification
+60.	Authentication
+61.	Authorisation
+62.	Security
+63.	Privacy
+64.	Child	Safety
+65.	Content	Management	Strategy
+66.	Content	Verification
+67.	Analytics
+68.	Success	Metrics
+69.	Functional	Requirements
+70.	Non-Functional	Requirements
+71.	Error	Handling
+72.	Edge	Cases
+73.	Integrations
+74.	Testing	Strategy
+75.	Test	Cases
+76.	AI	Evaluation
+77.	Accessibility	Evaluation
+78.	Performance	Evaluation
+79.	Deployment
+80.	Monitoring
+81.	Backup	and	Recovery
+82.	Development	Environments
+83.	Repository	Organisation
+84.	Coding	Conventions
+85.	Team	Responsibilities
+86.	Fifteen-Hour	Execution	Plan
+1.	
+Cut	parent	dashboard	(P1)
+2.	
+Cut	AI	features	(P1)
+3.	
+Cut	advanced	animations
+4.	
+Cut	Levels	5–7	content	(keep	Levels	0–4)
+5.	
+Cut	speaking	practice	(keep	listening	+	reading)
+6.	
+Never	cut:
+87.	Task	Dependency	Map
+88.	Definition	of	Done
+89.	Demo	Strategy
+90.	Acceptance	Criteria
+91.	Risk	Register
+92.	Assumptions
+1.	
+The	hackathon	team	has	4	members	with	basic	web	development	skills.
+2.	
+Supabase	free	tier	is	sufficient	for	MVP.
+3.	
+Prerecorded	audio	can	be	sourced	from	team	members	or	free	libraries.
+4.	
+Tamil	content	can	be	reviewed	by	a	native	speaker	on	the	team	or	a	volunteer.
+5.	
+The	hackathon	provides	internet	access	and	deployment	platform	access.
+6.	
+Judges	evaluate	based	on	working	demo,	not	production	readiness.
+7.	
+English-speaking	children	abroad	are	the	primary	audience.
+8.	
+Tanglish	is	a	familiar	concept	to	the	target	audience’s	families.
+9.	
+Progressive	Tanglish	reduction	is	pedagogically	sound	(requiring	validation).
+10.	
+AI	features	are	optional	enhancements,	not	core	requirements.
+93.	Constraints
+94.	Open	Questions
+95.	Decision	Log
+96.	Future	Roadmap
+97.	Tamil	Research	Assistant	Specification	(Future	Module)
+1.	
+User	selects	or	enters	Tamil	literary	passage.
+2.	
+User	selects	explanation	language	(English/Tamil).
+3.	
+System	identifies	available	source	(Thirukkural,	classical	literature,	proverbs).
+4.	
+System	presents	original	passage	separately	from	explanation.
+5.	
+System	provides	beginner-friendly	explanation.
+6.	
+Tanglish	assistance	offered	for	relevant	words.
+7.	
+Source	details	and	uncertainty	displayed.
+8.	
+If	authenticity	cannot	be	established,	system	says	so.
+98.	Content	Sourcing	and	Licensing
+99.	Budget	and	Operating-Cost	Estimates
+1.	
+Unicode	Consortium.	(2024).
+2.	
+W3C.	(2024).
+3.	
+Supabase.	(2026).
+4.	
+Federal	Trade	Commission.	(2025).
+5.	
+Cookie-Script.	(2025).
+6.	
+Council	of	Europe.	(2020).
+7.	
+Malge,	K.	P.	(2026).
+8.	
+Lund	University.	(2025).
+9.	
+IEEE.	(2026).
+10.	
+ACL	Anthology.	(2026).
+11.	
+Semantic	Scholar.	(2025).
+12.	
+Taylor	&	Francis.	(2025).
+13.	
+Duolingo.	(2025).
+14.	
+Google	Play.	(2025).
+15.	
+Apple	App	Store.	(2025).
+16.	
+Speechmatics.	(2025).
+17.	
+Project	Madurai.
+18.	
+Digital	Archives.

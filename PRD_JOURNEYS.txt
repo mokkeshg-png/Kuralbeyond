@@ -1,0 +1,103 @@
+49.	User	Journeys
+Main	User	Journey
+
+=== PAGE 21 ===
+flowchart	TD
+				A[Visit	Landing	Page]	-->	B{Choose	Interface	Language}
+				B	-->|English|	C[Read	English	Content]
+				B	-->|Tamil|	D[Read	Tamil	Content]
+				C	-->	E[Click	Sign	Up]
+				D	-->	E
+				E	-->	F[Create	Account	or	Demo]
+				F	-->	G[Onboarding:	How	it	Works]
+				G	-->	H[Initial	Assessment]
+				H	-->	I{Assessment	Complete?}
+				I	-->|Yes|	J[Receive	Level	Recommendation]
+				I	-->|Skip|	K[Start	Level	0]
+				J	-->	L[Dashboard]
+				K	-->	L
+				L	-->	M[Open	Lesson]
+				M	-->	N[Complete	Lesson	Items]
+				N	-->	O{Item	Correct?}
+				O	-->|Yes|	P[Positive	Feedback	+	XP]
+				O	-->|No|	Q[Hint	or	Correct	Answer]
+				P	-->	R[Continue	to	Next	Item]
+				Q	-->	R
+				R	-->	S{Lesson	Complete?}
+				S	-->|No|	N
+				S	-->|Yes|	T[Update	Progress]
+				T	-->	U[Update	Dashboard]
+				U	-->	V{Streak	Maintained?}
+				V	-->|Yes|	W[Streak	Increment]
+				V	-->|No|	X[Streak	Reset	with	Grace]
+				W	-->	Y[Recommend	Next	Lesson]
+				X	-->	Y
+				Y	-->	Z[Return	to	Dashboard	or	Continue]
+Authentication	Flow
+flowchart	TD
+				A[User	Clicks	Sign	Up]	-->	B{Has	Account?}
+				B	-->|No|	C[Enter	Email	+	Password]
+				B	-->|Yes|	D[Enter	Email	+	Password]
+				C	-->	E[Validate	Input]
+				D	-->	E
+				E	-->	F{Valid?}
+				F	-->|No|	G[Show	Error	Message]
+				F	-->|Yes|	H{Email	Confirmation	Required?}
+				H	-->|Yes|	I[Send	Confirmation	Email]
+				H	-->|No|	J[Create	Session]
+				I	-->	K[User	Confirms	Email]
+				K	-->	J
+				J	-->	L{Under	13?}
+				L	-->|Yes|	M[Request	Parental	Consent]
+				L	-->|No|	N[Access	Dashboard]
+				M	-->	O{Consent	Given?}
+				O	-->|Yes|	N
+				O	-->|No|	P[Limited	Demo	Mode]
+Parent	Progress	Review	Flow
+flowchart	TD
+				A[Parent	Logs	In]	-->	B[View	Linked	Children]
+				B	-->	C[Select	Child]
+				C	-->	D[View	Progress	Dashboard]
+				D	-->	E{What	to	View?}
+				E	-->|Overview|	F[Weekly	Summary]
+				E	-->|Details|	G[Skill	Mastery	Breakdown]
+				E	-->|Activity|	H[Lesson	History]
+				F	-->	I[Email	Report	Option]
+				G	-->	J[Export	CSV]
+				H	-->	K[View	Lesson	Details]
+				I	-->	L[Done]
+				J	-->	L
+				K	-->	L
+50.	Workflow	Diagrams
+Lesson	Interaction	Flow
+
+=== PAGE 22 ===
+sequenceDiagram
+				participant	Learner
+				participant	LessonPlayer
+				participant	AudioService
+				participant	ProgressService
+				participant	Database
+				Learner->>LessonPlayer:	Open	lesson
+				LessonPlayer->>Database:	Fetch	lesson	items
+				Database-->>LessonPlayer:	Return	items
+				LessonPlayer->>Learner:	Display	item	1
+				Learner->>LessonPlayer:	Play	audio
+				LessonPlayer->>AudioService:	Request	audio
+				AudioService-->>LessonPlayer:	Stream	audio
+				LessonPlayer->>Learner:	Play	audio
+				Learner->>LessonPlayer:	Submit	answer
+				LessonPlayer->>LessonPlayer:	Evaluate	answer
+				alt	Correct
+								LessonPlayer->>Learner:	Show	correct	feedback
+								LessonPlayer->>ProgressService:	Record	correct
+				else	Incorrect
+								LessonPlayer->>Learner:	Show	hint
+								Learner->>LessonPlayer:	Retry
+								LessonPlayer->>ProgressService:	Record	attempt
+				end
+				LessonPlayer->>Learner:	Show	next	item
+				Note	over	Learner,Database:	Repeat	for	all	items
+				LessonPlayer->>Database:	Save	lesson	completion
+				Database-->>LessonPlayer:	Confirm
+				LessonPlayer->>Learner:	Show	lesson	complete

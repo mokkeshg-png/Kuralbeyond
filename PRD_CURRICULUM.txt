@@ -1,0 +1,366 @@
+20.	Curriculum	Framework
+CEFR	Alignment
+TamilPalam	Level
+CEFR	Equivalent
+Can-Do	Descriptor
+Level	0
+Pre-A1
+Recognize	Tamil	script	exists;	understand	assessment
+Level	1
+Pre-A1
+Recognize	all	vowels	and	basic	consonants	with	audio
+support
+Level	2
+A1	(receptive)
+Understand	50+	spoken	words	with	visual	context
+Level	3
+A1
+Read	simple	2–3	syllable	words	in	Tamil	script
+Level	4
+A1+
+Construct	simple	sentences	about	self	and	family
+Level	5
+A2	(listening)
+Follow	short	guided	dialogues
+Level	6
+A2
+Read	short	paragraphs	with	comprehension
+Level	7
+A2+
+Participate	in	real-world	Tamil	interactions
+Level	Structure
+Every	level	contains:
+Learning	objectives
+	(3–5	per	level)
+Entry	requirements
+	(mastery	of	previous	level	or	assessment	score)
+Skills	taught
+	(reading,	writing,	listening,	speaking,	vocabulary,	grammar)
+Example	lessons
+	(5–8	per	level)
+Lesson	sequence
+	(prerequisite-ordered)
+Activities
+	(matching,	MCQ,	fill-blank,	speaking,	listening,	sentence-building)
+Assessment	types
+	(formative	quiz,	unit	test,	speaking	check)
+
+=== PAGE 8 ===
+Pass/mastery	criteria
+	(80%	accuracy	on	unit	test)
+Remediation	paths
+	(targeted	revision	for	failed	items)
+Completion	criteria
+	(all	lessons	+	unit	test	passed)
+Estimated	time
+	(Level	0:	10	min;	Levels	1–7:	45–90	min	each)
+Tanglish	policy
+	(see	Section	11)
+Audio	requirements
+	(prerecorded	for	all	letters,	words,	sentences)
+Accessibility	requirements
+	(WCAG	2.1	AA,	screen	reader	labels)
+21.	Tamil-Script	Learning	Model
+Unicode	Foundation
+Tamil	script	in	Unicode	occupies	code	points	U+0B80–U+0BFF.	Independent	vowels	(Uyir)	occupy	U+0B85–U+0B94;	consonants	(Mei)	occupy
+U+0B95–U+0BB9.	Vowel	signs	(Uyirmei)	are	combining	characters	that	modify	consonants.	The	virama	(U+0BCD,	்)	suppresses	the	inherent
+vowel.
+Critical	implementation	note:
+	Tamil	is	a	complex	script	requiring	proper	rendering	support.	Browsers	and	OS	font	stacks	must	handle	combining
+characters,	ligatures	(e.g.,	
+R),	
+and	the	split	vowel	sign	ொ	(U+0BCA).	Use	Unicode	NFC	normalization	for	all	stored	and	displayed	text.	Test
+rendering	in	Chrome,	Safari,	Firefox,	and	Edge	on	Windows,	macOS,	iOS,	and	Android.
+Letter	Introduction	Sequence
+Phase
+Content
+Audio
+Tanglish
+Visual
+1
+அ,	ஆ,	இ,	ஈ,	உ,	ஊ
+Yes
+Yes
+Animated	letter	formation
+2
+எ,	ஏ,	ஐ,	ஒ,	ஓ,	ஔ
+Yes
+Yes
+Letter	+	example	word
+3
+க,	ங,	ச,	ஞ,	ட,	ண
+Yes
+Yes
+Letter	+	sound	+	image
+4
+த,	ந,	ப,	ம,	ய,	ர,	ல,	வ,	ழ,	ள,	ற,	ன
+Yes
+Yes
+Retroflex	distinction
+highlighted
+5
+Combined	forms	(
+க்	+	
+vowel
+signs)
+Yes
+Reduced
+Formation	animation
+22.	Tanglish	Transliteration	Model
+The	Challenge
+Tamil	sounds	do	not	map	perfectly	to	English	letters.	Key	issues:
+Long	vs.	short	vowels:
+	ஆ	(
+ā)	vs.	
+அ	(
+a)	—	Tanglish	“aa”	vs	“a”
+Retroflex	consonants:
+	ள	(
+ḷ),	
+ழ	(
+ḻ),	
+ண	(
+ṇ)	—	no	exact	English	equivalent
+Voiced/unvoiced	distinction:
+	க	
+can	be	“ka”	or	“ga”	depending	on	position
+Dental	vs.	retroflex:
+	த	(
+dental	“th”)	vs.	
+ட	(
+retroﬂex	“t”)
+Transliteration	Rules
+Tamil
+IPA
+Tanglish	(Primary)
+Alternative
+Note
+அ
+/a/
+a
+—
+Short
+ஆ
+/aː/
+aa
+a
+Long
+இ
+/i/
+i
+—
+Short
+ஈ
+/iː/
+ee
+i
+Long
+க
+/k/
+ka
+ga
+Context-dependent	voicing
+ங
+/ŋ/
+nga
+—
+Velar	nasal
+ச
+/t͡ʃ/
+cha
+sa
+Context-dependent
+ஞ
+/ɲ/
+nya
+—
+Palatal	nasal
+ட
+/ʈ/
+ta
+da
+Retroflex
+ண
+/ɳ/
+na
+—
+Retroflex	nasal
+
+=== PAGE 9 ===
+த
+/t̪/
+tha
+da
+Dental
+ந
+/n̪/
+na
+—
+Dental	nasal
+ள
+/ɭ/
+la
+—
+Retroflex	lateral
+ழ
+/ɻ/
+zha
+l
+Approximant
+ற
+/r/
+ra
+—
+Trill
+ன
+/n/
+na
+—
+Alveolar	nasal
+Handling	ambiguity:
+	Where	multiple	Tanglish	spellings	are	common	(e.g.,	“zha”	vs	“l”	for	
+ழ),	
+the	platform	uses	one	primary	spelling	and
+displays	alternatives	on	request.	The	audio	is	the	authoritative	pronunciation	reference.
+23.	Progressive	Tanglish	Reduction
+Five-Stage	System
+Stage
+Tamil	Script
+Tanglish
+English	Meaning
+Audio
+Trigger	to	Advance
+A
+Always	shown
+Always	shown
+Always	shown
+Auto-play
+80%	accuracy	on	10	items
+B
+Always	shown
+Always	shown
+On	demand
+Auto-play
+85%	accuracy	on	15	items
+C
+Always	shown
+On	demand
+Hidden
+On	demand
+85%	accuracy	on	15	items	+	3	sessions
+D
+Always	shown
+Hidden
+Hidden
+On	demand
+90%	accuracy	on	20	items
+E
+Always	shown
+Hidden
+Hidden
+Hidden
+Mastery	confirmed
+Readiness	Evidence
+Stage	advancement	is	based	on	
+demonstrated	accuracy	across	multiple	item	types
+	(recognition,	recall,	production).
+Performance	is	tracked	per	skill	(letter	recognition,	word	reading,	sentence	comprehension).
+A	decrease	in	performance	triggers	
+automatic	regression
+	to	the	previous	stage	for	affected	items	only.
+Learners	can	
+manually	request	Tanglish	support
+	at	any	stage	via	a	persistent	“Need	help?”	button.
+Accessibility	support	(larger	text,	audio	repeat,	screen	reader	labels)	is	
+never	removed
+.
+Mastery	Calculation
+skill_mastery	=	(correct_recalls	/	total_attempts)	×	recency_weight	×	difficulty_modifier
+recency_weight
+:	Recent	attempts	weighted	higher	(exponential	decay	over	14	days)
+difficulty_modifier
+:	Harder	items	contribute	more	to	mastery	score
+Mastery	threshold	per	skill:	0.80	for	stage	advancement,	0.90	for	level	completion
+24.	Vocabulary	Learning
+Categories
+Category
+Example	Words
+Level
+Audio
+Visual
+Family
+அம்மா	(
+amma),	
+அப்பா	(
+appa),	
+அக்கா	(
+akka)
+2
+Yes
+Family	illustration
+Greetings
+வணக்கம்	(
+vanakkam),	
+நன்ற	(
+nandri)
+2
+Yes
+Greeting	gesture
+Numbers
+ஒன்	(
+ondru),	
+இரண்	(
+irandu)
+2
+Yes
+Number	+	objects
+Colours
+சவப்	(
+sivappu),	
+பச்ைச	(
+pachai)
+2
+Yes
+Colour	swatch
+Food
+ேசா	(
+soru),	
+தண்ணீர்	(
+thanneer)
+2
+Yes
+Food	image
+Animals
+நாய்	(
+naai),	
+ன	(
+poona)
+2
+Yes
+Animal	image
+Actions
+வா	(
+vaa),	
+ேபா	(
+po)
+3
+Yes
+Action	animation
+Spaced	Repetition	Algorithm
+Interval
+Trigger
+
+=== PAGE 10 ===
+1	day
+Initial	learning
+3	days
+First	successful	recall
+7	days
+Second	successful	recall
+14	days
+Third	successful	recall
+30	days
+Fourth	successful	recall
+60	days
+Mastered
+Failed	recall	resets	interval	to	1	day	for	that	item.

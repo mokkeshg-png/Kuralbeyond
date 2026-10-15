@@ -1,0 +1,611 @@
+55.	Database	Architecture
+Design	Principles
+Normalized	relational	schema
+	with	foreign	key	constraints.
+RLS	on	every	table
+	with	both	
+USING
+	and	
+WITH	CHECK
+	policies.
+UUID	primary	keys
+	for	all	user-facing	tables.
+Timestamps
+	(
+created_at
+,	
+updated_at
+)	on	all	tables.
+Soft	deletes
+	where	data	recovery	is	needed.
+Indexes
+	on	all	foreign	keys	and	frequent	query	columns.
+56.	ER	Diagram
+erDiagram
+				profiles	||--o{	user_preferences	:	has
+				profiles	||--o{	lesson_progress	:	tracks
+				profiles	||--o{	quiz_attempts	:	makes
+				profiles	||--o{	learner_skill_mastery	:	has
+				profiles	||--o{	user_achievements	:	earns
+				profiles	||--o{	daily_learning_activity	:	logs
+				profiles	||--o{	parent_child_relationships	:	"parent	of"
+				learning_levels	||--o{	lessons	:	contains
+				lessons	||--o{	lesson_items	:	contains
+				lessons	||--o{	exercises	:	has
+				exercises	||--o{	questions	:	contains
+				questions	||--o{	answer_options	:	has
+				tamil_letters	||--o{	pronunciation_assets	:	has
+				vocabulary_items	||--o{	pronunciation_assets	:	has
+				lesson_items	||--o{	vocabulary_items	:	references
+				lesson_items	||--o{	tamil_letters	:	references
+				achievements	||--o{	user_achievements	:	earned
+57.	Data	Dictionary
+profiles
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK,	DEFAULT	gen_random_uuid()
+Profile	ID
+user_id
+UUID
+FK	→	auth.users,	UNIQUE,	NOT	NULL
+Supabase	auth	user
+display_name
+TEXT
+NOT	NULL
+Learner	display	name
+interface_language
+TEXT
+CHECK	IN	(‘en’,‘ta’),	DEFAULT	‘en’
+UI	language
+date_of_birth
+DATE
+NULL
+For	age-based	features
+is_child
+BOOLEAN
+DEFAULT	false
+Under-13	flag
+
+=== PAGE 26 ===
+parental_consent
+BOOLEAN
+DEFAULT	false
+Consent	status
+created_at
+TIMESTAMPTZ
+DEFAULT	now()
+updated_at
+TIMESTAMPTZ
+DEFAULT	now()
+user_preferences
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+profile_id
+UUID
+FK	→	profiles,	UNIQUE
+daily_goal
+INTEGER
+DEFAULT	1,	CHECK	1–3
+Lessons	per	day
+audio_speed
+NUMERIC
+DEFAULT	1.0
+Playback	speed
+reduced_motion
+BOOLEAN
+DEFAULT	false
+Accessibility
+tanglish_enabled
+BOOLEAN
+DEFAULT	true
+Manual	override
+notifications_enabled
+BOOLEAN
+DEFAULT	true
+learning_levels
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+level_number
+INTEGER
+UNIQUE,	0–7
+Level	number
+title_en
+TEXT
+NOT	NULL
+English	title
+title_ta
+TEXT
+NOT	NULL
+Tamil	title
+description_en
+TEXT
+description_ta
+TEXT
+prerequisite_level
+UUID
+FK	→	learning_levels
+lessons
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+level_id
+UUID
+FK	→	learning_levels
+title_en
+TEXT
+NOT	NULL
+title_ta
+TEXT
+NOT	NULL
+sequence_order
+INTEGER
+NOT	NULL
+lesson_type
+TEXT
+CHECK	IN
+(‘letters’,‘vocabulary’,‘sentences’,‘listening’,‘speaking’,‘reading’,‘story’)
+estimated_minutes
+INTEGER
+DEFAULT	10
+tanglish_stage
+TEXT
+CHECK	IN	(‘A’,‘B’,‘C’,‘D’,‘E’)
+Required	stage
+lesson_items
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+lesson_id
+UUID
+FK	→	lessons
+item_type
+TEXT
+CHECK	IN	(‘letter’,‘word’,‘sentence’,‘passage’)
+content_ta
+TEXT
+NOT	NULL
+Tamil	script
+content_tanglish
+TEXT
+Transliteration
+content_en
+TEXT
+English	meaning
+audio_url
+TEXT
+Storage	path
+image_url
+TEXT
+Storage	path
+
+=== PAGE 27 ===
+sequence_order
+INTEGER
+tamil_letters
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+letter
+TEXT
+UNIQUE,	NOT	NULL
+Tamil	character
+unicode_codepoint
+TEXT
+e.g.,	U+0B85
+letter_type
+TEXT
+CHECK	IN
+(‘vowel’,‘consonant’,‘vowel_sign’,‘virama’)
+tanglish_primary
+TEXT
+tanglish_alternatives
+TEXT[]
+ipa
+TEXT
+IPA	notation
+example_word_ta
+TEXT
+example_word_en
+TEXT
+exercises
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+lesson_id
+UUID
+FK	→	lessons
+exercise_type
+TEXT
+CHECK	IN
+(‘mcq’,‘matching’,‘fill_blank’,‘ordering’,‘speaking’,‘listening’)
+prompt_en
+TEXT
+prompt_ta
+TEXT
+sequence_order
+INTEGER
+questions
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+exercise_id
+UUID
+FK	→	exercises
+question_text
+TEXT
+NOT	NULL
+correct_answer
+TEXT
+NOT	NULL
+explanation
+TEXT
+Shown	on	incorrect
+answer_options
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+question_id
+UUID
+FK	→	questions
+option_text
+TEXT
+NOT	NULL
+is_correct
+BOOLEAN
+DEFAULT	false
+sequence_order
+INTEGER
+lesson_progress
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+profile_id
+UUID
+FK	→	profiles
+lesson_id
+UUID
+FK	→	lessons
+status
+TEXT
+CHECK	IN	(‘not_started’,‘in_progress’,‘completed’)
+
+=== PAGE 28 ===
+score
+NUMERIC
+0–100
+attempts
+INTEGER
+DEFAULT	0
+last_item_index
+INTEGER
+For	resume
+completed_at
+TIMESTAMPTZ
+UNIQUE(profile_id,	lesson_id)
+quiz_attempts
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+profile_id
+UUID
+FK	→	profiles
+lesson_id
+UUID
+FK	→	lessons
+score
+NUMERIC
+correct_count
+INTEGER
+total_count
+INTEGER
+time_spent_seconds
+INTEGER
+created_at
+TIMESTAMPTZ
+DEFAULT	now()
+learner_skill_mastery
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+profile_id
+UUID
+FK	→	profiles
+skill_type
+TEXT
+CHECK	IN
+(‘letter_recognition’,‘word_reading’,‘sentence_comprehension’,‘listening’,‘speaking’)
+skill_item_id
+TEXT
+ID	of	letter/word
+mastery_score
+NUMERIC
+0–1
+attempts
+INTEGER
+correct
+INTEGER
+last_attempted_at
+TIMESTAMPTZ
+UNIQUE(profile_id,
+skill_type,	skill_item_id)
+revision_queue
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+profile_id
+UUID
+FK	→	profiles
+item_type
+TEXT
+item_id
+TEXT
+next_review_at
+TIMESTAMPTZ
+interval_days
+INTEGER
+DEFAULT	1
+ease_factor
+NUMERIC
+DEFAULT	2.5
+consecutive_correct
+INTEGER
+DEFAULT	0
+achievements
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+name_en
+TEXT
+NOT	NULL
+
+=== PAGE 29 ===
+name_ta
+TEXT
+NOT	NULL
+description_en
+TEXT
+description_ta
+TEXT
+icon
+TEXT
+Icon	identifier
+criteria_type
+TEXT
+e.g.,	‘streak_days’,‘words_learned’
+criteria_value
+INTEGER
+user_achievements
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+profile_id
+UUID
+FK	→	profiles
+achievement_id
+UUID
+FK	→	achievements
+earned_at
+TIMESTAMPTZ
+DEFAULT	now()
+UNIQUE(profile_id,	achievement_id)
+daily_learning_activity
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+profile_id
+UUID
+FK	→	profiles
+activity_date
+DATE
+NOT	NULL
+lessons_completed
+INTEGER
+DEFAULT	0
+minutes_spent
+INTEGER
+DEFAULT	0
+xp_earned
+INTEGER
+DEFAULT	0
+UNIQUE(profile_id,	activity_date)
+parent_child_relationships
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+parent_profile_id
+UUID
+FK	→	profiles
+child_profile_id
+UUID
+FK	→	profiles
+relationship_type
+TEXT
+‘parent’,‘guardian’
+verified
+BOOLEAN
+DEFAULT	false
+created_at
+TIMESTAMPTZ
+UNIQUE(parent_profile_id,	child_profile_id)
+58.	Data	Lifecycle
+Data	Type
+Retention
+Deletion	Method
+Trigger
+Profile
+Until	account	deletion
+Cascade	delete
+User/parent	request
+Lesson	progress
+Until	account	deletion
+Cascade	delete
+Account	deletion
+Quiz	attempts
+Until	account	deletion
+Cascade	delete
+Account	deletion
+Audio	recordings	(speaking)
+24	hours
+Automatic
+Timer
+AI	interaction	logs
+90	days
+Automatic
+Timer
+Analytics	events
+12	months
+Anonymized
+Timer
+Parent	relationship
+Until	unlinked
+Manual
+Parent/child	request
+
+=== PAGE 30 ===
+59.	API	Specification
+Supabase	Client	Operations	(Primary)
+Operation
+Method
+Table
+Auth
+Description
+Get	profile
+SELECT
+profiles
+Required
+Fetch	own	profile
+Update	profile
+UPDATE
+profiles
+Required
+Update	own	profile
+Get	lessons
+SELECT
+lessons
+Required
+Fetch	lessons	for	level
+Get	lesson	items
+SELECT
+lesson_items
+Required
+Fetch	items	for	lesson
+Record	progress
+INSERT/UPDATE
+lesson_progress
+Required
+Save	progress
+Get	achievements
+SELECT
+user_achievements
+Required
+Fetch	earned	badges
+Get	daily	activity
+SELECT
+daily_learning_activity
+Required
+Fetch	activity	log
+Get	revision	queue
+SELECT
+revision_queue
+Required
+Fetch	due	items
+Edge	Functions	(Protected)
+Function
+Method
+Auth
+Description
+Priority
+ai-hint
+POST
+Required	+	rate
+limit
+AI	hint	generation
+P1
+ai-conversation
+POST
+Required	+	rate
+limit
+Conversational	practice
+P1
+admin-content
+POST
+Admin	only
+Content	management
+P1
+parent-report
+POST
+Parent	only
+Generate	progress	report
+P1
+Security:
+	All	Edge	Functions	validate	JWT,	check	RLS-equivalent	permissions	server-side,	and	never	expose	API	keys	to	the	client.

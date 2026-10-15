@@ -1,0 +1,91 @@
+Line 723: U+0B95–U+0BB9.	Vowel	signs	(Uyirmei)	are	combining	characters	that	modify	consonants.	The	virama	(U+0BCD,	்)	suppresses	the	inherent
+Line 729: and	the	split	vowel	sign	ொ	(U+0BCA).	Use	Unicode	NFC	normalization	for	all	stored	and	displayed	text.	Test
+Line 738: அ,	ஆ,	இ,	ஈ,	உ,	ஊ
+Line 743: எ,	ஏ,	ஐ,	ஒ,	ஓ,	ஔ
+Line 748: க,	ங,	ச,	ஞ,	ட,	ண
+Line 753: த,	ந,	ப,	ம,	ய,	ர,	ல,	வ,	ழ,	ள,	ற,	ன
+Line 760: க்	+
+Line 770: ஆ	(
+Line 772: அ	(
+Line 775: ள	(
+Line 777: ழ	(
+Line 779: ண	(
+Line 782: க
+Line 785: த	(
+Line 787: ட	(
+Line 795: அ
+Line 800: ஆ
+Line 805: இ
+Line 810: ஈ
+Line 815: க
+Line 820: ங
+Line 825: ச
+Line 830: ஞ
+Line 835: ட
+Line 840: ண
+Line 847: த
+Line 852: ந
+Line 857: ள
+Line 862: ழ
+Line 867: ற
+Line 872: ன
+Line 879: ழ),
+Line 949: அம்மா	(
+Line 951: அப்பா	(
+Line 953: அக்கா	(
+Line 959: வணக்கம்	(
+Line 961: நன்ற	(
+Line 967: ஒன்	(
+Line 969: இரண்	(
+Line 975: ச
+Line 976: வப்	(
+Line 978: பச்ைச	(
+Line 984: ேசா	(
+Line 986: தண்ணீர்	(
+Line 992: நாய்	(
+Line 994: ன	(
+Line 1000: வா	(
+Line 1002: ேபா	(
+Line 1033: நல்ல	ைபயன்	(
+Line 1039: என்	ெபயர்	ஆரவ்	(
+Line 1045: உனக்	எப்ப	இக்?	(
+Line 1051: எனக்	பழம்	பக்ம்.	ஆல்
+Line 1052: காய்கற	பக்கா.	—
+Line 1283: அ
+Line 1287: அ
+Line 1292: க
+Line 1334: ள,	ழ,	ண
+Line 2220: அ
+Line 2233: அ
+Line 2235: ஆ
+Line 2237: இ
+Line 2239: ஈ
+Line 3852: தம ழ்”
+Line 3988: “ம ன்னஞ்சல்	அல்ல	கட¡ச்ெசால்	தவ.	மீண்ம்
+Line 3989: ¢யற்ச
+Line 3990: க்க¡ம்.”
+Line 3994: “உங்கள்	அமர்¡	காலாவதியான.	மீண்ம்
+Line 3995: உள்¤ைழய¡ம்.”
+Line 3999: “நீங்கள்	ஆஃப்லன
+Line 4000: ல்	உள்ளீர்கள்.”
+Line 4004: “ஆேயா	இப்ேபா	இயங்கா.”
+Line 4009: “ேபச	ைமக்ேராஃேபான்	ேதைவ.”
+Line 4013: “தம ழ்	உதவயாளர்	பஸயாக	உள்ளார்.”
+Line 4018: “ஏேதா	தவ	நடந்த.”
+Line 4022: “¢ன்ேனற்றம்	ேசம க்க	¢யவல்ல.”
+Line 4032: “ெதாடரவா?”
+Line 4042: “இந்த	பாடத்தில்	ச
+Line 4043: க்கல்.”
+Line 4050: “உங்க¨க்	அ©கல்	இல்ல.”
+Line 4054: “உங்கள்	கணக்	நிரந்தரமாக	நீக்கப்பம்.”
+Line 5573: Diacritic	that	suppresses	inherent	vowel	(்)
+Line 5578: ட,	ண,	ள,	ழ,	ற)
+Line 5631: தம ழ்
+Line 5633: எ«த்க்கள்
+Line 5659: அ
+Line 5661: ஆ
+Line 5663: இ
+Line 5665: ஈ
+Line 5669: உயர்
+Line 5671: எ«த்க்கள்
+Line 5686: அ
