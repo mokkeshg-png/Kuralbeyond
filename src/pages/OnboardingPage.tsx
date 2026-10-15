@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { 
@@ -20,11 +20,31 @@ export const OnboardingPage: React.FC = () => {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [slideIndex, setSlideIndex] = useState(0);
 
-  const [name, setName] = useState(LocalStorageAdapter.getProfile().display_name || '');
-  const [grade, setGrade] = useState<StandardGrade>(LocalStorageAdapter.getProfile().grade || 4);
-  const [ageMode, setAgeMode] = useState<AgeMode>(
-    grade <= 3 ? 'sprouts' : grade <= 6 ? 'explorers' : 'scholars'
-  );
+  // Start with empty name — will be filled from the authenticated profile
+  // Never seed with DEFAULT_PROFILE ('Aarav') to avoid wrong-name bug
+  const [name, setName] = useState('');
+  const [grade, setGrade] = useState<StandardGrade>(4);
+  const [ageMode, setAgeMode] = useState<AgeMode>('explorers');
+
+  // Load the real authenticated user's name and grade from Supabase
+  useEffect(() => {
+    authService.getCurrentUser().then(user => {
+      if (user) {
+        // Only pre-fill if we have a real authenticated name (not the default)
+        const realName = user.display_name && user.display_name !== 'Aarav' ? user.display_name : '';
+        setName(realName);
+        setGrade(user.grade ?? 4);
+        const g = user.grade ?? 4;
+        setAgeMode(g <= 3 ? 'sprouts' : g <= 6 ? 'explorers' : 'scholars');
+      } else {
+        // Not authenticated — check localStorage only as last resort
+        const local = LocalStorageAdapter.getProfile();
+        const localName = local.id !== 'usr-default-1' ? local.display_name : '';
+        setName(localName);
+        setGrade(local.grade ?? 4);
+      }
+    });
+  }, []);
 
   const slides = [
     {
@@ -56,8 +76,15 @@ export const OnboardingPage: React.FC = () => {
   };
 
   const handleSaveAndProceed = async (skipAssessment = false) => {
+    // Never save 'Aarav' as the name — require a real name to be entered
+    const safeName = name.trim();
+    if (!safeName) {
+      alert('Please enter your name before continuing.');
+      setStep(2);
+      return;
+    }
     await authService.updateProfile({
-      display_name: name || 'Aarav',
+      display_name: safeName,
       grade,
       age_mode: ageMode,
     });

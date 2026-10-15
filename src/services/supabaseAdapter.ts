@@ -37,31 +37,28 @@ export class SupabaseAdapter {
 
     try {
       const { data: { session }, error } = await supabase.auth.getSession();
+      // No session = not authenticated. Return null, never a fake local profile.
       if (error || !session?.user) {
-        return LocalStorageAdapter.getProfile();
+        return null;
       }
 
-      // Query profile matching user_id or active child profile
-      let query: any = supabase
+      // Query profile for the authenticated user ID only
+      const { data: profiles, error: pErr } = await supabase
         .from('profiles')
-        .select('*');
-
-      if (this.activeProfileId) {
-        query = query.eq('id', this.activeProfileId);
-      } else {
-        query = query.or(`user_id.eq.${session.user.id},parent_user_id.eq.${session.user.id}`);
-      }
-
-      const { data: profiles, error: pErr } = await query.limit(1);
+        .select('*')
+        .eq('user_id', session.user.id)
+        .limit(1);
 
       if (pErr || !profiles || (profiles as any[]).length === 0) {
-        return LocalStorageAdapter.getProfile();
+        // Authenticated but profile missing — do NOT return a fake profile
+        console.warn('[SupabaseAdapter.getCurrentUser] Authenticated but no profile found for', session.user.id);
+        return null;
       }
 
       const p: any = (profiles as any[])[0];
       const profile: UserProfile = {
         id: p.id,
-        email: session.user.email || p.parent_email || 'learner@kuralbeyond.edu',
+        email: session.user.email || p.parent_email || '',
         display_name: p.display_name,
         interface_language: p.interface_language,
         grade: p.grade as StandardGrade,
@@ -78,8 +75,9 @@ export class SupabaseAdapter {
       this.activeProfileId = profile.id;
       return profile;
     } catch (e) {
-      console.warn('[SupabaseAdapter.getCurrentUser] Network error, fallback to local', e);
-      return LocalStorageAdapter.getProfile();
+      console.warn('[SupabaseAdapter.getCurrentUser] Network error — returning null', e);
+      // Network error: return null, not a fake profile
+      return null;
     }
   }
 

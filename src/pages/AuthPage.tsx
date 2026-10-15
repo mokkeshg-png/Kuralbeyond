@@ -16,7 +16,6 @@ export const AuthPage: React.FC = () => {
   const [displayName, setDisplayName] = useState('');
   const [grade, setGrade] = useState<StandardGrade>(4);
   const [error, setError] = useState<string | null>(null);
-  const [newUserId, setNewUserId] = useState<string | null>(null);
   const [emailConfirmPending, setEmailConfirmPending] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -35,19 +34,18 @@ export const AuthPage: React.FC = () => {
           return;
         }
         const profile = await authService.signUp(email, password, displayName, grade, true);
-        const displayId: string = (profile as any).auth_user_id ?? profile.id;
-        setNewUserId(displayId);
 
-        // Check if email confirmation is required
-        if ((profile as any).__emailConfirmationRequired) {
+        // Check if email confirmation is required — stop here, do NOT navigate
+        if ((profile as Record<string, unknown>)['__emailConfirmationRequired']) {
           setEmailConfirmPending(true);
           return;
         }
+
+        // Registration complete with active session
         if (profile.is_child && !profile.parental_consent) {
-          // Brief pause so the user can see their ID before navigating
-          setTimeout(() => navigate('/parent-consent'), 2500);
+          navigate('/parent-consent');
         } else {
-          setTimeout(() => navigate('/onboarding'), 2500);
+          navigate('/onboarding');
         }
       } else {
         await authService.signIn(email, password);
@@ -188,22 +186,7 @@ export const AuthPage: React.FC = () => {
           </p>
         )}
 
-          {newUserId && (
-            <div className="bg-teal/10 border-2 border-teal/40 rounded-2xl p-4 space-y-1 text-center">
-              <p className="text-xs font-bold text-teal uppercase tracking-wide">
-                {isTa ? '✓ கணக்கு உருவாக்கப்பட்டது!' : '✓ Account Created!'}
-              </p>
-              <p className="text-[10px] text-ink-muted font-semibold">
-                {isTa ? 'உங்கள் தனிப்பட்ட அடையாளம்' : 'Your unique User ID'}
-              </p>
-              <p className="font-mono text-xs text-ink bg-paper border border-sand rounded-xl px-3 py-2 break-all select-all">
-                {newUserId}
-              </p>
-              <p className="text-[10px] text-ink-muted">
-                {isTa ? 'இதை குறித்துக்கொள்ளுங்கள்' : 'Save this for your records'}
-              </p>
-            </div>
-          )}
+          {/* Sign-up success flash — only shown briefly before redirect */}
 
           <button
             type="submit"
