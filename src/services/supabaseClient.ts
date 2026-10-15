@@ -35,6 +35,21 @@ export const supabase = createClient<Database>(
   }
 );
 
+// Log which Supabase project this client is connecting to.
+// Visible in DevTools console — never logs the key value.
+if (typeof window !== 'undefined') {
+  const configuredUrl = supabaseUrl ?? '(not set — check VITE_SUPABASE_URL in .env)';
+  const isPlaceholder = !supabaseUrl || supabaseUrl.includes('placeholder');
+  console.info(
+    `[TamilPalam] Supabase project: ${configuredUrl}`,
+    isPlaceholder
+      ? '⚠️  USING PLACEHOLDER — real database not connected'
+      : isSupabaseConfigured()
+      ? '✅ configured'
+      : '⚠️  key format invalid',
+  );
+}
+
 /**
  * Performs a lightweight connectivity check against Supabase.
  * Returns an object describing the outcome — never throws.

@@ -5,7 +5,7 @@ import { supabase, isSupabaseConfigured, checkSupabaseConnection } from './supab
 
 export interface IAuthService {
   getCurrentUser(): Promise<UserProfile | null>;
-  signIn(email: string, password?: string): Promise<UserProfile>;
+  signIn(email: string, password: string): Promise<UserProfile>;
   signUp(
     email: string,
     password: string,
@@ -51,31 +51,23 @@ export class AuthService implements IAuthService {
   }
 
   // ── Sign in ───────────────────────────────────────────────────────────────
-  async signIn(email: string, password?: string): Promise<UserProfile> {
+  async signIn(email: string, password: string): Promise<UserProfile> {
     if (!isSupabaseConfigured()) {
-      // Offline / demo fallback only
       const current = LocalStorageAdapter.getProfile();
-      const updated: UserProfile = {
-        ...current,
-        email,
-        updated_at: new Date().toISOString(),
-      };
+      const updated: UserProfile = { ...current, email, updated_at: new Date().toISOString() };
       LocalStorageAdapter.setProfile(updated);
       return updated;
-    }
-
-    if (!password) {
-      throw new Error('Password is required for Supabase authentication.');
     }
 
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw new Error(error.message);
     if (!data.user) throw new Error('Sign-in succeeded but no user was returned.');
 
+    // Ensure DB records exist (handles users who registered before trigger was in place)
+    await supabase.rpc('ensure_user_records' as any);
+
     const profile = await SupabaseAdapter.getCurrentUser();
-    if (!profile) {
-      throw new Error('Your profile could not be loaded. Please contact support.');
-    }
+    if (!profile) throw new Error('Your profile could not be loaded. Please contact support.');
     LocalStorageAdapter.setProfile(profile);
     return profile;
   }
@@ -170,6 +162,16 @@ export class AuthService implements IAuthService {
     // Email confirmation is off — trigger already ran. Allow a short delay
     // for the trigger to commit before we query the profile.
     await new Promise(r => setTimeout(r, 600));
+
+    // Ensure records exist (belt-and-suspenders against trigger timing)
+    await supabase.rpc('ensure_user_records' as any, {
+      p_full_name:          displayName,
+      p_grade:              grade,
+      p_age_mode:           ageMode,
+      p_is_child:           isChild,
+      p_interface_language: 'en',
+      p_avatar_id:          'avatar-kili',
+    });
 
     const profile = await SupabaseAdapter.getCurrentUser();
     const localProfile: UserProfile = profile ?? {
