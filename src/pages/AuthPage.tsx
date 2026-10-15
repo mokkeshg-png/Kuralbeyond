@@ -16,6 +16,7 @@ export const AuthPage: React.FC = () => {
   const [displayName, setDisplayName] = useState('');
   const [grade, setGrade] = useState<StandardGrade>(4);
   const [error, setError] = useState<string | null>(null);
+  const [emailConfirmPending, setEmailConfirmPending] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,6 +34,11 @@ export const AuthPage: React.FC = () => {
           return;
         }
         const profile = await authService.signUp(email, password, displayName, grade, true);
+        // Check if email confirmation is required
+        if ((profile as Record<string, unknown>)['__emailConfirmationRequired']) {
+          setEmailConfirmPending(true);
+          return;
+        }
         if (profile.is_child && !profile.parental_consent) {
           navigate('/parent-consent');
         } else {
@@ -42,8 +48,9 @@ export const AuthPage: React.FC = () => {
         await authService.signIn(email, password);
         navigate('/dashboard');
       }
-    } catch {
-      setError(t('errors.somethingWrong'));
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : t('errors.somethingWrong');
+      setError(msg);
     }
   };
 
@@ -149,11 +156,32 @@ export const AuthPage: React.FC = () => {
             </div>
           )}
 
-          {error && (
-            <p className="text-xs font-bold text-maroon bg-maroon/10 p-3 rounded-xl text-center">
-              {error}
+        {/* Email confirmation pending */}
+        {emailConfirmPending && (
+          <div className="p-4 rounded-2xl bg-teal-surface border-2 border-teal/30 text-center space-y-2 animate-pop">
+            <p className="text-sm font-bold text-teal">
+              {isTa ? 'உங்கள் மின்னஞ்சலை உறுதிப்படுத்தவும்' : '📧 Check your email'}
             </p>
-          )}
+            <p className="text-xs text-ink-muted">
+              {isTa
+                ? `${email} முகவரிக்கு ஒரு உறுதிப்படுத்தல் இணைப்பு அனுப்பப்பட்டுள்ளது. அதை சொடுக்கியதும் உள்நுழைக.`
+                : `A confirmation link was sent to ${email}. Click it then sign in below.`}
+            </p>
+            <button
+              type="button"
+              onClick={() => { setEmailConfirmPending(false); setIsSignUp(false); }}
+              className="mt-2 text-xs font-bold text-teal underline"
+            >
+              {isTa ? 'உள்நுழைய செல்க' : 'Go to Sign In'}
+            </button>
+          </div>
+        )}
+
+        {error && (
+          <p className="text-xs font-bold text-maroon bg-maroon/10 p-3 rounded-xl text-center">
+            {error}
+          </p>
+        )}
 
           <button
             type="submit"
