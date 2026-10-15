@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { authService } from '../services/authService';
 import { audioService } from '../services/audioService';
+import { AudioButton } from '../components/common/AudioButton';
 import { KiliParrot } from '../components/mascot/KiliParrot';
 
 export const LandingPage: React.FC = () => {
@@ -129,17 +130,14 @@ export const LandingPage: React.FC = () => {
                 <span className="text-xs font-bold uppercase tracking-wider text-teal bg-teal-surface px-3 py-1 rounded-full group-hover:bg-teal group-hover:text-white transition-colors">
                   Uyir Vowel 1 • Start Lesson →
                 </span>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    playHeroAudio();
-                  }}
-                  className="p-2 rounded-xl bg-teal text-white hover:bg-teal-light transition-colors shadow-sm"
-                  aria-label="Play audio"
-                >
-                  <Volume2 size={16} />
-                </button>
+                <div onClick={(e) => e.stopPropagation()}>
+                  <AudioButton
+                    audioId="vocab_vanakkam"
+                    fallbackText="வணக்கம்"
+                    size="sm"
+                    showFallbackBadge={false}
+                  />
+                </div>
               </div>
 
               {/* Large Tamil Letter */}

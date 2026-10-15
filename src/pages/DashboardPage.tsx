@@ -16,6 +16,7 @@ import { curriculumService } from '../services/curriculumService';
 import { DailyGoalRing } from '../components/common/DailyGoalRing';
 import { ScriptPowerMeter } from '../components/common/ScriptPowerMeter';
 import { KiliParrot } from '../components/mascot/KiliParrot';
+import { SarvamVoiceModal } from '../components/common/SarvamVoiceModal';
 
 export const DashboardPage: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -28,6 +29,7 @@ export const DashboardPage: React.FC = () => {
   const [nextLesson, setNextLesson] = useState<Lesson | null>(null);
   const [badges, setBadges] = useState<AchievementBadge[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isVoiceAssistantOpen, setIsVoiceAssistantOpen] = useState(false);
 
   useEffect(() => {
     async function loadDashboardData() {
@@ -91,12 +93,19 @@ export const DashboardPage: React.FC = () => {
 
           {/* Kili Mascot greeting (hidden for Scholars mode) */}
           {!isScholars && (
-            <KiliParrot
-              mood="talking"
-              speechText="Ready to learn with joy today?"
-              speechTextTa="இன்று மகிழ்வோடு கற்கத் தயாரா?"
-              size="sm"
-            />
+            <div 
+              onClick={() => setIsVoiceAssistantOpen(true)}
+              className="cursor-pointer transition-transform hover:scale-105 active:scale-95"
+              title="கிளியிடம் தமிழில் பேசுங்கள்! (Click to speak with Kili)"
+            >
+              <KiliParrot
+                mood="talking"
+                speechText="Click to speak Tamil with me! 🎙️"
+                speechTextTa="என்னுடன் தமிழில் பேசுங்கள்! 🎙️"
+                size="sm"
+                onOpenVoiceAssistant={() => setIsVoiceAssistantOpen(true)}
+              />
+            </div>
           )}
         </div>
 
@@ -278,6 +287,12 @@ export const DashboardPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Sarvam AI Tamil Voice Assistant Modal */}
+      <SarvamVoiceModal
+        isOpen={isVoiceAssistantOpen}
+        onClose={() => setIsVoiceAssistantOpen(false)}
+      />
     </div>
   );
 };

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Flame, Sparkles, User, Globe, Shield } from 'lucide-react';
+import { Flame, Sparkles, User, Globe, Shield, Mic } from 'lucide-react';
 import { UserProfile, UserStats } from '../../types';
+import { SarvamVoiceModal } from '../common/SarvamVoiceModal';
 
 interface NavbarProps {
   profile: UserProfile | null;
@@ -13,6 +14,7 @@ export const Navbar: React.FC<NavbarProps> = ({ profile, stats }) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
+  const [isVoiceAssistantOpen, setIsVoiceAssistantOpen] = useState(false);
 
   const toggleLanguage = () => {
     const nextLang = i18n.language === 'en' ? 'ta' : 'en';
@@ -152,6 +154,18 @@ export const Navbar: React.FC<NavbarProps> = ({ profile, stats }) => {
             <span>{i18n.language === 'en' ? 'தமிழ்' : 'EN'}</span>
           </button>
 
+          {/* Tamil AI Voice Assistant Trigger */}
+          <button
+            type="button"
+            onClick={() => setIsVoiceAssistantOpen(true)}
+            aria-label="Open Kili Tamil Voice Assistant"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-teal text-white hover:bg-teal-light text-xs sm:text-sm font-bold active:scale-95 transition-all shadow-sm"
+            title="Tamil AI Voice Assistant (Powered by Sarvam AI)"
+          >
+            <Mic size={16} />
+            <span className="hidden sm:inline">கிளியிடம் பேசு</span>
+          </button>
+
           {/* Profile / Settings Button */}
           {profile ? (
             <button
@@ -172,6 +186,12 @@ export const Navbar: React.FC<NavbarProps> = ({ profile, stats }) => {
           )}
         </div>
       </div>
+
+      {/* Sarvam AI Tamil Voice Assistant Modal */}
+      <SarvamVoiceModal
+        isOpen={isVoiceAssistantOpen}
+        onClose={() => setIsVoiceAssistantOpen(false)}
+      />
     </header>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { RotateCcw, Check, Sparkles } from 'lucide-react';
+import { RotateCcw, Check, Sparkles, AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 interface TracingCanvasProps {
@@ -9,16 +9,192 @@ interface TracingCanvasProps {
   className?: string;
 }
 
+interface TracingScoreResult {
+  score: number;
+  passed: boolean; // score >= 75
+  coverage: number;
+  precision: number;
+}
+
+/**
+ * Accurately compares the user's canvas strokes against the reference Tamil letter glyph.
+ * Computes coverage (did the user trace the letter strokes) and precision.
+ * Returns passed=true only when accuracy is at least 75%.
+ */
+function evaluateTracing(
+  canvas: HTMLCanvasElement,
+  letter: string,
+  outlineSvgPath?: string,
+  threshold: number = 0.75
+): TracingScoreResult {
+  const dpr = window.devicePixelRatio || 1;
+  const width = canvas.width;
+  const height = canvas.height;
+  if (!width || !height) return { score: 0, passed: false, coverage: 0, precision: 0 };
+
+  const refCanvas = document.createElement('canvas');
+  refCanvas.width = width;
+  refCanvas.height = height;
+  const refCtx = refCanvas.getContext('2d');
+  const userCtx = canvas.getContext('2d');
+  if (!refCtx || !userCtx) return { score: 0, passed: false, coverage: 0, precision: 0 };
+
+  refCtx.scale(dpr, dpr);
+  const logicalW = width / dpr;
+  const logicalH = height / dpr;
+
+  // Render the reference letter glyph exactly aligned with the background guide
+  refCtx.clearRect(0, 0, logicalW, logicalH);
+  refCtx.font = '160px "Noto Sans Tamil", sans-serif';
+  refCtx.textAlign = 'center';
+  refCtx.textBaseline = 'middle';
+  refCtx.fillStyle = '#000000';
+  refCtx.fillText(letter, logicalW / 2, logicalH / 2);
+
+  // If outline SVG path is provided, also stroke it on the reference canvas to reinforce guide lines
+  if (outlineSvgPath) {
+    try {
+      const p = new Path2D(outlineSvgPath);
+      refCtx.save();
+      const scale = Math.min(logicalW / 100, logicalH / 100) * 0.75;
+      const offsetX = (logicalW - 100 * scale) / 2;
+      const offsetY = (logicalH - 100 * scale) / 2;
+      refCtx.translate(offsetX, offsetY);
+      refCtx.scale(scale, scale);
+      refCtx.lineWidth = 18;
+      refCtx.lineCap = 'round';
+      refCtx.lineJoin = 'round';
+      refCtx.strokeStyle = '#000000';
+      refCtx.stroke(p);
+      refCtx.restore();
+    } catch {
+      // ignore Path2D error
+    }
+  }
+
+  // Read pixel data
+  const refImg = refCtx.getImageData(0, 0, width, height).data;
+  const userImg = userCtx.getImageData(0, 0, width, height).data;
+
+  // Grid sampling step for fast, smooth performance
+  const sampleStep = Math.max(3, Math.round(dpr * 3));
+  const cols = Math.floor(width / sampleStep);
+  const rows = Math.floor(height / sampleStep);
+
+  const refGrid = new Uint8Array(cols * rows);
+  const userGrid = new Uint8Array(cols * rows);
+  let targetTotal = 0;
+  let userTotal = 0;
+
+  for (let r = 0; r < rows; r++) {
+    const y = r * sampleStep;
+    const rowOffset = y * width;
+    for (let c = 0; c < cols; c++) {
+      const x = c * sampleStep;
+      const idx = (rowOffset + x) * 4;
+
+      if (refImg[idx + 3] > 30) {
+        refGrid[r * cols + c] = 1;
+        targetTotal++;
+      }
+      if (userImg[idx + 3] > 30) {
+        userGrid[r * cols + c] = 1;
+        userTotal++;
+      }
+    }
+  }
+
+  if (userTotal === 0 || targetTotal === 0) {
+    return { score: 0, passed: false, coverage: 0, precision: 0 };
+  }
+
+  // Radius for hit tolerance: approx 18 logical pixels (~ stroke width)
+  const tolerancePx = 18 * dpr;
+  const radiusSteps = Math.max(2, Math.ceil(tolerancePx / sampleStep));
+  const r2 = radiusSteps * radiusSteps;
+
+  // Check how much of the target letter was covered by the student
+  let targetHit = 0;
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      if (refGrid[r * cols + c] === 1) {
+        let hit = false;
+        for (let dr = -radiusSteps; dr <= radiusSteps && !hit; dr++) {
+          const nr = r + dr;
+          if (nr < 0 || nr >= rows) continue;
+          for (let dc = -radiusSteps; dc <= radiusSteps && !hit; dc++) {
+            const nc = c + dc;
+            if (nc < 0 || nc >= cols) continue;
+            if (dr * dr + dc * dc <= r2) {
+              if (userGrid[nr * cols + nc] === 1) {
+                hit = true;
+              }
+            }
+          }
+        }
+        if (hit) targetHit++;
+      }
+    }
+  }
+
+  // Check precision: did the student draw inside/near the letter or wildly off-canvas
+  let userHit = 0;
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      if (userGrid[r * cols + c] === 1) {
+        let hit = false;
+        for (let dr = -radiusSteps; dr <= radiusSteps && !hit; dr++) {
+          const nr = r + dr;
+          if (nr < 0 || nr >= rows) continue;
+          for (let dc = -radiusSteps; dc <= radiusSteps && !hit; dc++) {
+            const nc = c + dc;
+            if (nc < 0 || nc >= cols) continue;
+            if (dr * dr + dc * dc <= r2) {
+              if (refGrid[nr * cols + nc] === 1) {
+                hit = true;
+              }
+            }
+          }
+        }
+        if (hit) userHit++;
+      }
+    }
+  }
+
+  const coverage = targetHit / targetTotal;
+  const precision = userTotal > 0 ? userHit / userTotal : 0;
+
+  // Slight penalty only if strokes are mostly outside the letter (< 40% precision)
+  const precisionPenalty = precision < 0.4 ? precision / 0.4 : 1.0;
+  const rawScore = coverage * precisionPenalty;
+  const scorePercent = Math.min(100, Math.round(rawScore * 100));
+
+  const passedThreshold = Math.round(threshold * 100); // 75%
+  const passed = scorePercent >= passedThreshold;
+
+  return {
+    score: scorePercent,
+    passed,
+    coverage: Math.round(coverage * 100),
+    precision: Math.round(precision * 100),
+  };
+}
+
 export const TracingCanvas: React.FC<TracingCanvasProps> = ({
   letter,
+  outlineSvgPath,
   onComplete,
   className = '',
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isTa = i18n.language === 'ta';
+
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [hasDrawn, setHasDrawn] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
+  const [feedback, setFeedback] = useState<{ score: number; passed: boolean } | null>(null);
+  const [isShaking, setIsShaking] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -33,7 +209,7 @@ export const TracingCanvas: React.FC<TracingCanvasProps> = ({
     canvas.height = rect.height * dpr;
     ctx.scale(dpr, dpr);
 
-    // Initial clear
+    // Initial stroke style
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     ctx.strokeStyle = '#0F4C5C';
@@ -58,6 +234,11 @@ export const TracingCanvas: React.FC<TracingCanvasProps> = ({
     ctx.moveTo(x, y);
     setIsDrawing(true);
     setHasDrawn(true);
+
+    // Clear unsuccessful feedback when continuing to draw
+    if (feedback && !feedback.passed) {
+      setFeedback(null);
+    }
   };
 
   const draw = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
@@ -93,20 +274,45 @@ export const TracingCanvas: React.FC<TracingCanvasProps> = ({
     ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
     setHasDrawn(false);
     setIsVerified(false);
+    setFeedback(null);
+    setIsShaking(false);
   };
 
   const checkTracing = () => {
-    if (!hasDrawn) return;
-    setIsVerified(true);
-    setTimeout(() => {
-      onComplete();
-    }, 600);
+    const canvas = canvasRef.current;
+    if (!canvas || !hasDrawn) return;
+
+    // Evaluate accuracy with 75% threshold
+    const result = evaluateTracing(canvas, letter, outlineSvgPath, 0.75);
+
+    if (result.passed) {
+      setIsVerified(true);
+      setFeedback({ score: result.score, passed: true });
+      setTimeout(() => {
+        onComplete();
+      }, 750);
+    } else {
+      setIsVerified(false);
+      setFeedback({ score: result.score, passed: false });
+      setIsShaking(true);
+      setTimeout(() => {
+        setIsShaking(false);
+      }, 600);
+    }
   };
 
   return (
     <div className={`flex flex-col items-center gap-4 ${className}`}>
       {/* Tracing Board Container */}
-      <div className="relative w-72 h-72 sm:w-80 sm:h-80 bg-paper-dark rounded-3xl border-4 border-sand shadow-inner flex items-center justify-center overflow-hidden touch-none select-none">
+      <div 
+        className={`relative w-72 h-72 sm:w-80 sm:h-80 bg-paper-dark rounded-3xl border-4 transition-all shadow-inner flex items-center justify-center overflow-hidden touch-none select-none ${
+          isVerified
+            ? 'border-leaf ring-4 ring-leaf/20'
+            : feedback && !feedback.passed
+            ? 'border-maroon/60 ring-4 ring-maroon/20 animate-shake'
+            : 'border-sand'
+        } ${isShaking ? 'animate-shake' : ''}`}
+      >
         {/* Background Guide Letter Outline */}
         <div 
           className="absolute inset-0 flex items-center justify-center pointer-events-none select-none text-sand-dark/50"
@@ -128,15 +334,32 @@ export const TracingCanvas: React.FC<TracingCanvasProps> = ({
           className="relative z-10 w-full h-full cursor-crosshair"
         />
 
-        {/* Verification Success Overlay */}
+        {/* Verification Success Overlay (Only shown when passed >= 75%) */}
         {isVerified && (
-          <div className="absolute inset-0 z-20 bg-leaf/20 backdrop-blur-xs flex items-center justify-center animate-pop">
+          <div className="absolute inset-0 z-20 bg-leaf/25 backdrop-blur-xs flex flex-col items-center justify-center gap-2 animate-pop">
             <div className="w-16 h-16 rounded-full bg-leaf text-white flex items-center justify-center shadow-lg">
               <Check size={36} strokeWidth={3} />
             </div>
+            {feedback && (
+              <span className="bg-leaf text-white font-extrabold text-sm px-3 py-1 rounded-full shadow-md">
+                {feedback.score}% • {isTa ? 'அருமை!' : 'Great job!'}
+              </span>
+            )}
           </div>
         )}
       </div>
+
+      {/* Accuracy Feedback Warning (Shown if score < 75%) */}
+      {feedback && !feedback.passed && (
+        <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-maroon/10 border-2 border-maroon/30 text-maroon text-xs sm:text-sm font-bold animate-fade-in shadow-xs max-w-sm text-center">
+          <AlertCircle size={18} className="flex-shrink-0 text-maroon" />
+          <span>
+            {isTa 
+              ? `எழுத்தை முழுமையாக வரைக: ${feedback.score}% (75% தேவை)` 
+              : `Trace more of the letter: ${feedback.score}% (75% required to pass)`}
+          </span>
+        </div>
+      )}
 
       {/* Action Controls */}
       <div className="flex items-center gap-3">
@@ -152,15 +375,15 @@ export const TracingCanvas: React.FC<TracingCanvasProps> = ({
         <button
           type="button"
           onClick={checkTracing}
-          disabled={!hasDrawn}
+          disabled={!hasDrawn || isVerified}
           className={`inline-flex items-center gap-1.5 px-6 py-2.5 rounded-2xl font-bold text-sm transition-all shadow-md ${
-            hasDrawn
+            hasDrawn && !isVerified
               ? 'bg-teal text-white hover:bg-teal-light active:scale-95'
               : 'bg-sand/60 text-ink-muted cursor-not-allowed'
           }`}
         >
           <Sparkles size={16} className="text-gold-light" />
-          {t('lesson.checkTrace')}
+          <span>{t('lesson.checkTrace')}</span>
         </button>
       </div>
     </div>

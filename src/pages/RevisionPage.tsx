@@ -6,12 +6,11 @@ import {
   Check, 
   X, 
   Calendar,
-  Volume2,
   ArrowRight
 } from 'lucide-react';
 import { RevisionItem } from '../types';
 import { revisionService } from '../services/revisionService';
-import { audioService } from '../services/audioService';
+import { AudioButton } from '../components/common/AudioButton';
 
 export const RevisionPage: React.FC = () => {
   const { t } = useTranslation();
@@ -48,12 +47,6 @@ export const RevisionPage: React.FC = () => {
     }
   };
 
-  const handleAudio = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (currentItem?.audio_id) {
-      audioService.play(currentItem.audio_id, currentItem.content_ta);
-    }
-  };
 
   if (loading) {
     return (
@@ -124,14 +117,13 @@ export const RevisionPage: React.FC = () => {
                     }`}>
                       {currentItem.content_ta}
                     </span>
-                    <button
-                      type="button"
-                      onClick={handleAudio}
-                      className="mt-4 p-3 rounded-2xl bg-teal text-white hover:bg-teal-light shadow-md active:scale-95 transition-all"
-                      aria-label="Play pronunciation"
-                    >
-                      <Volume2 size={20} />
-                    </button>
+                    <div className="mt-4">
+                      <AudioButton
+                        audioId={currentItem.audio_id || `rev_${currentItem.content_ta}`}
+                        fallbackText={currentItem.content_ta}
+                        size="md"
+                      />
+                    </div>
                   </div>
 
                   <span className="text-xs text-ink-muted font-medium">

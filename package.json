@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "lint:tamil": "node scripts/validate-tamil.js"
+    "lint:tamil": "node scripts/validate-tamil.js",
+    "sarvam:server": "python sarvam_server.py"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
