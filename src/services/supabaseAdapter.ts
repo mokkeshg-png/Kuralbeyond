@@ -14,7 +14,8 @@ import {
   SkillType,
   TanglishStage,
   StandardGrade,
-  AgeMode
+  AgeMode,
+  UserPreferences
 } from '../types';
 
 export class SupabaseAdapter {
@@ -474,6 +475,62 @@ export class SupabaseAdapter {
       };
     } catch {
       return null as any;
+    }
+  }
+
+  // ==========================================
+  // User Preferences
+  // ==========================================
+  static async getPreferences(profileId: string): Promise<UserPreferences> {
+    // If not configured or demo profile, fall back to localStorage
+    if (!isSupabaseConfigured() || !profileId || profileId === 'usr-demo-guest' || profileId.startsWith('usr-default')) {
+      return LocalStorageAdapter.getPreferences();
+    }
+    try {
+      const { data, error } = await supabase
+        .from('user_preferences')
+        .select('*')
+        .eq('profile_id', profileId)
+        .limit(1)
+        .maybeSingle();
+      if (error || !data) {
+        return LocalStorageAdapter.getPreferences();
+      }
+      const row: any = data;
+      const localPrefs = LocalStorageAdapter.getPreferences();
+      return {
+        daily_goal: Math.max(1, Math.round((row.daily_goal_minutes || 15) / 15)),
+        audio_speed: localPrefs.audio_speed,
+        reduced_motion: row.reduced_motion ?? localPrefs.reduced_motion,
+        tanglish_enabled: row.tanglish_subtitles ?? localPrefs.tanglish_enabled,
+        notifications_enabled: row.daily_reminder ?? localPrefs.notifications_enabled,
+        high_contrast: row.high_contrast ?? localPrefs.high_contrast,
+        text_size_multiplier: localPrefs.text_size_multiplier,
+      };
+    } catch {
+      return LocalStorageAdapter.getPreferences();
+    }
+  }
+
+  static async setPreferences(profileId: string, prefs: UserPreferences): Promise<void> {
+    LocalStorageAdapter.setPreferences(prefs);
+    if (!isSupabaseConfigured() || !profileId || profileId === 'usr-demo-guest' || profileId.startsWith('usr-default')) {
+      return;
+    }
+    try {
+      await supabase
+        .from('user_preferences')
+        .upsert({
+          profile_id: profileId,
+          daily_goal_minutes: prefs.daily_goal * 15,
+          reduced_motion: prefs.reduced_motion,
+          tanglish_subtitles: prefs.tanglish_enabled,
+          daily_reminder: prefs.notifications_enabled,
+          high_contrast: prefs.high_contrast,
+          updated_at: new Date().toISOString(),
+        }, { onConflict: 'profile_id' });
+    } catch (e) {
+      console.warn('[SupabaseAdapter.setPreferences] Error upserting preferences', e);
     }
   }
 }
