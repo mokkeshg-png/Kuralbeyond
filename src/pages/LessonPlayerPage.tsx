@@ -16,6 +16,7 @@ import { InLessonHeader } from '../components/layout/InLessonHeader';
 import { TracingCanvas } from '../components/common/TracingCanvas';
 import { VoiceRecordCompare } from '../components/common/VoiceRecordCompare';
 import { FlipCard } from '../components/common/FlipCard';
+import { AudioButton } from '../components/common/AudioButton';
 import { KiliParrot } from '../components/mascot/KiliParrot';
 import { LocalStorageAdapter } from '../services/storageAdapter';
 
@@ -95,8 +96,8 @@ export const LessonPlayerPage: React.FC = () => {
 
     // Auto play audio if Tanglish rules allow
     const rules = tanglishService.getDisplayRules(lesson?.tanglish_stage || 'A');
-    if (rules.autoplayAudio && currentQuestion.audio_id) {
-      audioService.play(currentQuestion.audio_id);
+    if (rules.autoplayAudio && (currentQuestion.audio_id || currentQuestion.content_ta)) {
+      audioService.play(currentQuestion.audio_id || `q_${currentQuestion.content_ta}`, currentQuestion.content_ta);
     }
 
     // Initialize ordering word bank
@@ -164,8 +165,8 @@ export const LessonPlayerPage: React.FC = () => {
     if (feedbackState === 'correct') return;
     setSelectedOptionId(opt.id);
 
-    if (opt.audio_id) {
-      audioService.play(opt.audio_id);
+    if (opt.audio_id || opt.option_text) {
+      audioService.play(opt.audio_id || `opt_${opt.option_text}`, opt.option_text);
     }
 
     if (opt.is_correct) {
@@ -208,8 +209,10 @@ export const LessonPlayerPage: React.FC = () => {
   };
 
   // Matching pair handler
-  const handleTapPairLeft = (pairId: string, audioId?: string) => {
-    if (audioId) audioService.play(audioId);
+  const handleTapPairLeft = (pairId: string, audioId?: string, textTa?: string) => {
+    if (audioId || textTa) {
+      audioService.play(audioId || `pair_${textTa}`, textTa);
+    }
     setSelectedLeft(pairId);
   };
 
@@ -320,15 +323,14 @@ export const LessonPlayerPage: React.FC = () => {
                     {currentQuestion.content_tanglish}
                   </span>
                 )}
-                {currentQuestion.audio_id && (
-                  <button
-                    type="button"
-                    onClick={() => audioService.play(currentQuestion.audio_id!)}
-                    className="mt-3 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-teal text-white text-xs font-bold hover:bg-teal-light transition-colors shadow-sm active:scale-95"
-                  >
-                    <Volume2 size={16} />
-                    <span>Play</span>
-                  </button>
+                {(currentQuestion.audio_id || currentQuestion.content_ta) && (
+                  <div className="mt-3">
+                    <AudioButton
+                      audioId={currentQuestion.audio_id || `mcq_${currentQuestion.content_ta}`}
+                      fallbackText={currentQuestion.content_ta}
+                      size="sm"
+                    />
+                  </div>
                 )}
               </div>
             )}
@@ -448,7 +450,7 @@ export const LessonPlayerPage: React.FC = () => {
                     <button
                       key={'left-' + pair.id}
                       type="button"
-                      onClick={() => handleTapPairLeft(pair.id, pair.audio_id)}
+                      onClick={() => handleTapPairLeft(pair.id, pair.audio_id, pair.left_ta)}
                       disabled={isMatched}
                       className={`w-full p-3.5 rounded-2xl font-tamil font-bold text-base transition-all text-center min-h-[56px] shadow-sm break-words max-w-full px-2 overflow-hidden flex items-center justify-center ${
                         isMatched
@@ -494,13 +496,11 @@ export const LessonPlayerPage: React.FC = () => {
         {currentQuestion.exercise_type === 'listening' && currentQuestion.options && (
           <div className="w-full max-w-md space-y-6 text-center">
             <div className="p-6 bg-paper-dark rounded-3xl border-2 border-sand flex flex-col items-center justify-center space-y-3">
-              <button
-                type="button"
-                onClick={() => audioService.play(currentQuestion.audio_id!)}
-                className="w-16 h-16 rounded-full bg-teal text-white flex items-center justify-center shadow-lg hover:bg-teal-light transition-all active:scale-95"
-              >
-                <Volume2 size={32} />
-              </button>
+              <AudioButton
+                audioId={currentQuestion.audio_id || `listen_${currentQuestion.content_ta}`}
+                fallbackText={currentQuestion.content_ta}
+                size="lg"
+              />
               <span className="text-xs font-bold text-ink-muted">
                 {t('lesson.listenPrompt')}
               </span>
@@ -543,8 +543,11 @@ export const LessonPlayerPage: React.FC = () => {
               <span>Panel {activeStoryPanel + 1} of {currentQuestion.story_panels.length}</span>
               <button
                 type="button"
-                onClick={() => audioService.play(currentQuestion.story_panels![activeStoryPanel].audio_id)}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-teal text-white text-xs font-bold hover:bg-teal-light"
+                onClick={() => audioService.play(
+                  currentQuestion.story_panels![activeStoryPanel].audio_id,
+                  currentQuestion.story_panels![activeStoryPanel].caption_ta
+                )}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-teal text-white text-xs font-bold hover:bg-teal-light active:scale-95 shadow-sm"
               >
                 <Volume2 size={16} />
                 <span>Hear Panel</span>

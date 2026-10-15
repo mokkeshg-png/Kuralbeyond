@@ -15,10 +15,20 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Tamil:wght@400;500;600;700;800&family=Noto+Serif+Tamil:wght@600;700&display=swap"
       rel="stylesheet"
     />
-    <script type="module" crossorigin src="/assets/index-DAIm2bRN.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-Ci4eMd8I.css">
+    <script>
+      // If opened on local machine via LAN IP over plain HTTP,
+      // silently redirect to localhost so Chrome unlocks full microphone permissions!
+      if (
+        window.location.protocol === 'http:' &&
+        (window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname === '0.0.0.0')
+      ) {
+        window.location.replace('http://localhost:' + (window.location.port || '5173') + window.location.pathname + window.location.search + window.location.hash);
+      }
+    </script>
+    <script type="module" crossorigin src="/assets/index-DYOek4-D.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-8edYOOVA.css">
   </head>
   <body class="bg-paper text-ink antialiased selection:bg-gold-light selection:text-ink min-h-screen">
-    <div id="root"></div>
+    <div id="root"></div>
   </body>
 </html>

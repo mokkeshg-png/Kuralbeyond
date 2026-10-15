@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Volume2, ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 import { ASSESSMENT_QUESTIONS } from '../data/assessmentData';
-import { audioService } from '../services/audioService';
+import { AudioButton } from '../components/common/AudioButton';
 import { LocalStorageAdapter } from '../services/storageAdapter';
 
 export const AssessmentPage: React.FC = () => {
@@ -18,12 +18,6 @@ export const AssessmentPage: React.FC = () => {
   const [hasAnsweredCurrent, setHasAnsweredCurrent] = useState(false);
 
   const question = ASSESSMENT_QUESTIONS[currentIndex];
-
-  const handlePlayAudio = () => {
-    if (question.audio_id) {
-      audioService.play(question.audio_id);
-    }
-  };
 
   const handleSelectOption = (optId: string) => {
     if (hasAnsweredCurrent) return;
@@ -94,14 +88,15 @@ export const AssessmentPage: React.FC = () => {
               </p>
 
               {question.audio_id && (
-                <button
-                  type="button"
-                  onClick={handlePlayAudio}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-teal text-white font-bold text-xs hover:bg-teal-light transition-all shadow-sm active:scale-95"
-                >
-                  <Volume2 size={18} />
-                  <span>{t('common.tapToListen')}</span>
-                </button>
+                <div className="flex items-center gap-2">
+                  <AudioButton
+                    audioId={question.audio_id}
+                    size="sm"
+                  />
+                  <span className="text-xs font-bold text-ink-muted">
+                    {t('common.tapToListen')}
+                  </span>
+                </div>
               )}
             </div>
 
