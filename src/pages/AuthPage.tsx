@@ -36,7 +36,7 @@ export const AuthPage: React.FC = () => {
         const profile = await authService.signUp(email, password, displayName, grade, true);
 
         // Check if email confirmation is required — stop here, do NOT navigate
-        if ((profile as Record<string, unknown>)['__emailConfirmationRequired']) {
+        if ((profile as unknown as Record<string, unknown>)['__emailConfirmationRequired']) {
           setEmailConfirmPending(true);
           return;
         }
