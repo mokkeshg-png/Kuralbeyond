@@ -183,12 +183,8 @@ export const FlipCard: React.FC<FlipCardProps> = ({
             )}
           </div>
 
-<<<<<<< HEAD
-          <div className="text-xs text-ink-muted font-medium">
-            Kuralbeyond Phonics Bridge
-=======
           <div className="w-full flex items-center justify-between text-xs text-ink-muted font-medium">
-            <span>TamilPalam Phonics Bridge</span>
+            <span>Kuralbeyond Phonics Bridge</span>
             <button
               type="button"
               disabled={isLoading}
@@ -199,7 +195,6 @@ export const FlipCard: React.FC<FlipCardProps> = ({
               {isLoading ? <Loader2 size={12} className="animate-spin" /> : <Volume2 size={12} />}
               <span>Listen</span>
             </button>
->>>>>>> 1649169d39c2126004f7156a0f06e240d5170581
           </div>
         </div>
       </div>
