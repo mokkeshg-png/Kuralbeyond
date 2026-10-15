@@ -10,6 +10,7 @@ import {
 import { UserProfile, UserPreferences, AgeMode } from '../types';
 import { authService } from '../services/authService';
 import { LocalStorageAdapter } from '../services/storageAdapter';
+import { SupabaseAdapter } from '../services/supabaseAdapter';
 
 export const ProfilePage: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -21,7 +22,17 @@ export const ProfilePage: React.FC = () => {
 
   useEffect(() => {
     document.documentElement.setAttribute('data-age-mode', profile.age_mode);
-  }, [profile.age_mode]);
+    // Load preferences from Supabase and hydrate state
+    SupabaseAdapter.getPreferences(profile.id).then(remotePrefs => {
+      setPreferences(remotePrefs);
+      // Sync reduced_motion to DOM
+      if (remotePrefs.reduced_motion) {
+        document.documentElement.classList.add('reduced-motion');
+      } else {
+        document.documentElement.classList.remove('reduced-motion');
+      }
+    }).catch(() => { /* keep localStorage state on error */ });
+  }, [profile.age_mode, profile.id]);
 
   const handleAgeModeChange = async (mode: AgeMode) => {
     const updated = await authService.updateProfile({ age_mode: mode });
@@ -39,13 +50,13 @@ export const ProfilePage: React.FC = () => {
   const handleSpeedChange = (speed: number) => {
     const updated = { ...preferences, audio_speed: speed };
     setPreferences(updated);
-    LocalStorageAdapter.setPreferences(updated);
+    SupabaseAdapter.setPreferences(profile.id, updated);
   };
 
   const handleReduceMotionToggle = () => {
     const updated = { ...preferences, reduced_motion: !preferences.reduced_motion };
     setPreferences(updated);
-    LocalStorageAdapter.setPreferences(updated);
+    SupabaseAdapter.setPreferences(profile.id, updated);
     if (updated.reduced_motion) {
       document.documentElement.classList.add('reduced-motion');
     } else {
