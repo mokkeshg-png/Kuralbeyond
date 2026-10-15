@@ -17,6 +17,7 @@ import { DailyGoalRing } from '../components/common/DailyGoalRing';
 import { ScriptPowerMeter } from '../components/common/ScriptPowerMeter';
 import { KiliParrot } from '../components/mascot/KiliParrot';
 import { SarvamVoiceModal } from '../components/common/SarvamVoiceModal';
+import { TamilAlphabet247Modal } from '../components/common/TamilAlphabet247Modal';
 
 export const DashboardPage: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -30,6 +31,7 @@ export const DashboardPage: React.FC = () => {
   const [badges, setBadges] = useState<AchievementBadge[]>([]);
   const [loading, setLoading] = useState(true);
   const [isVoiceAssistantOpen, setIsVoiceAssistantOpen] = useState(false);
+  const [isAlphabetModalOpen, setIsAlphabetModalOpen] = useState(false);
 
   useEffect(() => {
     async function loadDashboardData() {
@@ -96,12 +98,12 @@ export const DashboardPage: React.FC = () => {
             <div 
               onClick={() => setIsVoiceAssistantOpen(true)}
               className="cursor-pointer transition-transform hover:scale-105 active:scale-95"
-              title="கிளியிடம் தமிழில் பேசுங்கள்! (Click to speak with Kili)"
+              title={isTa ? 'கிளியிடம் தமிழில் பேசுங்கள்!' : 'Click to talk with Kili!'}
             >
               <KiliParrot
                 mood="talking"
-                speechText="Click to speak Tamil with me! 🎙️"
-                speechTextTa="என்னுடன் தமிழில் பேசுங்கள்! 🎙️"
+                speechText={isTa ? undefined : 'Click to speak Tamil with me! 🎙️'}
+                speechTextTa={isTa ? 'என்னுடன் தமிழில் பேசுங்கள்! 🎙️' : undefined}
                 size="sm"
                 onOpenVoiceAssistant={() => setIsVoiceAssistantOpen(true)}
               />
@@ -226,6 +228,38 @@ export const DashboardPage: React.FC = () => {
           </Link>
         </div>
 
+        {/* 247 Tamil Letters Quick Access Banner */}
+        <div 
+          onClick={() => setIsAlphabetModalOpen(true)}
+          className="bg-gradient-to-r from-teal-surface via-paper-dark to-gold-surface border-2 border-teal/20 hover:border-teal rounded-3xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm cursor-pointer transition-all hover:scale-[1.01]"
+        >
+          <div className="flex items-center gap-3.5">
+            <div className="w-12 h-12 rounded-2xl bg-teal text-gold flex items-center justify-center font-tamil font-extrabold text-2xl shadow-md flex-shrink-0">
+              அ
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h4 className="font-heading font-extrabold text-base sm:text-lg text-teal">
+                  247 தமிழ் எழுத்துகள் அகரவரிசை (All 247 Letters)
+                </h4>
+                <span className="text-[10px] font-extrabold bg-gold text-ink px-2 py-0.5 rounded-full uppercase">
+                  பயிற்சி மையம்
+                </span>
+              </div>
+              <p className="text-xs text-ink-muted mt-0.5">
+                உயிர் 12, ஆய்தம் 1, மெய் 18, உயிர்மெய் 216 — எந்த எழுத்தையும் கேட்டு, பேசி, வரைந்து பயிலுங்கள்.
+              </p>
+            </div>
+          </div>
+          <button 
+            type="button"
+            className="px-5 py-2.5 rounded-2xl bg-teal text-white font-bold text-xs flex items-center gap-1.5 shadow-md flex-shrink-0 hover:bg-teal-light"
+          >
+            <span>அட்டவணையைக் காண்க</span>
+            <ArrowRight size={14} />
+          </button>
+        </div>
+
         {/* Real-Life Mission Banner */}
         <div className="bg-gold-surface border-2 border-gold/40 rounded-3xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm">
           <div className="space-y-1">
@@ -292,6 +326,12 @@ export const DashboardPage: React.FC = () => {
       <SarvamVoiceModal
         isOpen={isVoiceAssistantOpen}
         onClose={() => setIsVoiceAssistantOpen(false)}
+      />
+
+      {/* All 247 Tamil Letters Hub Modal */}
+      <TamilAlphabet247Modal
+        isOpen={isAlphabetModalOpen}
+        onClose={() => setIsAlphabetModalOpen(false)}
       />
     </div>
   );

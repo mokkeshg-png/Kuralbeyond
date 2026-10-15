@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   X, 
   Mic, 
@@ -11,6 +12,7 @@ import {
   HelpCircle,
   Radio
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { sarvamVoiceService, SarvamChatMessage } from '../../services/sarvamVoiceService';
 import { KiliParrot } from '../mascot/KiliParrot';
 
@@ -23,6 +25,8 @@ export const SarvamVoiceModal: React.FC<SarvamVoiceModalProps> = ({
   isOpen,
   onClose,
 }) => {
+  const { i18n } = useTranslation();
+  const isTa = i18n.language === 'ta';
   const [messages, setMessages] = useState<SarvamChatMessage[]>([
     {
       role: 'assistant',
@@ -41,17 +45,22 @@ export const SarvamVoiceModal: React.FC<SarvamVoiceModalProps> = ({
   const timerRef = useRef<any>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  // Check backend server status on open
+  // Check backend server status on open and lock body scroll
   useEffect(() => {
     if (isOpen) {
+      document.body.style.overflow = 'hidden';
       sarvamVoiceService.checkHealth().then(res => {
         setServerOnline(res.isOnline);
       });
     } else {
+      document.body.style.overflow = '';
       sarvamVoiceService.stopAudio();
       stopRecording();
       setStatus('idle');
     }
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [isOpen]);
 
   // Auto-scroll chat history
@@ -230,9 +239,17 @@ export const SarvamVoiceModal: React.FC<SarvamVoiceModalProps> = ({
 
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-ink/60 backdrop-blur-sm animate-fade-in">
-      <div className="relative w-full max-w-2xl bg-paper rounded-3xl border-4 border-teal/20 shadow-2xl flex flex-col max-h-[90vh] overflow-hidden">
+  return createPortal(
+    <div 
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-ink/60 backdrop-blur-sm animate-fade-in overflow-y-auto"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div 
+        className="relative w-full max-w-2xl bg-paper rounded-3xl border-4 border-teal/20 shadow-2xl flex flex-col max-h-[88vh] my-auto overflow-hidden animate-pop"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header with Kili Branding */}
         <div className="flex items-center justify-between px-6 py-4 bg-paper-dark border-b-2 border-sand">
           <div className="flex items-center gap-3">
@@ -303,7 +320,7 @@ export const SarvamVoiceModal: React.FC<SarvamVoiceModalProps> = ({
                     className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-teal text-white text-xs font-bold hover:bg-teal-light transition-all active:scale-95 shadow-sm"
                   >
                     <Volume2 size={14} />
-                    <span>மீண்டும் கேள் (Listen)</span>
+                    <span>{isTa ? 'மீண்டும் கேள்' : 'Listen Again'}</span>
                   </button>
                 )}
               </div>
@@ -316,7 +333,7 @@ export const SarvamVoiceModal: React.FC<SarvamVoiceModalProps> = ({
               <KiliParrot mood="thinking" size="sm" showSpeech={false} />
               <span className="text-xs font-bold text-teal flex items-center gap-1.5">
                 <Sparkles size={14} className="animate-spin text-gold" />
-                கிளி யோசித்து பதில் தயாரிக்கிறது... (Kili is thinking with Sarvam-105B...)
+                {isTa ? 'கிளி யோசித்து பதில் தயாரிக்கிறது...' : 'Kili is thinking with Sarvam AI...'}
               </span>
             </div>
           )}
@@ -325,7 +342,7 @@ export const SarvamVoiceModal: React.FC<SarvamVoiceModalProps> = ({
             <div className="flex items-center gap-3 p-3 bg-leaf-surface rounded-2xl border border-leaf/30 w-fit">
               <Radio size={16} className="text-leaf animate-pulse" />
               <span className="text-xs font-bold text-leaf-dark">
-                கிளி தமிழில் பேசுகிறது... (Kili speaking in Tamil via Sarvam TTS)
+                {isTa ? 'கிளி தமிழில் பேசுகிறது...' : 'Kili speaking in Tamil via Sarvam TTS'}
               </span>
             </div>
           )}
@@ -378,12 +395,12 @@ export const SarvamVoiceModal: React.FC<SarvamVoiceModalProps> = ({
               {isRecording ? (
                 <>
                   <Square size={18} fill="currentColor" />
-                  <span>நிறுத்து ({15 - recordingSeconds}s)</span>
+                  <span>{isTa ? 'நிறுத்து' : 'Stop'} ({15 - recordingSeconds}s)</span>
                 </>
               ) : (
                 <>
                   <Mic size={18} />
-                  <span>தமிழில் பேசு (Speak)</span>
+                  <span>{isTa ? 'பேசு' : 'Speak'}</span>
                 </>
               )}
             </button>
@@ -395,7 +412,7 @@ export const SarvamVoiceModal: React.FC<SarvamVoiceModalProps> = ({
                 value={inputText}
                 onChange={e => setInputText(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleTextSubmit()}
-                placeholder="அல்லது தட்டச்சு செய்யவும்... (or type your question)"
+                placeholder={isTa ? 'அல்லது தட்டச்சு செய்யவும்... (or type your question)' : 'Or type your question here...'}
                 disabled={isRecording || status === 'thinking'}
                 className="w-full bg-transparent text-sm text-ink placeholder:text-ink-muted focus:outline-none font-tamil py-1"
               />
@@ -426,6 +443,7 @@ export const SarvamVoiceModal: React.FC<SarvamVoiceModalProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

@@ -5,7 +5,8 @@ import {
   Globe, 
   Check,
   Shield,
-  ArrowLeft
+  ArrowLeft,
+  LogOut
 } from 'lucide-react';
 import { UserProfile, UserPreferences, AgeMode } from '../types';
 import { authService } from '../services/authService';
@@ -15,10 +16,10 @@ import { SupabaseAdapter } from '../services/supabaseAdapter';
 export const ProfilePage: React.FC = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const isTa = i18n.language === 'ta';
 
   const [profile, setProfile] = useState<UserProfile>(LocalStorageAdapter.getProfile());
   const [preferences, setPreferences] = useState<UserPreferences>(LocalStorageAdapter.getPreferences());
-  const [showResetModal, setShowResetModal] = useState(false);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-age-mode', profile.age_mode);
@@ -64,11 +65,9 @@ export const ProfilePage: React.FC = () => {
     }
   };
 
-  const handleResetData = () => {
-    LocalStorageAdapter.resetAll();
-    setShowResetModal(false);
-    navigate('/');
-    window.location.reload();
+  const handleLogout = async () => {
+    await authService.signOut();
+    navigate('/auth');
   };
 
   return (
@@ -246,52 +245,29 @@ export const ProfilePage: React.FC = () => {
             </div>
           </div>
 
-          {/* Reset Learning Data */}
-          <div className="pt-4 border-t border-sand flex justify-between items-center">
+          {/* Account Session / Log Out */}
+          <div className="pt-4 border-t border-sand flex flex-col sm:flex-row justify-between sm:items-center gap-3">
             <div>
-              <h4 className="font-bold text-xs text-maroon">{t('settings.resetData')}</h4>
-              <p className="text-[11px] text-ink-muted">Clear all streaks, badges, and cached lessons</p>
+              <h4 className="font-bold text-xs sm:text-sm text-ink">
+                {isTa ? 'கணக்கு அமர்வு' : 'Account Session'}
+              </h4>
+              <p className="text-[11px] text-ink-muted mt-0.5">
+                {isTa
+                  ? 'வெளியேறிய பின் மீண்டும் உள்நுழையும்போது உங்கள் கற்றல் முன்னேற்றம், நட்சத்திரங்கள் மற்றும் வரம்புகள் அனைத்தும் தொடரும்.'
+                  : 'Log out of your account. When you log back in, all previous learning processes, stars, and progress resume.'}
+              </p>
             </div>
             <button
               type="button"
-              onClick={() => setShowResetModal(true)}
-              className="px-4 py-2 rounded-2xl bg-maroon/10 hover:bg-maroon hover:text-white text-maroon font-bold text-xs transition-colors"
+              onClick={handleLogout}
+              className="px-5 py-2.5 rounded-2xl bg-maroon/10 hover:bg-maroon hover:text-white text-maroon font-bold text-xs transition-all active:scale-95 flex items-center justify-center gap-2 shadow-sm flex-shrink-0"
             >
-              Reset
+              <LogOut size={16} />
+              <span>{isTa ? 'வெளியேறு (Log Out)' : 'Log Out'}</span>
             </button>
           </div>
         </div>
       </div>
-
-      {/* Reset Confirmation Modal */}
-      {showResetModal && (
-        <div className="fixed inset-0 z-50 bg-ink/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-paper rounded-3xl max-w-sm w-full p-6 border-4 border-maroon shadow-2xl text-center space-y-4 animate-pop">
-            <h3 className="font-heading font-bold text-lg text-ink">
-              {t('settings.resetData')}
-            </h3>
-            <p className="text-xs text-ink-muted">
-              {t('settings.resetWarning')}
-            </p>
-            <div className="flex gap-3 pt-2">
-              <button
-                type="button"
-                onClick={() => setShowResetModal(false)}
-                className="flex-1 py-2.5 rounded-2xl bg-sand font-bold text-xs text-ink"
-              >
-                {t('common.cancel')}
-              </button>
-              <button
-                type="button"
-                onClick={handleResetData}
-                className="flex-1 py-2.5 rounded-2xl bg-maroon text-white font-extrabold text-xs shadow-md"
-              >
-                {t('common.confirm')}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

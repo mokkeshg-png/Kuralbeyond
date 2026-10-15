@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { X, Volume2, HelpCircle, Sparkles, ChevronDown } from 'lucide-react';
+import { X, Volume2, HelpCircle, Sparkles, ChevronDown, SkipForward } from 'lucide-react';
 import { TanglishStage } from '../../types';
 import { LocalStorageAdapter } from '../../services/storageAdapter';
 
@@ -10,6 +10,7 @@ interface InLessonHeaderProps {
   stage: TanglishStage;
   onExit: () => void;
   onNeedHelp: () => void;
+  onSkip?: () => void;
   helpActive: boolean;
 }
 
@@ -19,6 +20,7 @@ export const InLessonHeader: React.FC<InLessonHeaderProps> = ({
   stage,
   onExit,
   onNeedHelp,
+  onSkip,
   helpActive,
 }) => {
   const { t, i18n } = useTranslation();
@@ -126,6 +128,19 @@ export const InLessonHeader: React.FC<InLessonHeaderProps> = ({
               <HelpCircle size={16} />
               <span className="hidden sm:inline">{t('common.needHelp')}</span>
             </button>
+
+            {/* Optional Skip Button for child freedom */}
+            {onSkip && (
+              <button
+                type="button"
+                onClick={onSkip}
+                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-2xl bg-sand/80 hover:bg-sand text-ink text-xs font-bold transition-all active:scale-95 shadow-xs"
+                title="Skip to next letter/activity"
+              >
+                <SkipForward size={14} className="text-teal" />
+                <span className="hidden sm:inline">{isTa ? 'தாவு' : 'Skip'}</span>
+              </button>
+            )}
           </div>
         </div>
       </header>

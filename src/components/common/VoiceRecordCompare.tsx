@@ -18,7 +18,8 @@ export const VoiceRecordCompare: React.FC<VoiceRecordCompareProps> = ({
   onComplete,
   className = '',
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isTa = i18n.language === 'ta';
   const [isRecording, setIsRecording] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [recordingSeconds, setRecordingSeconds] = useState(0);
@@ -247,7 +248,7 @@ export const VoiceRecordCompare: React.FC<VoiceRecordCompareProps> = ({
         )}
 
         <span className="text-xs font-semibold text-ink-muted">
-          {isRecording ? `${recordingSeconds}s / 5s • பேசுங்கள்...` : audioUrl ? 'Playback ready (பதிவு முடிந்தது)' : t('lesson.recordVoicePrompt')}
+          {isRecording ? (isTa ? `${recordingSeconds}s / 5s • பேசுங்கள்...` : `${recordingSeconds}s / 5s • Speak now...`) : audioUrl ? (isTa ? 'பதிவு முடிந்தது' : 'Playback ready') : t('lesson.recordVoicePrompt')}
         </span>
       </div>
 

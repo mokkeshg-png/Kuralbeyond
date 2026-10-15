@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ShieldCheck, Play, ArrowRight } from 'lucide-react';
+import { ShieldCheck, Play, ArrowRight, UserCheck } from 'lucide-react';
 import { authService } from '../services/authService';
+import { LocalStorageAdapter } from '../services/storageAdapter';
 import { StandardGrade } from '../types';
 
 export const AuthPage: React.FC = () => {
@@ -10,13 +11,22 @@ export const AuthPage: React.FC = () => {
   const navigate = useNavigate();
   const isTa = i18n.language === 'ta';
 
-  const [isSignUp, setIsSignUp] = useState(true);
-  const [email, setEmail] = useState('');
+  const savedProfile = LocalStorageAdapter.getProfile();
+  const hasSavedProfile = Boolean(savedProfile && savedProfile.display_name && savedProfile.display_name !== 'Explorer Guest');
+
+  // Default to Sign In if student profile already exists, else Sign Up
+  const [isSignUp, setIsSignUp] = useState(!hasSavedProfile);
+  const [email, setEmail] = useState(savedProfile?.email || '');
   const [password, setPassword] = useState('');
-  const [displayName, setDisplayName] = useState('');
-  const [grade, setGrade] = useState<StandardGrade>(4);
+  const [displayName, setDisplayName] = useState(savedProfile?.display_name || '');
+  const [grade, setGrade] = useState<StandardGrade>(savedProfile?.grade || 4);
   const [error, setError] = useState<string | null>(null);
   const [emailConfirmPending, setEmailConfirmPending] = useState(false);
+
+  const handleResumeSavedProfile = async () => {
+    localStorage.setItem('kuralbeyond_session_active', 'true');
+    navigate('/dashboard');
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,7 +55,7 @@ export const AuthPage: React.FC = () => {
         if (profile.is_child && !profile.parental_consent) {
           navigate('/parent-consent');
         } else {
-          navigate('/onboarding');
+          navigate('/assessment');
         }
       } else {
         await authService.signIn(email, password);
@@ -91,6 +101,54 @@ export const AuthPage: React.FC = () => {
           <p className="text-xs text-ink-muted">
             {isSignUp ? t('auth.signUpSubtitle') : t('auth.signInSubtitle')}
           </p>
+        </div>
+
+        {/* Quick Resume Card for existing student */}
+        {hasSavedProfile && (
+          <div className="p-3.5 sm:p-4 rounded-2xl bg-teal-surface border-2 border-teal/30 flex items-center justify-between gap-3 shadow-xs animate-fade-in">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-teal text-white flex items-center justify-center font-tamil font-extrabold text-base shadow-sm flex-shrink-0">
+                {savedProfile.display_name.charAt(0) || 'அ'}
+              </div>
+              <div className="text-left">
+                <div className="flex items-center gap-1.5">
+                  <h4 className="font-bold text-xs sm:text-sm text-ink">{savedProfile.display_name}</h4>
+                  <span className="text-[10px] bg-sand px-1.5 py-0.2 rounded-md font-bold text-ink-muted">Std {savedProfile.grade}</span>
+                </div>
+                <p className="text-[11px] text-ink-muted">{isTa ? 'முந்தைய கற்றல் தொடரும்' : 'Resume current learning progress'}</p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={handleResumeSavedProfile}
+              className="px-4 py-2 rounded-xl bg-teal text-white font-bold text-xs hover:bg-teal-light active:scale-95 transition-all shadow-sm flex items-center gap-1 flex-shrink-0"
+            >
+              <UserCheck size={14} />
+              <span>{isTa ? 'தொடர்க' : 'Resume'}</span>
+            </button>
+          </div>
+        )}
+
+        {/* Sign In vs Sign Up Tabs */}
+        <div className="grid grid-cols-2 p-1 bg-paper-dark rounded-2xl border border-sand">
+          <button
+            type="button"
+            onClick={() => { setIsSignUp(false); setError(null); }}
+            className={`py-2 text-xs font-bold rounded-xl transition-all ${
+              !isSignUp ? 'bg-teal text-white shadow-sm' : 'text-ink-muted hover:text-ink'
+            }`}
+          >
+            {isTa ? 'உள்நுழைக (Sign In)' : 'Sign In'}
+          </button>
+          <button
+            type="button"
+            onClick={() => { setIsSignUp(true); setError(null); }}
+            className={`py-2 text-xs font-bold rounded-xl transition-all ${
+              isSignUp ? 'bg-teal text-white shadow-sm' : 'text-ink-muted hover:text-ink'
+            }`}
+          >
+            {isTa ? 'புதிய கணக்கு (Sign Up)' : 'Sign Up'}
+          </button>
         </div>
 
         {/* Form */}

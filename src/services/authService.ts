@@ -23,7 +23,11 @@ export interface IAuthService {
 export class AuthService implements IAuthService {
   // ── Restore session after browser refresh ────────────────────────────────
   async restoreSession(): Promise<UserProfile | null> {
-    if (!isSupabaseConfigured()) return LocalStorageAdapter.getProfile();
+    if (!isSupabaseConfigured()) {
+      const active = localStorage.getItem('kuralbeyond_session_active');
+      if (active === 'false') return null;
+      return LocalStorageAdapter.getProfile();
+    }
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) return null;
@@ -38,7 +42,11 @@ export class AuthService implements IAuthService {
   // localStorage if the user is not authenticated. Silent localStorage
   // "success" on other devices is the root cause of the multi-device bug.
   async getCurrentUser(): Promise<UserProfile | null> {
-    if (!isSupabaseConfigured()) return LocalStorageAdapter.getProfile();
+    if (!isSupabaseConfigured()) {
+      const active = localStorage.getItem('kuralbeyond_session_active');
+      if (active === 'false') return null;
+      return LocalStorageAdapter.getProfile();
+    }
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) return null; // unauthenticated
@@ -52,6 +60,7 @@ export class AuthService implements IAuthService {
 
   // ── Sign in ───────────────────────────────────────────────────────────────
   async signIn(email: string, password: string): Promise<UserProfile> {
+    localStorage.setItem('kuralbeyond_session_active', 'true');
     if (!isSupabaseConfigured()) {
       const current = LocalStorageAdapter.getProfile();
       const updated: UserProfile = { ...current, email, updated_at: new Date().toISOString() };
@@ -227,13 +236,17 @@ export class AuthService implements IAuthService {
   // ── Sign out ──────────────────────────────────────────────────────────────
   async signOut(): Promise<void> {
     if (isSupabaseConfigured()) {
-      await supabase.auth.signOut();
+      try {
+        await supabase.auth.signOut();
+      } catch {}
     }
-    LocalStorageAdapter.resetAll();
+    // Mark session logged out while preserving all user progress, streaks, stars, and badges
+    localStorage.setItem('kuralbeyond_session_active', 'false');
   }
 
   // ── Demo / guest mode ─────────────────────────────────────────────────────
   async enableDemoMode(): Promise<UserProfile> {
+    localStorage.setItem('kuralbeyond_session_active', 'true');
     const demoProfile: UserProfile = {
       id: 'usr-demo-guest',
       email: 'guest@kuralbeyond.demo',
